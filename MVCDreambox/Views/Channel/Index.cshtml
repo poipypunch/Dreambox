@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MVCDreambox.Models.Channel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ChannelDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChannelPath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChannelStatus)
+        </th>        
+        <th>
+            @Html.DisplayNameFor(model => model.CreateBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChannelDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChannelPath)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChannelStatus)
+        </td>        
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ChannelID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ChannelID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ChannelID })
+        </td>
+    </tr>
+}
+
+</table>
