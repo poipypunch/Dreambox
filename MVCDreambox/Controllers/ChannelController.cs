@@ -51,9 +51,17 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Channels.Add(channel);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(string.Empty, channel.ChannelDesc))
+                {
+                    channel.ChannelID = Guid.NewGuid().ToString();
+                    channel.UpdateBy = Session["UserID"].ToString();
+                    channel.UpdateDate = DateTime.Now;
+                    channel.CreateBy = Session["UserID"].ToString();
+                    channel.CreateDate = DateTime.Now;
+                    db.Channels.Add(channel);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(channel);
@@ -81,9 +89,14 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(channel).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(channel.ChannelID, channel.ChannelDesc))
+                {
+                    channel.UpdateBy = Session["UserID"].ToString();
+                    channel.UpdateDate = DateTime.Now;
+                    db.Entry(channel).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(channel);
         }
@@ -112,6 +125,19 @@ namespace MVCDreambox.Controllers
             db.Channels.Remove(channel);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        private bool CheckDuplicate(string id, string TypeDesc)
+        {
+            try
+            {
+                Channel channel;
+                channel = id == string.Empty ? db.Channels.Where(x => x.ChannelDesc == TypeDesc && x.ChannelID != id).First() : db.Channels.Where(x => x.ChannelDesc == TypeDesc).First();
+                return channel != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         protected override void Dispose(bool disposing)

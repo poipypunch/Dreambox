@@ -1,0 +1,43 @@
+﻿@model MVCDreambox.Models.Package
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Package</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PackageDesc)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PackageDesc)
+            @Html.ValidationMessageFor(model => model.PackageDesc)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PackageStatus)
+        </div>
+        <div class="editor-field">
+            @Html.RadioButtonFor(model => model.PackageStatus, "Active", new { @checked = true }) Active
+            @Html.RadioButtonFor(model => model.PackageStatus, "InActive") InActive
+        </div>
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

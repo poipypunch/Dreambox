@@ -52,14 +52,17 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                sysuser.UserID = Guid.NewGuid().ToString();
-                sysuser.CreateBy = Role.Admin;
-                sysuser.CreateDate = DateTime.Now;
-                sysuser.UpdateBy = Role.Admin;
-                sysuser.UpdateDate = DateTime.Now;
-                db.SysUsers.Add(sysuser);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(string.Empty, sysuser.UserName))
+                {
+                    sysuser.UserID = Guid.NewGuid().ToString();
+                    sysuser.CreateBy = Session["UserID"].ToString();
+                    sysuser.CreateDate = DateTime.Now;
+                    sysuser.UpdateBy = Session["UserID"].ToString();
+                    sysuser.UpdateDate = DateTime.Now;
+                    db.SysUsers.Add(sysuser);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(sysuser);
@@ -87,11 +90,14 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                sysuser.UpdateBy = Role.Admin;
-                sysuser.UpdateDate = DateTime.Now;
-                db.Entry(sysuser).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(sysuser.UserID, sysuser.UserName))
+                {
+                    sysuser.UpdateBy = Session["UserID"].ToString();
+                    sysuser.UpdateDate = DateTime.Now;
+                    db.Entry(sysuser).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(sysuser);
         }
@@ -144,6 +150,20 @@ namespace MVCDreambox.Controllers
                 UserID = "0001";
             }
             return UserID;
+        }
+
+        private bool CheckDuplicate(string id, string TypeDesc)
+        {
+            try
+            {
+                SysUser sysUser;
+                sysUser = id == string.Empty ? db.SysUsers.Where(x => x.UserName == TypeDesc && x.UserID != id).First() : db.SysUsers.Where(x => x.UserName == TypeDesc).First();
+                return sysUser != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

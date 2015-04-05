@@ -9,97 +9,99 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table>
+@using (Html.BeginForm())
+{
+    <p>
+        Select Department: @Html.DropDownList("SelectedDepartment", "All")
+        <input type="submit" value="Filter" />
+    </p>
+}
+
+<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.MemberName)
-        </th>
+        </th>      
         <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ExpireyDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MemberTypeID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DealerID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
+            Member type
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MemberName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ExpireyDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MemberTypeID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DealerID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MemberID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MemberID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MemberID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberName)
+            </td>           
+            <td>
+                @Html.DisplayFor(modelItem => item.memberType.MemberTypeDesc)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MemberID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.MemberID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.MemberID })
+            </td>
+        </tr>
+    }
 
 </table>
+@*<table>
+        <tr>
+
+            <th>
+                @Html.DisplayName("User name")
+            </th>
+            <th>
+                @Html.DisplayName("Member name")
+            </th>
+            <th>
+                @Html.DisplayName("Email")
+            </th>
+            <th>
+                @Html.DisplayName("Phone")
+            </th>
+            <th>
+                @Html.DisplayName("Expiry date")
+            </th>
+            <th>
+                @Html.DisplayName("Member type")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.member.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.member.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.member.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.member.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.member.ExpiryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.membertype.MemberTypeDesc)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.member.MemberID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.member.MemberID })
+                </td>
+            </tr>
+        }
+
+    </table>*@

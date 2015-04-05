@@ -17,8 +17,10 @@ namespace MVCDreambox.Models
         public string PackageDesc { get; set; }
         public string PackageStatus { get; set; }
         public string CreateBy { get; set; }
+         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
+         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime UpdateDate { get; set; }
     }
 }

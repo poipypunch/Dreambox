@@ -12,12 +12,11 @@ namespace MVCDreambox.Controllers
     public class MemberTypeController : Controller
     {
         private DreamboxContext db = new DreamboxContext();
-
         //
         // GET: /MemberType/
 
         public ActionResult Index()
-        {
+        {           
             return View(db.MemberTypes.ToList());
         }
 
@@ -51,9 +50,18 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.MemberTypes.Add(membertype);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(string.Empty, membertype.MemberTypeDesc))
+                {
+                    membertype.MemberTypeID = Guid.NewGuid().ToString();
+                    membertype.CreateBy = Session["UserID"].ToString();
+                    membertype.UpdateBy = Session["UserID"].ToString();
+                    membertype.CreateDate = DateTime.Now;
+                    membertype.UpdateDate = DateTime.Now;
+                    membertype.DealerID = Session["UserID"].ToString();
+                    db.MemberTypes.Add(membertype);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(membertype);
@@ -81,9 +89,14 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(membertype).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (CheckDuplicate(membertype.MemberTypeID, membertype.MemberTypeDesc))
+                {
+                    membertype.UpdateBy = Session["UserID"].ToString();
+                    membertype.UpdateDate = DateTime.Now;
+                    db.Entry(membertype).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(membertype);
         }
@@ -112,6 +125,21 @@ namespace MVCDreambox.Controllers
             db.MemberTypes.Remove(membertype);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private bool CheckDuplicate(string id, string TypeDesc)
+        {
+            try
+            {
+                string UserID = Session["UserID"].ToString();
+                MemberType objMemberType;
+                objMemberType = id == string.Empty ? db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID && x.MemberTypeID != id).First() : db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID).First();
+                return objMemberType != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         protected override void Dispose(bool disposing)

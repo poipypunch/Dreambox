@@ -5,8 +5,61 @@
 }
 
 <h2>Edit</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-@using (Html.BeginForm()) {
+    <div class="form-horizontal">
+        <h4>Course</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.MemberID)
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.MemberName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MemberName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MemberName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="MemberTypeID">MemberType</label>
+            <div class="col-md-10">
+                @Html.DropDownList("MemberTypeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MemberTypeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+@*@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
@@ -64,26 +117,27 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.ExpireyDate)
+            @Html.LabelFor(model => model.ExpiryDate)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ExpireyDate)
-            @Html.ValidationMessageFor(model => model.ExpireyDate)
+        <div class="editor-field">           
+            @Html.TextBox("ExpiryDate")
+            @Html.ValidationMessageFor(model => model.ExpiryDate)
         </div>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.MemberTypeID)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.MemberTypeID)
+            @Html.DropDownList("MemberTypeID", MemberTypes);
             @Html.ValidationMessageFor(model => model.MemberTypeID)
-        </div>   
+
+        </div>
         <div class="editor-field">
             @Html.HiddenFor(model => model.CreateBy)
         </div>
         <div class="editor-field">
             @Html.HiddenFor(model => model.CreateDate)
-        </div>      
+        </div>
 
         <p>
             <input type="submit" value="Save" />
@@ -93,8 +147,17 @@
 
 <div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @*<link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.24.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ExpiryDate').datepicker()
+        });
+    </script>*@
 }
+
+

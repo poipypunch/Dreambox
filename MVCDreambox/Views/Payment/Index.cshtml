@@ -24,19 +24,13 @@
             @Html.DisplayNameFor(model => model.PaymentCost)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExpiryDate)
+            @Html.DisplayNameFor(model => model.PaymentExpiryDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PaymentStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateBy)
-        </th>
+        </th>        
         <th>
             @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateBy)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.UpdateDate)
@@ -60,26 +54,20 @@
                 @Html.DisplayFor(modelItem => item.PaymentCost)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ExpiryDate)
+                @Html.DisplayFor(modelItem => item.PaymentExpiryDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentStatus)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreateBy)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateBy)
-            </td>
+            </td>           
             <td>
                 @Html.DisplayFor(modelItem => item.UpdateDate)
             </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id=item.PaymentID }) |*@
-                @Html.ActionLink("Details", "Details", new { id = item.PaymentID }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.PaymentID }) |*@
                 @Html.ActionLink("Delete", "Delete", new { id = item.PaymentID })
             </td>
         </tr>

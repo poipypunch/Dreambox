@@ -61,11 +61,11 @@ namespace MVCDreambox.Controllers
                     payment.PaymentName = paymentdummy.PaymentName;
                     payment.PaymentStatus = paymentdummy.PaymentStatus;
                     payment.PaymentCost = paymentdummy.PaymentCost;
-                    payment.ExpiryDate = DateTime.Now ;
+                    payment.PaymentExpiryDate = paymentdummy.PaymentExpiryDate;
                     payment.PaymentTotalDay = paymentdummy.PaymentTotalDay;
-                    payment.CreateBy = Role.Admin;
+                    payment.CreateBy = Session["UserID"].ToString();
                     payment.CreateDate = DateTime.Now;
-                    payment.UpdateBy = Role.Admin;
+                    payment.UpdateBy = Session["UserID"].ToString();
                     payment.UpdateDate = DateTime.Now;
                     db.Payments.Add(payment);
                 }

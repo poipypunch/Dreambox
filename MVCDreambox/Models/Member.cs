@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 namespace MVCDreambox.Models
 {
     [Table("Member")]
@@ -23,12 +24,24 @@ namespace MVCDreambox.Models
         public string Email { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
-        public DateTime ExpireyDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? ExpiryDate { get; set; }
+
+        [DisplayName("Member type")]
         public string MemberTypeID { get; set; }
         public string DealerID { get; set; }
         public string CreateBy { get; set; }
-        public string CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public string UpdateBy { get; set; }
-        public string UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+        public virtual MemberType memberType { get; set; }
+        //public virtual SysUser sysUser { get; set; }
+    }
+
+    public class MemberViewModel
+    {
+        public Member member { get; set; }
+        public MemberType membertype { get; set; }
+
     }
 }

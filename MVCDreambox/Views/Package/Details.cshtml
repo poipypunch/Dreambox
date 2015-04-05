@@ -1,0 +1,57 @@
+﻿@model MVCDreambox.Models.Package
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Package</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PackageDesc)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PackageDesc)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PackageStatus)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PackageStatus)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreateBy)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreateBy)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreateDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreateDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UpdateBy)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UpdateBy)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UpdateDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UpdateDate)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.PackageID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

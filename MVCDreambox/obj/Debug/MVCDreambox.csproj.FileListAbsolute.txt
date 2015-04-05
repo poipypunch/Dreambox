@@ -81,6 +81,11 @@ E:\Dreambox\MVCDreambox\MVCDreambox\bin\ko\System.Spatial.resources.dll
 E:\Dreambox\MVCDreambox\MVCDreambox\bin\ru\System.Spatial.resources.dll
 E:\Dreambox\MVCDreambox\MVCDreambox\bin\zh-Hans\System.Spatial.resources.dll
 E:\Dreambox\MVCDreambox\MVCDreambox\bin\zh-Hant\System.Spatial.resources.dll
-E:\Dreambox\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.csprojResolveAssemblyReference.cache
 E:\Dreambox\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.dll
 E:\Dreambox\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.pdb
+E:\Dreambox\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.csprojResolveAssemblyReference.cache
+E:\Dreambox\MVCDreambox\MVCDreambox\bin\PagedList.dll
+E:\Dreambox\MVCDreambox\MVCDreambox\bin\PagedList.Mvc.dll
+E:\Dreambox\MVCDreambox\MVCDreambox\bin\Antlr3.Runtime.pdb
+E:\Dreambox\MVCDreambox\MVCDreambox\bin\PagedList.xml
+E:\Dreambox\MVCDreambox\MVCDreambox\bin\PagedList.Mvc.xml

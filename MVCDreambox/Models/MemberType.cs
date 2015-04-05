@@ -9,6 +9,10 @@ namespace MVCDreambox.Models
     [Table("MemberType")]
     public class MemberType
     {
+        public MemberType()
+        {
+            this.member = new HashSet<Member>();
+        }
         [Key]
         public string MemberTypeID { get; set; }
         [Required]
@@ -19,5 +23,6 @@ namespace MVCDreambox.Models
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
+        public virtual ICollection<Member> member { get; set; }
     }
 }

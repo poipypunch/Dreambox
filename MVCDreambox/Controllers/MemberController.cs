@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
+using System.Net;
 
 namespace MVCDreambox.Controllers
 {
@@ -13,19 +14,44 @@ namespace MVCDreambox.Controllers
     {
         private DreamboxContext db = new DreamboxContext();
 
+        public MemberController()
+        {
+            db = new DreamboxContext();
+        }
         //
         // GET: /Member/
 
-        public ActionResult Index()
+        public ActionResult Index(string SelectedDepartment)
         {
-            return View(db.Members.ToList());
+            var memberType = db.MemberTypes.OrderBy(q => q.MemberTypeDesc).ToList();
+            ViewBag.SelectedDepartment = new SelectList(memberType, "MemberTypeID", "MemberTypeDesc", SelectedDepartment);
+            string memberTypeID = SelectedDepartment;
+
+            IQueryable<Member> members = db.Members
+                .Where(c => SelectedDepartment == string.Empty || c.MemberTypeID == memberTypeID)
+                .OrderBy(d => d.MemberName)
+                .Include(d => d.memberType);
+            var sql = members.ToString();
+            return View(members.ToList());
         }
+
+        //public ActionResult Index()
+        //{
+        //    var viewModel =
+        //   (from m in db.Members
+        //    join mt in db.MemberTypes on m.MemberTypeID equals mt.MemberTypeID
+        //    orderby m.MemberName, mt.MemberTypeDesc
+        //    select new MemberViewModel { member = m, membertype = mt });
+        //    return View(viewModel);
+        //}
 
         //
         // GET: /Member/Details/5
 
         public ActionResult Details(string id = null)
         {
+
+            // Member member = (Member)db.Members.Include(p => p.memberType);
             Member member = db.Members.Find(id);
             if (member == null)
             {
@@ -39,6 +65,8 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Create()
         {
+            // ViewBag.MemberTypeList = GetMemberTypeList();
+            PopulateMembersDropDownList();
             return View();
         }
 
@@ -51,9 +79,19 @@ namespace MVCDreambox.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Members.Add(member);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(string.Empty, member.UserName))
+                {
+                    PopulateMembersDropDownList();
+                    member.MemberID = Guid.NewGuid().ToString();
+                    member.DealerID = Session["UserID"].ToString();
+                    member.UpdateBy = Session["UserID"].ToString();
+                    member.UpdateDate = DateTime.Now;
+                    member.CreateBy = Session["UserID"].ToString();
+                    member.CreateDate = DateTime.Now;
+                    db.Members.Add(member);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(member);
@@ -64,12 +102,24 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Edit(string id = null)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             Member member = db.Members.Find(id);
             if (member == null)
             {
                 return HttpNotFound();
             }
+            PopulateMembersDropDownList(member.MemberTypeID);
             return View(member);
+            //Member member = db.Members.Find(id);
+            //if (member == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //ViewBag.MemberTypeList = GetMemberTypeList();
+            //return View(member);
         }
 
         //
@@ -79,11 +129,18 @@ namespace MVCDreambox.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Member member)
         {
+            PopulateMembersDropDownList();
             if (ModelState.IsValid)
             {
-                db.Entry(member).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!CheckDuplicate(member.MemberID, member.UserName))
+                {
+                                       
+                    member.UpdateBy = Session["UserID"].ToString();
+                    member.UpdateDate = DateTime.Now;
+                    db.Entry(member).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(member);
         }
@@ -113,7 +170,47 @@ namespace MVCDreambox.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public SelectListItem[] GetMemberTypeList()
+        {
+            SelectListItem[] MemberTypeList = null;
+            try
+            {
+                MemberTypeList = (from m in db.MemberTypes.OrderBy(m => m.MemberTypeDesc).ToArray()
+                                  select new SelectListItem
+                                  {
+                                      Text = m.MemberTypeDesc,
+                                      Value = m.MemberTypeID
+                                  }).ToArray();
 
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return MemberTypeList;
+        }
+
+        private bool CheckDuplicate(string id, string TypeDesc)
+        {
+            try
+            {
+                string UserID = Session["UserID"].ToString();
+                Member member;
+                member = id != string.Empty ? db.Members.Where(x => x.UserName == TypeDesc && x.DealerID == UserID && x.MemberID != id).First() : db.Members.Where(x => x.UserName == TypeDesc && x.DealerID == UserID).First();
+                return member != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        private void PopulateMembersDropDownList(object selectedMember = null)
+        {
+            var membersQuery = from d in db.MemberTypes
+                               orderby d.MemberTypeDesc
+                               select d;
+            ViewBag.MemberTypeID = new SelectList(membersQuery, "MemberTypeID", "MemberTypeDesc", selectedMember);
+        }
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
