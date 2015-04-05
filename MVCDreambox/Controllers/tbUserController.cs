@@ -10,7 +10,7 @@ using System.Data.Objects.SqlClient;
 
 namespace MVCDreambox.Controllers
 {
-    public class SysUserController : Controller
+    public class tbUserController : Controller
     {
         private DreamboxContext db = new DreamboxContext();
 
@@ -19,7 +19,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View(db.SysUsers.ToList());
+            return View(db.tbUsers.ToList());
         }
 
         //
@@ -27,12 +27,12 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Details(string id = null)
         {
-            SysUser sysuser = db.SysUsers.Find(id);
-            if (sysuser == null)
+            tbUser tbuser = db.tbUsers.Find(id);
+            if (tbuser == null)
             {
                 return HttpNotFound();
             }
-            return View(sysuser);
+            return View(tbuser);
         }
 
         //
@@ -48,24 +48,23 @@ namespace MVCDreambox.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SysUser sysuser)
+        public ActionResult Create(tbUser tbuser)
         {
             if (ModelState.IsValid)
             {
-                if (!CheckDuplicate(string.Empty, sysuser.UserName))
+                if (!CheckDuplicate(string.Empty, tbuser.UserName))
                 {
-                    sysuser.UserID = Guid.NewGuid().ToString();
-                    sysuser.CreateBy = Session["UserID"].ToString();
-                    sysuser.CreateDate = DateTime.Now;
-                    sysuser.UpdateBy = Session["UserID"].ToString();
-                    sysuser.UpdateDate = DateTime.Now;
-                    db.SysUsers.Add(sysuser);
+                    tbuser.DealerID = Guid.NewGuid().ToString();
+                    tbuser.CreateBy = Session["UserID"].ToString();
+                    tbuser.CreateDate = DateTime.Now;
+                    tbuser.UpdateBy = Session["UserID"].ToString();
+                    db.tbUsers.Add(tbuser);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
             }
 
-            return View(sysuser);
+            return View(tbuser);
         }
 
         //
@@ -73,12 +72,12 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Edit(string id = null)
         {
-            SysUser sysuser = db.SysUsers.Find(id);
-            if (sysuser == null)
+            tbUser tbuser = db.tbUsers.Find(id);
+            if (tbuser == null)
             {
                 return HttpNotFound();
             }
-            return View(sysuser);
+            return View(tbuser);
         }
 
         //
@@ -86,20 +85,20 @@ namespace MVCDreambox.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(SysUser sysuser)
+        public ActionResult Edit(tbUser tbuser)
         {
             if (ModelState.IsValid)
             {
-                if (!CheckDuplicate(sysuser.UserID, sysuser.UserName))
+                if (!CheckDuplicate(tbuser.DealerID, tbuser.UserName))
                 {
-                    sysuser.UpdateBy = Session["UserID"].ToString();
-                    sysuser.UpdateDate = DateTime.Now;
-                    db.Entry(sysuser).State = EntityState.Modified;
+                    tbuser.UpdateBy = Session["UserID"].ToString();
+                    tbuser.UpdateDate = DateTime.Now;
+                    db.Entry(tbuser).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
             }
-            return View(sysuser);
+            return View(tbuser);
         }
 
         //
@@ -107,12 +106,12 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Delete(string id = null)
         {
-            SysUser sysuser = db.SysUsers.Find(id);
-            if (sysuser == null)
+            tbUser tbuser = db.tbUsers.Find(id);
+            if (tbuser == null)
             {
                 return HttpNotFound();
             }
-            return View(sysuser);
+            return View(tbuser);
         }
 
         //
@@ -122,8 +121,8 @@ namespace MVCDreambox.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            SysUser sysuser = db.SysUsers.Find(id);
-            db.SysUsers.Remove(sysuser);
+            tbUser tbuser = db.tbUsers.Find(id);
+            db.tbUsers.Remove(tbuser);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -134,31 +133,31 @@ namespace MVCDreambox.Controllers
             base.Dispose(disposing);
         }
 
-        private string GetNewUserID()
-        {
-            string UserID = string.Empty;
-            try
-            {
-                var maxTopID = (from max in db.SysUsers
-                                where !String.IsNullOrEmpty(max.UserID)
-                                select max.UserID).Max();
-                maxTopID = (Convert.ToInt32(maxTopID) + 1).ToString();
-                UserID = String.Format("{0:0000}", maxTopID);
-            }
-            catch (Exception ex)
-            {
-                UserID = "0001";
-            }
-            return UserID;
-        }
+        //private string GetNewUserID()
+        //{
+        //    string UserID = string.Empty;
+        //    try
+        //    {
+        //        var maxTopID = (from max in db.SysUsers
+        //                        where !String.IsNullOrEmpty(max.UserID)
+        //                        select max.UserID).Max();
+        //        maxTopID = (Convert.ToInt32(maxTopID) + 1).ToString();
+        //        UserID = String.Format("{0:0000}", maxTopID);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        UserID = "0001";
+        //    }
+        //    return UserID;
+        //}
 
         private bool CheckDuplicate(string id, string TypeDesc)
         {
             try
             {
-                SysUser sysUser;
-                sysUser = id == string.Empty ? db.SysUsers.Where(x => x.UserName == TypeDesc && x.UserID != id).First() : db.SysUsers.Where(x => x.UserName == TypeDesc).First();
-                return sysUser != null ? true : false;
+                tbUser tbuser;
+                tbuser = id == string.Empty ? db.tbUsers.Where(x => x.UserName == TypeDesc && x.DealerID != id).First() : db.tbUsers.Where(x => x.UserName == TypeDesc).First();
+                return tbuser != null ? true : false;
             }
             catch (Exception ex)
             {

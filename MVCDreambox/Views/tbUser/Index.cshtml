@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MVCDreambox.Models.SysUser>
+﻿@model IEnumerable<MVCDreambox.Models.tbUser>
 
 @{
     ViewBag.Title = "Index";
@@ -10,11 +10,11 @@
     @Html.ActionLink("Create New", "Create")
 
     @*@{
-        var grid = new WebGrid(Model, defaultSort: "CreateDate");
-    }
-    @grid.GetHtml()*@
+            var grid = new WebGrid(Model, defaultSort: "CreateDate");
+        }
+        @grid.GetHtml()*@
 </p>
-<table>
+<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.UserName)
@@ -71,9 +71,9 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.UserID }) |
-                @*@Html.ActionLink("Details", "Details", new { id = item.UserID }) |*@
-                @Html.ActionLink("Delete", "Delete", new { id = item.UserID })
+                @Html.ActionLink("Edit", "Edit", new { id = item.DealerID }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.DealerID }) |*@
+                @Html.ActionLink("Delete", "Delete", new { id = item.DealerID })
             </td>
         </tr>
     }

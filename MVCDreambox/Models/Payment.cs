@@ -31,11 +31,11 @@ namespace MVCDreambox.Models
         public string CreateBy { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime CreateDate { get; set; }
+        public DateTime ? CreateDate { get; set; }
         public string UpdateBy { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime UpdateDate { get; set; }
+        public DateTime ? UpdateDate { get; set; }
     }
 
     public class PaymentDummy

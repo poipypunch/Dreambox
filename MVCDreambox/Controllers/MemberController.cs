@@ -30,7 +30,8 @@ namespace MVCDreambox.Controllers
             IQueryable<Member> members = db.Members
                 .Where(c => SelectedDepartment == string.Empty || c.MemberTypeID == memberTypeID)
                 .OrderBy(d => d.MemberName)
-                .Include(d => d.memberType);
+                .Include(d => d.memberType)
+                .Include(d => d.tbUser);
             var sql = members.ToString();
             return View(members.ToList());
         }
@@ -206,7 +207,8 @@ namespace MVCDreambox.Controllers
         }
         private void PopulateMembersDropDownList(object selectedMember = null)
         {
-            var membersQuery = from d in db.MemberTypes
+            string UserID = Session["UserID"].ToString(); 
+            var membersQuery = from d in db.MemberTypes.Where(d=>d.DealerID==UserID)                               
                                orderby d.MemberTypeDesc
                                select d;
             ViewBag.MemberTypeID = new SelectList(membersQuery, "MemberTypeID", "MemberTypeDesc", selectedMember);

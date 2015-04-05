@@ -1,4 +1,4 @@
-﻿@model MVCDreambox.Models.SysUser
+﻿@model MVCDreambox.Models.tbUser
 
 @{
     ViewBag.Title = "Edit";
@@ -14,7 +14,7 @@
     <fieldset>
         <legend>SysUser</legend>
 
-        @Html.HiddenFor(model => model.UserID)
+        @Html.HiddenFor(model => model.DealerID)
 
         <div class="editor-label">
             @Html.LabelFor(model => model.UserName)

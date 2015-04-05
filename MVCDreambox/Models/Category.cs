@@ -19,7 +19,7 @@ namespace MVCDreambox.Models
         [Required]
         public string ParentID { get; set; }
         public string DealerID { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public DateTime ? CreateDate { get; set; }
+        public DateTime ? UpdateDate { get; set; }
     }
 }

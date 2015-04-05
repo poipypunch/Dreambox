@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 namespace MVCDreambox.Models
 {
     public class DreamboxContext : DbContext
@@ -19,5 +20,16 @@ namespace MVCDreambox.Models
         public DbSet<Member> Members { get; set; }
 
         public DbSet<MemberSubscription> MemberSubscriptions { get; set; }
+        public DbSet<tbUser> tbUsers { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Entity<Channel>()
+               .HasMany(c => c.packages).WithMany(i => i.Channels)
+               .Map(t => t.MapLeftKey("ChannelID")
+                   .MapRightKey("PackageID")
+                   .ToTable("PackageMapping"));
+        }
     }
 }

@@ -35,13 +35,7 @@ namespace MVCDreambox.Models
         public string UpdateBy { get; set; }
         public DateTime? UpdateDate { get; set; }
         public virtual MemberType memberType { get; set; }
+        public virtual tbUser tbUser { get; set; }
         //public virtual SysUser sysUser { get; set; }
-    }
-
-    public class MemberViewModel
-    {
-        public Member member { get; set; }
-        public MemberType membertype { get; set; }
-
-    }
+    }   
 }
