@@ -10,14 +10,15 @@ namespace MVCDreambox.Models
     public class PackagePermission
     {
         [Key]
-        [Column(Order = 1)] 
+        [Column(Order = 1)]
         public string PackageID { get; set; }
         [Key]
-        [Column(Order = 2)] 
+        [Column(Order = 2)]
         public string DealerID { get; set; }
         public string CreateBy { get; set; }
-        public DateTime ? CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public string UpdateBy { get; set; }
-        public DateTime ? UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+
     }
 }

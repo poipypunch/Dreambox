@@ -11,11 +11,11 @@ namespace MVCDreambox.Models
     public class Payment
     {
         [Key]
-        [DisplayName("Package ID")]
+        [DisplayName("Payment ID")]
         public string PaymentID { get; set; }
         [Required]
         [StringLength(100)]
-        [DisplayName("Package name")]
+        [DisplayName("Payment name")]
         public string PaymentName { get; set; }
         [Required]
         [DisplayName("Amount of day")]
@@ -44,7 +44,7 @@ namespace MVCDreambox.Models
         public string PaymentID { get; set; }
         [Required]
         [StringLength(100)]
-        [DisplayName("Package name")]
+        [DisplayName("Payment name")]
         public string PaymentName { get; set; }
         [Required]
         //[RegularExpression(@"^\d{5}$")]

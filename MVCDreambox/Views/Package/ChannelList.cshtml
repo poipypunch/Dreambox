@@ -1,21 +1,21 @@
-﻿@model IEnumerable<MVCDreambox.Models.Package>
+﻿@model IEnumerable<MVCDreambox.Models.PackageMapping>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "ChannelList";
 }
 
-<h2>Index</h2>
-
+<h2>ChannelList</h2>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add Channel", "AddChannel")
 </p>
+<p>@ViewBag.PackageName</p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.PackageDesc)
+            @Html.DisplayNameFor(model => model.channel.ChannelDesc)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PackageStatus)
+            @Html.DisplayNameFor(model => model.channel.ChannelPath)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CreateDate)
@@ -25,15 +25,14 @@
         </th>
         <th></th>
     </tr>
-
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PackageDesc)
+                @Html.DisplayFor(modelItem => item.channel.ChannelDesc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PackageStatus)
+                @Html.DisplayFor(modelItem => item.channel.ChannelPath)
             </td>
             @*<td>
                     @Html.DisplayFor(modelItem => item.CreateBy)
@@ -44,16 +43,17 @@
             @*<td>
                     @Html.DisplayFor(modelItem => item.UpdateBy)
                 </td>*@
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
+            </td>*@
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) |
+              
                 @*@Html.ActionLink("Details", "Details", new { id=item.PackageID }) |*@
-                @Html.ActionLink("Delete", "Delete", new { id = item.PackageID }) |
-                @Html.ActionLink("Channel list", "ChannelList", new { id = item.PackageID, PackageDesc = item.PackageDesc })
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.PackageID })*@
             </td>
         </tr>
     }
-
 </table>
+<div>
+    @Html.ActionLink("Back to Package list", "Index")
+</div>

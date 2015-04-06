@@ -23,6 +23,13 @@ namespace MVCDreambox.Controllers
             return View(db.Packages.ToList());
         }
 
+        public ActionResult ChannelList(string id, string PackageDesc)
+        {
+            ViewBag.PackageName = PackageDesc;
+            return View(db.PackageMappings.Where(p => p.PackageID == id).OrderByDescending(p=>p.channel.CreateDate).Include(p => p.package).Include(p => p.channel).ToList());
+        }
+
+
         //
         // GET: /Package/Details/5
 
@@ -42,8 +49,8 @@ namespace MVCDreambox.Controllers
         public ActionResult Create()
         {
             var package = new Package();
-            package.Channels = new List<Channel>();
-            PopulateMappingChannelData(package);
+           // package.Channels = new List<Channel>();
+            //PopulateMappingChannelData(package);
             //PopulateAssignedCourseData(instructor);
             return View();
         }
@@ -113,7 +120,7 @@ namespace MVCDreambox.Controllers
                 throw raise;
 
             }
-            PopulateMappingChannelData(package);
+            //PopulateMappingChannelData(package);
 
             return View(package);
         }
@@ -123,7 +130,7 @@ namespace MVCDreambox.Controllers
             var viewModel = new List<MappingChannelToPackage>();
             try
             {
-                var allChannel = db.Channels.OrderBy(c=>c.ChannelDesc);
+                var allChannel = db.Channels.OrderBy(c => c.ChannelDesc);
                 var packageChannel = new HashSet<string>(package.Channels.Select(c => c.ChannelID));
                 foreach (var channel in allChannel)
                 {
@@ -172,10 +179,10 @@ namespace MVCDreambox.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Package package = db.Packages
-                .Include(i => i.Channels)
+                //.Include(i => i.Channels)
                 .Where(i => i.PackageID == id)
                 .Single();
-            PopulateMappingChannelData(package);
+           // PopulateMappingChannelData(package);
             if (package == null)
             {
                 return HttpNotFound();
@@ -193,14 +200,14 @@ namespace MVCDreambox.Controllers
             try
             {
                 var PackageToUpdate = db.Packages
-               .Include(i => i.Channels)
+               //.Include(i => i.Channels)
                .Where(i => i.PackageID == package.PackageID)
                .Single();
                 if (ModelState.IsValid)
                 {
                     PackageToUpdate.PackageDesc = package.PackageDesc;
-                    PackageToUpdate.PackageStatus = package.PackageStatus;                    
-                    UpdatePackageChannels(selectedChannels, PackageToUpdate);
+                    PackageToUpdate.PackageStatus = package.PackageStatus;
+                    //UpdatePackageChannels(selectedChannels, PackageToUpdate);
                     if (!CheckDuplicate(PackageToUpdate.PackageID, PackageToUpdate.PackageDesc))
                     {
                         PackageToUpdate.UpdateBy = Session["UserID"].ToString();
@@ -217,7 +224,7 @@ namespace MVCDreambox.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
-            PopulateMappingChannelData(package);
+            //PopulateMappingChannelData(package);
             return View(package);
             //if (ModelState.IsValid)
             //{

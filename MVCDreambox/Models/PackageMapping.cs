@@ -11,14 +11,16 @@ namespace MVCDreambox.Models
     public class PackageMapping
     {
         [Key]
-        [Column(Order = 1)] 
+        [Column(Order = 1)]
         public string PackageID { get; set; }
         [Key]
-        [Column(Order = 2)] 
+        [Column(Order = 2)]
         public string ChannelID { get; set; }
         public string CreateBy { get; set; }
-        public DateTime ? CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public string UpdateBy { get; set; }
-        public DateTime ? UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+        public virtual Package package { get; set; }
+        public virtual Channel channel { get; set; }
     }
 }

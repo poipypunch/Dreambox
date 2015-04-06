@@ -24,5 +24,6 @@ namespace MVCDreambox.Models
         public DateTime ? UpdateDate { get; set; }
 
         public virtual ICollection<Package> packages { get; set; }
+        public virtual ICollection<PackageMapping> PackageMappings { get; set; }
     }
 }

@@ -21,15 +21,16 @@ namespace MVCDreambox.Models
 
         public DbSet<MemberSubscription> MemberSubscriptions { get; set; }
         public DbSet<tbUser> tbUsers { get; set; }
+        public DbSet<PackageMapping> PackageMappings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            modelBuilder.Entity<Channel>()
-               .HasMany(c => c.packages).WithMany(i => i.Channels)
-               .Map(t => t.MapLeftKey("ChannelID")
-                   .MapRightKey("PackageID")
-                   .ToTable("PackageMapping"));
+            //modelBuilder.Entity<Channel>()
+            //   .HasMany(c => c.packages).WithMany(i => i.Channels)
+            //   .Map(t => t.MapLeftKey("ChannelID")
+            //       .MapRightKey("PackageID")
+            //       .ToTable("PackageMapping"));
         }
     }
 }
