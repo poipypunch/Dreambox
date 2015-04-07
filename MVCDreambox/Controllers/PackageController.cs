@@ -26,9 +26,101 @@ namespace MVCDreambox.Controllers
         public ActionResult ChannelList(string id, string PackageDesc)
         {
             ViewBag.PackageName = PackageDesc;
-            return View(db.PackageMappings.Where(p => p.PackageID == id).OrderByDescending(p=>p.channel.CreateDate).Include(p => p.package).Include(p => p.channel).ToList());
+            ViewBag.PackageID = id;
+            return View(db.PackageMappings.Where(p => p.PackageID == id).OrderByDescending(p => p.channel.CreateDate).Include(p => p.package).Include(p => p.channel).ToList());
+        }
+        [HttpPost]
+        public ActionResult ChannelList(string[] DeleteIds)
+        {
+            List<PackageMapping> objPackage = new List<PackageMapping>();
+            string packageID = string.Empty;
+            //string[] Pid = null;
+            //string[] Cid = null;
+            //if (DeleteIds != null)
+            //{
+            //    //Pid = new string[DeleteIds.Length];
+            //    //Cid = new string[DeleteIds.Length];
+            //    //int j = 0;
+            //    //foreach (string i in DeleteIds)
+            //    //{
+            //    //    string[] str = i.Split('|').ToArray();
+            //    //    Pid[j] = str[0];
+            //    //    Cid[j] = str[1];
+            //    //    j++;
+            //    //}
+            //}
+            if (DeleteIds != null && DeleteIds.Length > 0)
+            {
+                List<PackageMapping> selectedIds = new List<PackageMapping>();
+                packageID = DeleteIds[0].Split('|').ToArray().First();
+                Package objpackage = new Package();
+                objpackage = db.Packages.Where(a => a.PackageID == packageID).FirstOrDefault();
+                // packageID = DeleteIds[0].Split('|').ToArray().First();
+                //selectedIds = db.PackageMappings.Where(a => Pid.Contains(a.PackageID) && Cid.Contains(a.ChannelID)).ToList();
+                selectedIds = db.PackageMappings.Where(a => DeleteIds.Contains(a.PackageID + "|" + a.ChannelID)).ToList();
+                foreach (var i in selectedIds)
+                {
+                    db.PackageMappings.Remove(i);
+                }
+                db.SaveChanges();
+                //objPackage = db.PackageMappings.ToList();
+                objPackage = db.PackageMappings.Where(p => p.PackageID == objpackage.PackageID).OrderByDescending(p => p.channel.CreateDate).Include(p => p.package).Include(p => p.channel).ToList();
+                ViewBag.PackageName = objpackage.PackageDesc;
+                ViewBag.message = "Selected Records are Deleted Successfully";
+            }
+            return View(objPackage);
         }
 
+        public ActionResult AddChannel(string id)
+        {
+            List<Channel> channel = new List<Channel>();
+
+            channel = (from s in db.Channels
+                       where !db.PackageMappings.Any(p => (p.ChannelID == s.ChannelID) && (p.PackageID == id))
+                       select s).ToList();
+            Package objpackage = new Package();
+            objpackage = db.Packages.Where(a => a.PackageID == id).FirstOrDefault();
+            ViewBag.PackageName = objpackage.PackageID;
+            ViewBag.PackageID = id;
+            return View(channel);
+        }
+
+        [HttpPost]
+        public ActionResult AddChannel(string[] AddIds)
+        {
+            List<PackageMapping> objPackage = new List<PackageMapping>();
+            string packageID = string.Empty;
+            if (AddIds != null && AddIds.Length > 0)
+            {
+                PackageMapping pack;
+                packageID = AddIds[0].Split('|').ToArray().First();
+                string[] svalue = null;
+                for (int i = 0; i < AddIds.Length; i++)
+                {
+                    svalue = AddIds[i].Split('|').ToArray();
+                    pack = new PackageMapping();
+                    pack.PackageID = svalue[0];
+                    pack.ChannelID = svalue[1];
+                    pack.CreateBy = Session["UserID"].ToString();
+                    pack.UpdateBy = Session["UserID"].ToString();
+                    pack.CreateDate = DateTime.Now;
+                    pack.UpdateDate = DateTime.Now;
+                    db.PackageMappings.Add(pack);
+                }
+
+                db.SaveChanges();
+                Package objpackage = new Package();
+                objpackage = db.Packages.Where(a => a.PackageID == packageID).FirstOrDefault();
+                ViewBag.PackageName = objpackage.PackageDesc;
+                ViewBag.PackageID = packageID;
+                return RedirectToAction("ChannelList", new { id = objpackage.PackageID, PackageDesc = PackageDesc });
+            }
+            List<Channel> channel = new List<Channel>();
+            channel = (from s in db.Channels
+                       where !db.PackageMappings.Any(p => (p.ChannelID == s.ChannelID) && (p.PackageID == packageID))
+                       select s).ToList();
+            return View(channel);            
+        }
 
         //
         // GET: /Package/Details/5
@@ -49,7 +141,7 @@ namespace MVCDreambox.Controllers
         public ActionResult Create()
         {
             var package = new Package();
-           // package.Channels = new List<Channel>();
+            // package.Channels = new List<Channel>();
             //PopulateMappingChannelData(package);
             //PopulateAssignedCourseData(instructor);
             return View();
@@ -182,7 +274,7 @@ namespace MVCDreambox.Controllers
                 //.Include(i => i.Channels)
                 .Where(i => i.PackageID == id)
                 .Single();
-           // PopulateMappingChannelData(package);
+            // PopulateMappingChannelData(package);
             if (package == null)
             {
                 return HttpNotFound();
@@ -200,7 +292,7 @@ namespace MVCDreambox.Controllers
             try
             {
                 var PackageToUpdate = db.Packages
-               //.Include(i => i.Channels)
+                    //.Include(i => i.Channels)
                .Where(i => i.PackageID == package.PackageID)
                .Single();
                 if (ModelState.IsValid)

@@ -384,6 +384,7 @@
     <Content Include="Views\Package\Edit.cshtml" />
     <Content Include="Views\Package\Delete.cshtml" />
     <Content Include="Views\Package\ChannelList.cshtml" />
+    <Content Include="Views\Package\AddChannel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

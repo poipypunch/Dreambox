@@ -1,0 +1,103 @@
+﻿@model IEnumerable<MVCDreambox.Models.Channel>
+
+@{
+    ViewBag.Title = "AddChannel";
+}
+<h2>Add channel</h2>
+@*<p>
+        @Html.ActionLink("Add Channel", "AddChannel", new { id = ViewBag.PackageID })
+    </p>*@
+<p>
+    @Html.ActionLink("Channel list", "ChannelList", new { id = ViewBag.PackageID, PackageDesc = ViewBag.PackageDesc })
+</p>
+@*<p>@ViewBag.PackageName</p>*@
+@using (Html.BeginForm("AddChannel", "Package", FormMethod.Post))
+{
+    @*<h5 style="color: Green; font-family: Tahoma">@ViewBag.PackageName</h5>*@
+    <h5 style="color: Red; font-family: Tahoma">@ViewBag.message</h5>
+    var grid = new WebGrid(source: Model, rowsPerPage: 10);
+    @grid.GetHtml(
+            tableStyle: "table",
+        htmlAttributes: new { id = "AddSelectedWebGrid" },
+        headerStyle: "grid-header",
+        rowStyle: "gridRow",
+        alternatingRowStyle: "alt",
+        mode: WebGridPagerModes.All,
+        firstText: "<< First",
+        previousText: " < Previous",
+        nextText: "Next >",
+        lastText: "Last >>",
+        caption: "User Details",
+        columns: grid.Columns(
+        @*Here I am adding Checkbox Column for selecting multiple records*@
+grid.Column(format: @<text><input type="checkbox" name="AddIds" id="chk" value="@ViewBag.PackageID|@item.ChannelID" /></text>, header: "Select"),
+grid.Column(format: @<text>@item.ChannelDesc</text>,header: "Channel name"),
+grid.Column(format: @<text>@item.ChannelPath</text>, header: "Channel path"),
+grid.Column(format: @<text>@item.ChannelStatus</text>, header: "Channel status"))
+                                                )
+    <br />
+    <input type="submit" value="Add Selected" class="btn" /><br />
+}
+@*<h2>AddChannel</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ChannelDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChannelPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChannelStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChannelDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChannelPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChannelStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.ChannelID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ChannelID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ChannelID })
+            </td>
+        </tr>
+    }
+
+    </table>*@
