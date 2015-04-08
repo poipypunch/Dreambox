@@ -1,0 +1,30 @@
+﻿@using MVCDreambox.Models
+@helper GetTreeView(List<MVCDreambox.Models.Category> category, string parentID)
+{
+    foreach (var i in category.Where(a => a.ParentID.Equals(parentID)))
+    {
+        <li>
+            @{var subcate = category.Where(a => a.ParentID.Equals(i.CategoryID)).Count();
+            var cateid = "'" + @i.CategoryID + "'";
+
+            }
+            @if (subcate > 0)
+            {
+                <span class="MVCcollapse MVCcollapsible">&nbsp;</span>
+            }
+            else
+            {
+                <span style="width:15px; display:inline-block">&nbsp;</span>
+            }
+            <span onclick="LoadPartialView(@cateid)">@i.CategoryDesc</span>
+            @if (subcate > 0)
+            {
+                <ul>
+                    @Treeview.GetTreeView(category, i.CategoryID)
+                    @* Recursive Call for Populate Sub items here*@
+                </ul>
+            }
+        </li>
+    }
+}
+

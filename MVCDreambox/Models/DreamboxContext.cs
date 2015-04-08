@@ -32,5 +32,7 @@ namespace MVCDreambox.Models
             //       .MapRightKey("PackageID")
             //       .ToTable("PackageMapping"));
         }
+
+        public DbSet<Category> Categories { get; set; }
     }
 }

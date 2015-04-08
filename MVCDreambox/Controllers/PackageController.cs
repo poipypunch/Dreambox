@@ -113,7 +113,7 @@ namespace MVCDreambox.Controllers
                 objpackage = db.Packages.Where(a => a.PackageID == packageID).FirstOrDefault();
                 ViewBag.PackageName = objpackage.PackageDesc;
                 ViewBag.PackageID = packageID;
-                return RedirectToAction("ChannelList", new { id = objpackage.PackageID, PackageDesc = PackageDesc });
+                return RedirectToAction("ChannelList", new { id = objpackage.PackageID, PackageDesc = objpackage.PackageDesc });
             }
             List<Channel> channel = new List<Channel>();
             channel = (from s in db.Channels
