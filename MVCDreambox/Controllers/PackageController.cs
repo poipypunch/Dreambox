@@ -172,12 +172,12 @@ namespace MVCDreambox.Controllers
             {
                 if (selectedChannels != null)
                 {
-                    package.Channels = new List<Channel>();
-                    foreach (var channel in selectedChannels)
-                    {
-                        var ChannelToAdd = db.Channels.Find(channel);
-                        package.Channels.Add(ChannelToAdd);
-                    }
+                    //package.Channels = new List<Channel>();
+                    //foreach (var channel in selectedChannels)
+                    //{
+                    //    var ChannelToAdd = db.Channels.Find(channel);
+                    //    package.Channels.Add(ChannelToAdd);
+                    //}
                 }
                 if (!CheckDuplicate(string.Empty, package.PackageDesc))
                 {
@@ -223,14 +223,14 @@ namespace MVCDreambox.Controllers
             try
             {
                 var allChannel = db.Channels.OrderBy(c => c.ChannelDesc);
-                var packageChannel = new HashSet<string>(package.Channels.Select(c => c.ChannelID));
+                //var packageChannel = new HashSet<string>(package.Channels.Select(c => c.ChannelID));
                 foreach (var channel in allChannel)
                 {
                     viewModel.Add(new MappingChannelToPackage
                     {
                         ChannelID = channel.ChannelID,
                         ChannelDesc = channel.ChannelDesc,
-                        Mapping = packageChannel.Contains(channel.ChannelID)
+                       // Mapping = packageChannel.Contains(channel.ChannelID)
                     });
                 }
             }
@@ -332,34 +332,34 @@ namespace MVCDreambox.Controllers
             //return View(package);
         }
 
-        private void UpdatePackageChannels(string[] selectedChannels, Package packageToUpdate)
-        {
-            if (selectedChannels == null)
-            {
-                packageToUpdate.Channels = new List<Channel>();
-                return;
-            }
-            var selectedChannelsHS = new HashSet<string>(selectedChannels);
-            var PackageChannels = new HashSet<string>
-                (packageToUpdate.Channels.Select(c => c.ChannelID));
-            foreach (var course in db.Channels)
-            {
-                if (selectedChannelsHS.Contains(course.ChannelID))
-                {
-                    if (!PackageChannels.Contains(course.ChannelID))
-                    {
-                        packageToUpdate.Channels.Add(course);
-                    }
-                }
-                else
-                {
-                    if (PackageChannels.Contains(course.ChannelID))
-                    {
-                        packageToUpdate.Channels.Remove(course);
-                    }
-                }
-            }
-        }
+        //private void UpdatePackageChannels(string[] selectedChannels, Package packageToUpdate)
+        //{
+        //    if (selectedChannels == null)
+        //    {
+        //        packageToUpdate.Channels = new List<Channel>();
+        //        return;
+        //    }
+        //    var selectedChannelsHS = new HashSet<string>(selectedChannels);
+        //    var PackageChannels = new HashSet<string>
+        //        (packageToUpdate.Channels.Select(c => c.ChannelID));
+        //    foreach (var course in db.Channels)
+        //    {
+        //        if (selectedChannelsHS.Contains(course.ChannelID))
+        //        {
+        //            if (!PackageChannels.Contains(course.ChannelID))
+        //            {
+        //                packageToUpdate.Channels.Add(course);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (PackageChannels.Contains(course.ChannelID))
+        //            {
+        //                packageToUpdate.Channels.Remove(course);
+        //            }
+        //        }
+        //    }
+        //}
         //
         // GET: /Package/Delete/5
 

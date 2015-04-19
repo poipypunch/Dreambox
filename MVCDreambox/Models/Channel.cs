@@ -23,7 +23,7 @@ namespace MVCDreambox.Models
         public string UpdateBy { get; set; }
         public DateTime ? UpdateDate { get; set; }
 
-        public virtual ICollection<Package> packages { get; set; }
-        public virtual ICollection<PackageMapping> PackageMappings { get; set; }
+        //public virtual ICollection<Package> packages { get; set; }
+        //public virtual ICollection<PackageMapping> PackageMappings { get; set; }
     }
 }

@@ -1,57 +1,196 @@
-﻿@model IEnumerable<MVCDreambox.Models.Member>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
+<div ng-controller="MemberController">    
+    <div ng-show="divMemberModification">
+        <form name="myForm">
+            @*<p ng-model="mahsa"> ID of selected MemberType is : {{MemberTypeID}} </p>*@
+            <div class="form-horizontal">
+                <h4>{{Operation}} Channel</h4>
+                <hr />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-@using (Html.BeginForm())
-{
-    <p>
-        Select Department: @Html.DropDownList("SelectedDepartment", "All")
-        <input type="submit" value="Filter" />
-    </p>
-}
+                <span class="help-block">{{errormessage}}</span>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MemberName)
-        </th>      
-        <th>
-            Member type
-        </th>
-        <th></th>
-    </tr>
+                <div class="form-group">
+                    @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <select data-ng-model="MemberTypeID" ng-options="memtype.MemberTypeID as memtype.MemberTypeDesc for memtype in membertypes" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Username", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" ng-model="UserName" class="form-control" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="password" ng-model="Password" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group" ng-show="showRepassword">
+                    @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="password" ng-model="RePassword" class="form-control" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Member name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" ng-model="MemberName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("E-mail", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" ng-model="Email" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <textarea ng-model="Address" maxlength="250" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Phone", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="tel" ng-model="Phone" class="form-control" />
+                    </div>
+                </div>
+                @*<div class="form-group">
+                            @Html.Label("DealerID", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" style="width:94px;" ng-model="DealerID" />
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            @Html.Label("Create by", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" style="width:94px;" ng-model="CreateBy" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Create date", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" style="width:94px;" ng-model="CreateDate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Update by", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" style="width:94px;" ng-model="UpdateBy" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Update date", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" style="width:94px;" ng-model="UpdateDate" />
+                            </div>
+                        </div>*@
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberName)
-            </td>           
-            <td>
-                @Html.DisplayFor(modelItem => item.memberType.MemberTypeDesc)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.MemberID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.MemberID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.MemberID })
-            </td>
-        </tr>
+                <input type="text" style="width:20px;" ng-model="MemberID" class="hidden" />
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" ng-click="Save()" class="btn btn-default" />
+                        <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div ng-show="divGrid">
+        <input type="button" value="Add" ng-click="add()" class="btn" />
+        <div class="form-group">
+            @Html.Label("Filter:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" value="MemberName" ng-model="FilterByMemberName" class="form-control" />
+            </div>
+        </div>
+        <table  class="table">
+            <tr>
+                <td><b>User Name</b></td>
+                <td><b>Member Name</b></td>
+                <td><b>Member type</b></td>
+                <td><b>Operation</b></td>
+            </tr>
+            <tr ng-repeat="member in members | filter:FilterByMemberName">
+                <td>
+                    {{member.UserName}}
+                </td>
+                <td>
+                    {{member.MemberName}}
+                </td>
+                <td>
+                    {{member.MemberTypeDesc}}
+                </td>
+                <td>
+                    <input type="button" value="Edit" ng-click="edit(member)" class="btn" />
+                    <input type="button" value="Delete" ng-click="delete(member)" class="btn" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+@*@model IEnumerable<MVCDreambox.Models.Member>
+
+    @{
+        ViewBag.Title = "Index";
     }
 
-</table>
+    <h2>Index</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    @using (Html.BeginForm())
+    {
+        <p>
+            Select Department: @Html.DropDownList("SelectedDepartment", "All")
+            <input type="submit" value="Filter" />
+        </p>
+    }
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberName)
+            </th>
+            <th>
+                Member type
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.memberType.MemberTypeDesc)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.MemberID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.MemberID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.MemberID })
+                </td>
+            </tr>
+        }
+
+    </table>*@
 @*<table>
         <tr>
 
