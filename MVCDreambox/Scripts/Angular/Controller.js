@@ -1,33 +1,41 @@
-﻿app.controller("ChannelController", function ($scope, channelService, ngTableParams) {
+﻿app.controller("ChannelController", function ($scope, channelService,$filter, ngTableParams) {
     $scope.divChannelModification = false;
     GetAll();
 
 
-    //To Get All Records  
+    //To Get All Records
     function GetAll() {
-        
         var Data = channelService.getChan();
         Data.then(function (chan) {
-            $scope.channels = chan.data;             
-            $scope.tableParams = new ngTableParams({
-                page: 1,            // show first page
-                count: 10           // count per page
-            }, {
-                total: chan.data.length, // length of data
-                getData: function ($defer, params) {
-                    $scope.channels = chan.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                    params.total(chan.data.length);
-                    $defer.resolve($scope.channels);
-                }
-            });
-           
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = chan.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+
         }, function () {
             alert('get data error');
         });
     }
-
-
-
+    //function GetAll() {
+        
+    //    var Data = channelService.getChan();
+    //    Data.then(function (chan) {
+    //        $scope.channels = chan.data;             
+    //        $scope.tableParams = new ngTableParams({
+    //            page: 1,            // show first page
+    //            count: 10           // count per page
+    //        }, {
+    //            total: chan.data.length, // length of data
+    //            getData: function ($defer, params) {
+    //                $scope.channels = chan.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+    //                params.total(chan.data.length);
+    //                $defer.resolve($scope.channels);
+    //            }
+    //        });
+           
+    //    }, function () {
+    //        alert('get data error');
+    //    });
+    //}
     $scope.edit = function (channel) {
         $scope.ChannelID = channel.ChannelID;
         $scope.ChannelDesc = channel.ChannelDesc;
@@ -84,15 +92,8 @@
         else {
             var getMSG = channelService.Add(Channel);
             getMSG.then(function (messagefromController) {
-                //$scope.$apply(function () {
-                //    GetAll();
-                //    $scope.channels.push(Channel);                    
-                //    $scope.tableParams.reload();
-                //    $scope.ok();
-                //});
                 GetAll();
-                //alert(messagefromController.data);
-                //$scope.tableParams.reload();
+                alert(messagefromController.data);
                 $scope.divChannelModification = false;
             }, function () {
                 alert('Insert Error');
@@ -110,6 +111,31 @@
             alert('Delete Error');
         });
     }
+});
+app.directive('csSelect', function () {
+    return {
+        require: '^stTable',
+        template: '<input type="checkbox"/>',
+        scope: {
+            row: '=csSelect'
+        },
+        link: function (scope, element, attr, ctrl) {
+
+            element.bind('change', function (evt) {
+                scope.$apply(function () {
+                    ctrl.select(scope.row, 'multiple');
+                });
+            });
+
+            scope.$watch('row.isSelected', function (newValue, oldValue) {
+                if (newValue === true) {
+                    element.parent().addClass('st-selected');
+                } else {
+                    element.parent().removeClass('st-selected');
+                }
+            });
+        }
+    };
 });
 
 app.controller("MemberController", function ($scope, memberService) {

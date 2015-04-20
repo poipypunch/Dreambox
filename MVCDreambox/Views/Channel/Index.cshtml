@@ -14,6 +14,7 @@
     <input type="button" value="Add" ng-click="add()" />
     <div ng-show="divChannelModification">
         <p>{{Operation}} Channel</p>
+        <p>{{ChannelDesc}}</p>
         <table>
             <tr>
                 <td>
@@ -31,7 +32,7 @@
                 </td>
 
                 <td>
-                   
+
                     <label>Channel status</label>
                     <div class="form-group">
                         <div class="radio">
@@ -56,29 +57,73 @@
             </tr>
         </table>
     </div>
-    <table ng-table="tableParams" class="table">
-        <tr>
-            <td><b>Channel Description</b></td>
-            <td><b>Channel Path</b></td>
-            <td><b>Channel Status</b></td>
-            <td><b>Operation</b></td>
-        </tr>
-        <tr ng-repeat="channel in $data | filter:FilterByChannelDesc ">
-            <td>
-                {{channel.ChannelDesc}}
-            </td>
-            <td>
-                {{channel.ChannelPath}}
-            </td>
-            <td>
-                {{channel.ChannelStatus}}
-            </td>
-            <td>
-                <input type="button" value="Edit" ng-click="edit(channel)" />
-                <input type="button" value="Delete" ng-click="delete(channel)" />
-            </td>
-        </tr>
+    <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th st-sort="ChannelDesc"><b>Channel name</b></th>
+                <th st-sort="ChannelPath"><b>Channel Path</b></th>
+                <th st-sort="ChannelStatus"><b>Channel Status</b></th>
+                <th><b>Operation</b></th>
+            </tr>
+            @*<tr>
+                    <th>
+                        <input st-search="'ChannelDesc'" placeholder="search for Channel name" class="input-sm form-control" type="search" />
+                    </th>
+                    <th colspan="4">
+                        <input st-search placeholder="global search" class="input-sm form-control" type="search" />
+                    </th>
+                </tr>*@
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in displayedCollection">
+                <td cs-select="row"></td>
+                <td>
+                    {{row.ChannelDesc}}
+                </td>
+                <td>
+                    {{row.ChannelPath}}
+                </td>
+                <td>
+                    {{row.ChannelStatus}}
+                </td>
+                <td>
+                    <input type="button" value="Edit" ng-click="edit(row)" />
+                    <input type="button" value="Delete" ng-click="delete(row)" />
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-center">
+                    <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                </td>
+            </tr>
+        </tfoot>
     </table>
+    @*<table ng-table="tableParams" class="table">
+            <tr>
+                <td><b>Channel Description</b></td>
+                <td><b>Channel Path</b></td>
+                <td><b>Channel Status</b></td>
+                <td><b>Operation</b></td>
+            </tr>
+            <tr ng-repeat="channel in $data | filter:FilterByChannelDesc ">
+                <td>
+                    {{channel.ChannelDesc}}
+                </td>
+                <td>
+                    {{channel.ChannelPath}}
+                </td>
+                <td>
+                    {{channel.ChannelStatus}}
+                </td>
+                <td>
+                    <input type="button" value="Edit" ng-click="edit(channel)" />
+                    <input type="button" value="Delete" ng-click="delete(channel)" />
+                </td>
+            </tr>
+        </table>*@
 
 </div>
 

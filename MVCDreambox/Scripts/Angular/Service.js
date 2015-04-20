@@ -1,5 +1,4 @@
 ﻿app.service("channelService", function ($http) {
-
     this.getChan = function () {
         return $http.get("/Channel/GetAllChannels");
     };

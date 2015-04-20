@@ -24,7 +24,8 @@ namespace MVCDreambox
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Scripts/ng-table.min.js"));
+                      "~/Scripts/ng-table.min.js",
+                      "~/Scripts/smart-table.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
