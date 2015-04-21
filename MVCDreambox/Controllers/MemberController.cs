@@ -74,7 +74,7 @@ namespace MVCDreambox.Controllers
                 member.UpdateDate = DateTime.Now;
                 db.Entry(member).State = EntityState.Modified;
                 db.SaveChanges();
-                return "Record has been Updated";
+                return "Success";
             }
             else
             {

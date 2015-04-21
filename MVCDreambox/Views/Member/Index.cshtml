@@ -1,11 +1,19 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
+<style>
+    .form-group .help-block {
+        display: none;
+    }
 
+    .form-group.has-error .help-block {
+        display: block;
+    }
+</style>
 <h2>Index</h2>
-<div ng-controller="MemberController">    
+<div ng-controller="MemberController">
     <div ng-show="divMemberModification">
-        <form name="myForm">
+        <form name="appForm">
             @*<p ng-model="mahsa"> ID of selected MemberType is : {{MemberTypeID}} </p>*@
             <div class="form-horizontal">
                 <h4>{{Operation}} Channel</h4>
@@ -13,34 +21,38 @@
 
                 <span class="help-block">{{errormessage}}</span>
 
-                <div class="form-group">
+                <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <select data-ng-model="MemberTypeID" ng-options="memtype.MemberTypeID as memtype.MemberTypeDesc for memtype in membertypes" class="form-control"></select>
+                        <select data-ng-model="MemberTypeID" name="MemberTypeID" ng-options="memtype.MemberTypeID as memtype.MemberTypeDesc for memtype in membertypes" class="form-control" required></select>
+                        <p class="help-block" ng-if="appForm.MemberTypeID.$error.required">Member type is requied</p>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Username", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" ng-model="UserName" class="form-control" required />
+                        <input type="text" name="UserName" ng-model="UserName" class="form-control" required />
+                        <p class="help-block" ng-if="appForm.UserName.$error.required">Username is requied</p>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="password" ng-model="Password" class="form-control" />
+                        <input type="password" name="Password" ng-model="Password" class="form-control" required />
+                        <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>
                     </div>
                 </div>
                 <div class="form-group" ng-show="showRepassword">
                     @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="password" ng-model="RePassword" class="form-control" required />
+                        <input type="password" ng-model="RePassword" class="form-control" />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" ng-model="MemberName" class="form-control" />
+                        <input type="text" name="MemberName" ng-model="MemberName" class="form-control" required />
+                        <p class="help-block" ng-if="appForm.MemberName.$error.required">Member name is requied</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -50,7 +62,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.Label("Address", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <textarea ng-model="Address" maxlength="250" class="form-control"></textarea>
                     </div>
@@ -60,38 +72,7 @@
                     <div class="col-md-10">
                         <input type="tel" ng-model="Phone" class="form-control" />
                     </div>
-                </div>
-                @*<div class="form-group">
-                            @Html.Label("DealerID", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" style="width:94px;" ng-model="DealerID" />
-                            </div>
-                        </div>
-                    <div class="form-group">
-                            @Html.Label("Create by", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" style="width:94px;" ng-model="CreateBy" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Create date", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" style="width:94px;" ng-model="CreateDate" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Update by", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" style="width:94px;" ng-model="UpdateBy" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Update date", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" style="width:94px;" ng-model="UpdateDate" />
-                            </div>
-                        </div>*@
-
+                </div> 
                 <input type="text" style="width:20px;" ng-model="MemberID" class="hidden" />
 
                 <div class="form-group">
@@ -105,35 +86,53 @@
 
     </div>
     <div ng-show="divGrid">
-        <input type="button" value="Add" ng-click="add()" class="btn" />
-        <div class="form-group">
-            @Html.Label("Filter:", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="text" value="MemberName" ng-model="FilterByMemberName" class="form-control" />
-            </div>
-        </div>
-        <table  class="table">
-            <tr>
-                <td><b>User Name</b></td>
-                <td><b>Member Name</b></td>
-                <td><b>Member type</b></td>
-                <td><b>Operation</b></td>
-            </tr>
-            <tr ng-repeat="member in members | filter:FilterByMemberName">
-                <td>
-                    {{member.UserName}}
-                </td>
-                <td>
-                    {{member.MemberName}}
-                </td>
-                <td>
-                    {{member.MemberTypeDesc}}
-                </td>
-                <td>
-                    <input type="button" value="Edit" ng-click="edit(member)" class="btn" />
-                    <input type="button" value="Delete" ng-click="delete(member)" class="btn" />
-                </td>
-            </tr>
+        <input type="button" value="New member" ng-click="add()" class="btn" />
+        @*<div class="form-group">
+                @Html.Label("Filter:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input type="text" value="MemberName" ng-model="FilterByMemberName" class="form-control" />
+                </div>
+            </div>*@
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+                    <th st-sort="UserName"><b>User Name</b></th>
+                    <th st-sort="MemberName"><b>Member Name</b></th>
+                    <th st-sort="MemberTypeDesc"><b>Member type</b></th>
+                    <td><b>Operation</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                @*<tr ng-repeat="member in members | filter:FilterByMemberName">*@
+                <tr ng-repeat="row in displayedCollection">
+                    <td>
+                        {{row.UserName}}
+                    </td>
+                    <td>
+                        {{row.MemberName}}
+                    </td>
+                    <td>
+                        {{row.MemberTypeDesc}}
+                    </td>
+                    <td>
+                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
+                            </i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

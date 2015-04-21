@@ -199,7 +199,7 @@ namespace MVCDreambox.Controllers
                 chan.UpdateBy = "Admin";
                 db.Entry(chan).State = EntityState.Modified;
                 db.SaveChanges();
-                return "Record has been Updated";
+                return "Success";
             }
             else
             {
@@ -243,7 +243,7 @@ namespace MVCDreambox.Controllers
                     channel.CreateDate = DateTime.Now;
                     db.Channels.Add(channel);
                     db.SaveChanges();
-                    return "Record has been Added";
+                    return "Success";
                 }
                 else
                 {
