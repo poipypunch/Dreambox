@@ -38,7 +38,7 @@ namespace MVCDreambox.Models
         public DateTime ? CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime ? UpdateDate { get; set; }
-        public virtual ICollection<Member> members { get; set; }
+        //public virtual ICollection<Member> members { get; set; }
         //public virtual ICollection<Package> packages { get; set; }
     }
 }

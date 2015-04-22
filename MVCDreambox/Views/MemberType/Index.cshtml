@@ -1,63 +1,138 @@
-﻿@model IEnumerable<MVCDreambox.Models.MemberType>
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Dreambox solution";
 }
+<style>
+    .form-group .help-block {
+        display: none;
+    }
 
-<h2>Index</h2>
+    .form-group.has-error .help-block {
+        display: block;
+    }
+</style>
+<h2>Member type Management</h2>
+<div ng-controller="MemberTypeController">
+    <div ng-show="divModification">
+        <form name="appForm">
+            @*<p ng-model="mahsa"> ID of selected MemberType is : {{MemberTypeID}} </p>*@
+            <div class="form-horizontal">
+                <h4>{{Operation}} Member type</h4>
+                <hr />
+                <span class="alert-danger">{{errormessage}}</span>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Member type name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="MemberTypeDesc" ng-model="MemberTypeDesc" class="form-control" required />
+                        <p class="help-block" ng-if="appForm.MemberTypeDesc.$error.required">Member type name is requied</p>
+                    </div>
+                </div>
+                <input type="text" style="width:20px;" ng-model="MemberTypeID" class="hidden" />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" ng-click="Save()" class="btn btn-default" />
+                        <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
+                    </div>
+                </div>
+            </div>
+        </form>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.MemberTypeDesc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DealerID)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.CreateBy)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.UpdateBy)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </th>
-        <th></th>
-    </tr>
+    </div>
+    <div ng-show="divGrid">
+        <input type="button" value="New member type" ng-click="add()" class="btn" />       
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+                    <th st-sort="MemberTypeDesc"><b>Member type name</b></th>
+                    <th st-sort="RealName"><b>Dealer name</b></th>
+                    <th st-sort="CreateDate"><b>Create date</b></th>
+                    <th st-sort="UpdateDate"><b>Update date</b></th>
+                    <td><b>Operation</b></td>
+                </tr>
+            </thead>
+            <tbody>                
+                <tr ng-repeat="row in displayedCollection">
+                    <td>
+                        {{row.MemberTypeDesc}}
+                    </td>
+                    <td>
+                        {{row.RealName}}
+                    </td>
+                    <td>
+                        {{row.CreateDate | date: 'MMM-dd-yyyy'}}
+                    </td>
+                    <td>
+                        {{row.UpdateDate | date: 'MMM-dd-yyyy'}}
+                    </td>                    
+                    <td>
+                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
+                            </i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+@*@model IEnumerable<MVCDreambox.Models.MemberType>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.MemberTypeDesc)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DealerID)
-        </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.CreateBy)
-        </td>*@
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
-        </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.UpdateBy)
-        </td>*@
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MemberTypeID }) |
-            @*@Html.ActionLink("Details", "Details", new { id=item.MemberTypeID }) |*@
-            @Html.ActionLink("Delete", "Delete", new { id=item.MemberTypeID })
-        </td>
-    </tr>
-}
+    @{
+        ViewBag.Title = "Index";
+    }
 
-</table>
+    <h2>Index</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberTypeDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberTypeDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DealerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.MemberTypeID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.MemberTypeID })
+            </td>
+        </tr>
+    }
+
+    </table>*@

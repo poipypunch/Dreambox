@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Dreambox solution";
 }
 <style>
     .form-group .help-block {
@@ -10,17 +10,15 @@
         display: block;
     }
 </style>
-<h2>Index</h2>
+<h2>Member management</h2>
 <div ng-controller="MemberController">
-    <div ng-show="divMemberModification">
+    <div ng-show="divModification">
         <form name="appForm">
-            @*<p ng-model="mahsa"> ID of selected MemberType is : {{MemberTypeID}} </p>*@
             <div class="form-horizontal">
-                <h4>{{Operation}} Channel</h4>
+                <h4>{{Operation}} Member</h4>
                 <hr />
-
-                <span class="help-block">{{errormessage}}</span>
-
+                <span class="alert-danger">{{errormessage}}</span>
+                <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -72,7 +70,7 @@
                     <div class="col-md-10">
                         <input type="tel" ng-model="Phone" class="form-control" />
                     </div>
-                </div> 
+                </div>
                 <input type="text" style="width:20px;" ng-model="MemberID" class="hidden" />
 
                 <div class="form-group">
@@ -99,6 +97,7 @@
                     <th st-sort="UserName"><b>User Name</b></th>
                     <th st-sort="MemberName"><b>Member Name</b></th>
                     <th st-sort="MemberTypeDesc"><b>Member type</b></th>
+                    <th st-sort="RealName"><b>Dealer name</b></th>
                     <td><b>Operation</b></td>
                 </tr>
             </thead>
@@ -114,6 +113,7 @@
                     <td>
                         {{row.MemberTypeDesc}}
                     </td>
+                    <td>{{row.RealName}}</td>
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">

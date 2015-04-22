@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Dreambox solution";
 }
 <style>
     .form-group .help-block {
@@ -10,17 +10,17 @@
         display: block;
     }
 </style>
-<h2>Index</h2>
+<h2>Channel Management</h2>
 <div ng-controller="ChannelController">
     @*<a href="/permission">Permission</a><br />*@
     @*Filter: <input type="text" value="ChannelDesc" ng-model="FilterByChannelDesc" />
         <br />*@
 
-    <div ng-show="divChannelModification">
+    <div ng-show="divModification">
         <form name="appForm" novalidate>
             <div class="form-horizontal">
                 <p>{{Operation}} Channel</p>
-                <span class="help-block">{{errormessage}}</span>
+                <span class="alert-danger">{{errormessage}}</span>
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Channel name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
-                    @Html.Label("ChannelPath", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.Label("Channel path", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <input type="text" name="ChannelPath" ng-model="ChannelPath" class="form-control" required placeholder="Channel path" />
                         <p class="help-block" ng-if="appForm.ChannelPath.$error.required">Channel path is requied</p>

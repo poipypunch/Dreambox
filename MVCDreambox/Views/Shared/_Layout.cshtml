@@ -12,7 +12,8 @@
     <script src="~/Scripts/Angular/Module.js"></script>
     <script src="~/Scripts/Angular/Service.js"></script>
     <script src="~/Scripts/Angular/Controller.js"></script>
-    <script src="~/Scripts/ng-table.min.js"></script>
+    <script src="~/Scripts/Angular/Directive.js"></script>
+    @*<script src="~/Scripts/ng-table.min.js"></script>*@
     <script src="~/Scripts/smart-table.min.js"></script>
             @Styles.Render("~/Content/css")
             @Scripts.Render("~/bundles/modernizr")
@@ -69,46 +70,4 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
-@*<body>
-            <header>
-                <div class="content-wrapper">
-                    <div class="float-left">
-                        <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
-                    </div>
-                    <div class="float-right">
-                        <section id="login">
-                            @Html.Partial("_LoginPartial")
-                        </section>
-                        <nav>
-                            <ul id="menu">
-                                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                                <li>@Html.ActionLink("About", "About", "Home")</li>
-                                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                                <li>@Html.ActionLink("User", "Index", "SysUser")</li>
-                                <li>@Html.ActionLink("Payment", "Index", "Payment")</li>
-                                <li>@Html.ActionLink("Member Type", "Index", "MemberType")</li>
-                                <li>@Html.ActionLink("Member", "Index", "Member")</li>
-                                <li>@Html.ActionLink("Package", "Index", "Package")</li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </header>
-            <div id="body">
-                @RenderSection("featured", required: false)
-                <section class="content-wrapper main-content clear-fix">
-                    @RenderBody()
-                </section>
-            </div>
-            <footer>
-                <div class="content-wrapper">
-                    <div class="float-left">
-                        <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
-                    </div>
-                </div>
-            </footer>
 
-            @Scripts.Render("~/bundles/jquery")
-            @RenderSection("scripts", required: false)
-        </body>
-    </html>*@

@@ -1,6 +1,90 @@
-﻿app.service("channelService", function ($http) {
-    this.getChan = function () {
-        return $http.get("/Channel/GetAllChannels");
+﻿app.service("userService", function ($http) {
+    this.getUsers = function () {
+        return $http.get("/tbUser/GetUsersList");
+    };
+
+    //Save (Update)  
+    this.update = function (tbuser) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/Update",
+            data: JSON.stringify(tbuser),
+            dataType: "json"
+        });
+        return response;
+    }
+
+    //Delete 
+    this.Delete = function (DealerID) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/Delete",
+            params: {
+                id: DealerID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (tbuser) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/Add",
+            data: JSON.stringify(tbuser),
+            dataType: "json"
+
+        });
+        return response;
+    }
+
+});
+
+app.service("packageService", function ($http) {
+    this.getPackages = function () {
+        return $http.get("/Package/GetPackagesList");
+    };
+
+    //Save (Update)  
+    this.update = function (Package) {
+        var response = $http({
+            method: "post",
+            url: "/Package/Update",
+            data: JSON.stringify(Package),
+            dataType: "json"
+        });
+        return response;
+    }
+
+    //Delete 
+    this.Delete = function (PackageID) {
+        var response = $http({
+            method: "post",
+            url: "/Package/Delete",
+            params: {
+                id: PackageID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (Package) {
+        var response = $http({
+            method: "post",
+            url: "/Package/Add",
+            data: JSON.stringify(Package),
+            dataType: "json"
+
+        });
+        return response;
+    }
+
+});
+
+app.service("channelService", function ($http) {
+    this.getChannels = function () {
+        return $http.get("/Channel/GetChannelsList");
     };
 
     //Save (Update)  
@@ -41,16 +125,13 @@
 });
 
 app.service("memberService", function ($http) {
-    this.getMember = function () {
+    this.getMembers = function () {
         return $http.get("/Member/GetAllMember");
     };
 
-    this.getMemberType = function () {
+    this.getMemberTypes = function () {
         return $http.get("/Member/GetAllMemberTypes");
     };
-    //this.getRole = function () {
-    //    return $http.get("/Member/GetAllRoles");
-    //};
 
     this.update = function (member) {
         var response = $http({
@@ -84,16 +165,43 @@ app.service("memberService", function ($http) {
 
         });
         return response;
-    }
-
-    //Save Permission  
-    this.updateRole = function (member) {
+    }    
+});
+app.service("memberTypeService", function ($http) {
+    this.GetMemberTypes = function () {
+        return $http.get("/MemberType/GetMemberTypesList");
+    };
+    this.update = function (memtype) {
         var response = $http({
             method: "post",
-            url: "/Member/UpdateMember",
-            data: JSON.stringify(member),
+            url: "/MemberType/Update",
+            data: JSON.stringify(memtype),
             dataType: "json"
         });
         return response;
     }
+
+    //Delete 
+    this.Delete = function (membertypeid) {
+        var response = $http({
+            method: "post",
+            url: "/MemberType/Delete",
+            params: {
+                id: membertypeid
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (memtype) {
+        var response = $http({
+            method: "post",
+            url: "/MemberType/Add",
+            data: JSON.stringify(memtype),
+            dataType: "json"
+
+        });
+        return response;
+    }    
 });

@@ -1,59 +1,155 @@
-﻿@model IEnumerable<MVCDreambox.Models.Package>
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Dreambox solution";
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PackageDesc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PackageStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PackageDesc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PackageStatus)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.CreateBy)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.UpdateBy)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) |
-                @*@Html.ActionLink("Details", "Details", new { id=item.PackageID }) |*@
-                @Html.ActionLink("Delete", "Delete", new { id = item.PackageID }) |
-                @Html.ActionLink("Channel list", "ChannelList", new { id = item.PackageID, PackageDesc = item.PackageDesc })
-            </td>
-        </tr>
+<style>
+    .form-group .help-block {
+        display: none;
     }
 
-</table>
+    .form-group.has-error .help-block {
+        display: block;
+    }
+</style>
+<h2>Package Management</h2>
+<div ng-controller="PackageController">
+    <div ng-show="divModification">
+        <form name="appForm" novalidate>
+            <div class="form-horizontal">
+                <p>{{Operation}} Package</p>
+                <span class="alert-danger">{{errormessage}}</span>
+                <br />
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Package name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="PackageDesc" ng-model="PackageDesc" class="form-control" required placeholder="Package name" />
+                        <p class="help-block" ng-if="appForm.PackageDesc.$error.required">Package name is requied</p>
+                    </div>
+                </div>               
+                <div class="form-group">
+                    @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="PackageStatus" value="Active" ng-model="PackageStatus">
+                                Active
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="PackageStatus" value="Not Active" ng-model="PackageStatus">
+                                Not Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <input type="text" style="width:20px;" ng-model="PackageID" class="hidden" />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" ng-click="Save()" class="btn" />
+                        <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div ng-show="divGrid">
+        <input type="button" value="New Package" ng-click="add()" class="btn" />
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+
+                    <th st-sort="PackageDesc"><b>Package name</b></th>
+                    <th st-sort="PackageStatus"><b>Status</b></th>
+                    <th st-sort="CreateDate"><b>Create date</b></th>
+                    <th st-sort="UpdateDate"><b>Update date</b></th>
+                    <th><b>Operation</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td>
+                        {{row.PackageDesc}}
+                    </td>
+                    <td>
+                        {{row.PackageStatus}}
+                    </td>
+                    <td>
+                        {{row.CreateDate}}
+                    </td>
+                    <td>
+                        {{row.UpdateDate}}
+                    </td>                    
+                    <td>
+                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
+                            </i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+@*@model IEnumerable<MVCDreambox.Models.Package>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <h2>Index</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PackageDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PackageStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PackageDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PackageStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PackageID }) |
+                    @Html.ActionLink("Channel list", "ChannelList", new { id = item.PackageID, PackageDesc = item.PackageDesc })
+                </td>
+            </tr>
+        }
+
+    </table>*@

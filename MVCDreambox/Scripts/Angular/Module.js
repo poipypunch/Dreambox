@@ -1,4 +1,4 @@
-﻿var app = angular.module('MyApp', ['ngRoute', 'ngTable', 'smart-table']);
+﻿var app = angular.module('MyApp', ['ngRoute', 'smart-table']);
 
 app.config(['$routeProvider', function ($routeprovider) {
     $routeprovider.
@@ -10,8 +10,28 @@ app.config(['$routeProvider', function ($routeprovider) {
           templateurl: '/Views/Member/index.cshtml',
           controller: 'MemberController'
       }).
+        when('/MemberType', {
+            templateurl: '/Views/MemberType/index.cshtml',
+            controller: 'MemberTypeController'
+        }).
+        when('/Package', {
+            templateurl: '/Views/Package/index.cshtml',
+            controller: 'PackgeController'
+        }).
+        when('/tbUser', {
+            templateurl: '/Views/tbUser/index.cshtml',
+            controller: 'UserController'
+        }).
+        when('/Category', {
+            templateurl: '/Views/Category/index.cshtml',
+            controller: 'CategoryController'
+        }).
+        when('/Payment', {
+            templateurl: '/Views/Payment/index.cshtml',
+            controller: 'PaymentController'
+        }).
       otherwise({
-          redirectto: '/Channel'
+          redirectto: '/Home'
       });
 }]);
 //app.config(['$httpProvider', function ($httpProvider) {
