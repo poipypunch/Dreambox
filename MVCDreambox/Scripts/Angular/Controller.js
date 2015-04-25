@@ -85,7 +85,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
                         $scope.errormessage = messagefromController.data;
                     }
                 }, function () {
-                    $scope.errormessage = "Update member failed.";
+                    $scope.errormessage = "Update user failed.";
                 });
             }
             else {
@@ -99,7 +99,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
                         $scope.errormessage = messagefromController.data;
                     }
                 }, function () {
-                    $scope.errormessage = "Add member failed.";
+                    $scope.errormessage = "Add user failed.";
                 });
             }
         }
@@ -112,7 +112,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
                 GetUsersList();
                 alert(messagefromController.data);
             }, function () {
-                $scope.errormessage = "Delete member failed.";
+                $scope.errormessage = "Delete user failed.";
             });
         }
     }
@@ -318,6 +318,97 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
     }
 });
 
+//---------------------- PackageMappingController -------------------------------//
+app.controller("PackageMappingController", function ($scope, packagemapService, $filter) {
+    $scope.divMappingChannel = false;
+    $scope.divActiveChannel = false;
+    $scope.SelectItemChans = [];
+    GetActivePackageList();
+    //getMappingChannelsList();
+    //getActiveChannelsList();
+    //To Get All Records
+    function GetActivePackageList() {
+        var Data = packagemapService.getActivePackagesList();
+        Data.then(function (pack) {
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = pack.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetMappingChannelsList(PackageID) {
+        var Data = packagemapService.getMappingChannelsList(PackageID);
+        Data.then(function (pack) {
+            $scope.itemsmapByPage = 10;
+            $scope.mapCollection = pack.data;
+            $scope.displayedmapCollection = [].concat($scope.mapCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetActiveChannelsList(PackageID) {
+        var Data = packagemapService.getActiveChannelsList(PackageID);
+        Data.then(function (pack) {
+            $scope.itemschanByPage = 10;
+            $scope.chanCollection = pack.data;
+            $scope.displayedchanCollection = [].concat($scope.chanCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    $scope.selectRow = function (pack) {
+        $scope.divMappingChannel = true;
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = false;
+        $scope.SelectedPackageID = pack.PackageID;
+        GetMappingChannelsList(pack.PackageID);
+    }
+    $scope.addChannel = function () {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = true;
+        GetActiveChannelsList($scope.SelectedPackageID);
+    }
+    $scope.cancel = function () {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = false;
+    }
+    $scope.addSelect = function (chan) {
+        if ($scope.SelectItemChans.indexOf(chan.ChannelID) != -1) return;
+        $scope.SelectItemChans.push(chan.ChannelID);
+    }
+
+    $scope.add = function () {
+        if ($scope.SelectItemChans == null || $scope.SelectItemChans.length <= 0) {
+            $scope.errormessage = "Please select channel to map.";
+        } else {
+            var getMSG = packagemapService.Add($scope.SelectedPackageID, $scope.SelectItemChans);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    GetMappingChannelsList($scope.SelectedPackageID);
+                    $scope.SelectItemChans = [];
+                    $scope.divActiveChannel = false;
+                } else {
+                    alert(messagefromController.data);
+                }
+            }, function () {
+                $scope.errormessage = "Mapping package failed.";
+            });
+        }
+    }
+    $scope.delete = function (pack) {
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = packagemapService.Delete(pack.PackageID, pack.ChannelID);
+            getMSG.then(function (messagefromController) {
+                //GetChannelList();
+                GetMappingChannelsList(pack.PackageID);
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete package mapping failed.";
+            });
+        }
+    }
+});
 //---------------------- MemberTypeController -----------------------------------//
 app.controller("MemberTypeController", function ($scope, memberTypeService) {
     $scope.divModification = false;
@@ -574,6 +665,102 @@ app.controller("MemberController", function ($scope, memberService) {
         }
     }
 });
+//------------------------------- UserController ----------------------------------------------------//
+app.controller("PaymentController", function ($scope, paymentService, $filter) {
+    $scope.divGrid = true;
+    $scope.divModification = false;
+    GetPaymentsList();
+    //To Get All Records
+    function GetPaymentsList() {
+        var Data = paymentService.getPayments();
+        Data.then(function (payment) {
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = payment.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    $scope.Cancel = function () {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
+        $scope.divModification = false;
+        $scope.divGrid = true;
+    }
+
+    $scope.add = function () {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
+        $scope.PaymentName = "";
+        $scope.PaymentCost = "";
+        $scope.PaymentExpiryDate = "";
+        $scope.PaymentTotalDay = "";
+        $scope.Quantity = 1;
+        $scope.Operation = "New";
+        $scope.divModification = true;
+        $scope.divGrid = false;
+    }
+    $scope.change = function (value) {
+        alert('change');
+    }
+
+    $scope.Save = function () {
+        $scope.$broadcast('show-errors-check-validity');
+        if ($scope.appForm.$valid) {
+            var payment = {
+                PaymentName: $scope.PaymentName,
+                PaymentTotalDay: $scope.PaymentTotalDay,
+                PaymentCost: $scope.PaymentCost,
+                PaymentExpiryDate: $scope.PaymentExpiryDate,
+                Quantity: $scope.Quantity
+            };
+            var Operation = $scope.Operation;
+            var getMSG = paymentService.Add(payment);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    GetPaymentsList();
+                    $scope.divModification = false;
+                    $scope.divGrid = true;
+                } else {
+                    $scope.errormessage = messagefromController.data;
+                }
+            }, function () {
+                $scope.errormessage = "Add payment failed.";
+            });
+        }
+    }
+
+    $scope.delete = function (payment) {
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = paymentService.Delete(payment.PaymentID);
+            getMSG.then(function (messagefromController) {
+                GetPaymentsList();
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete payment failed.";
+            });
+        }
+    }
+});
+app.controller("CategoryController", function ($scope) {
+    $scope.assets = [
+         { assetId: 1, name: "parent 1", hasChildren: true },
+         { assetId: 2, name: "parent 2", hasChildren: false }
+    ];
+    $scope.selected = { name: "child 111" };
+    $scope.hierarchy = "1,11";
+    $scope.loadChildren = function (nodeId) {
+        return [
+            { assetId: parseInt(nodeId + "1"), name: "child " + nodeId + "1", hasChildren: true },
+            { assetId: parseInt(nodeId + "2"), name: "child " + nodeId + "2" }
+        ];
+    }
+    $scope.$on("nodeSelected", function (event, node) {
+        $scope.selected = node;
+        $scope.$broadcast("selectNode", node);
+    });
+});
+
 
 
 

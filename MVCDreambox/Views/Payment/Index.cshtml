@@ -1,76 +1,207 @@
-﻿@model IEnumerable<MVCDreambox.Models.Payment>
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Dreambox solution";
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentTotalDay)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentCost)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentExpiryDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentStatus)
-        </th>        
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentTotalDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentExpiryDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>           
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id=item.PaymentID }) |*@
-                @*@Html.ActionLink("Details", "Details", new { id = item.PaymentID }) |*@
-                @Html.ActionLink("Delete", "Delete", new { id = item.PaymentID })
-            </td>
-        </tr>
+<style>
+    .form-group .help-block {
+        display: none;
     }
 
-</table>
+    .form-group.has-error .help-block {
+        display: block;
+    }
+</style>
+<h2>Payment Management</h2>
+<div ng-controller="PaymentController">
+    <div ng-show="divModification">
+        <form name="appForm" novalidate>
+            <div class="form-horizontal">
+                <p>{{Operation}} Payment</p>
+                <span class=" text-danger">{{errormessage}}</span>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Payment name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="PaymentName" ng-model="PaymentName" class="form-control" required placeholder="Payment name" />
+                        <p class="help-block" ng-if="appForm.PaymentName.$error.required">Payment name is requied</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Time (day) ", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="PaymentTotalDay" ng-model="PaymentTotalDay" class="form-control" required placeholder="Total day" numbers-only />
+                        <p class="help-block" ng-if="appForm.PaymentTotalDay.$error.required">Total day is requied</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Amount", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="PaymentCost" ng-model="PaymentCost" class="form-control" required placeholder="Amount" numbers-only />
+                        <p class="help-block" ng-if="appForm.PaymentCost.$error.required">Cost is requied</p>
+                    </div>
+                </div><div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Expire date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" id="PaymentExpiryDate" name="PaymentExpiryDate" ng-model="PaymentExpiryDate" class="form-control" placeholder=" expire date"  required="true" />
+                        <p class="help-block" ng-if="appForm.PaymentExpiryDate.$error.required">Expire date is requied</p>
+                    </div>
+                </div>
+
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Quantity", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="Quantity" ng-model="Quantity" class="form-control" required placeholder="Quantity" numbers-only />
+                        <p class="help-block" ng-if="appForm.Quantity.$error.required">Quantity is requied</p>
+                    </div>
+                </div>
+                <input type="text" style="width:20px;" ng-model="PaymentID" class="hidden" />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" ng-click="Save()" class="btn" />
+                        <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div ng-show="divGrid">
+        <input type="button" value="New payment" ng-click="add()" class="btn" />
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+
+                    <th st-sort="PaymentID"><b>ID</b></th>
+                    <th st-sort="PaymentName"><b>Payment name</b></th>
+                    <th st-sort="PaymentTotalDay"><b>Total day</b></th>
+                    <th st-sort="PaymentCost"><b>Amount</b></th>
+                    <th st-sort="PaymentExpiryDate"><b>Expire date</b></th>
+                    <th st-sort="PaymentStatus"><b>Status</b></th>
+                    <th st-sort="CreateDate"><b>Create date</b></th>
+                    <th><b>Operation</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td>
+                        {{row.PaymentID}}
+                    </td>
+                    <td>
+                        {{row.PaymentName}}
+                    </td>
+                    <td>
+                        {{row.PaymentTotalDay}}
+                    </td>
+                    <td>
+                        {{row.PaymentCost}}
+                    </td>
+                    <td>
+                        {{row.PaymentExpiryDate}}
+                    </td>
+                    <td>
+                        {{row.PaymentStatus}}
+                    </td>
+                    <td>
+                        {{row.CreateDate}}
+                    </td>
+                    <td>
+                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-trash">
+                            </i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    <link href="@Url.Content("~/Content/themes/base/all.css")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#PaymentExpiryDate').datepicker();
+        });
+    </script>
+}
+
+
+@*@model IEnumerable<MVCDreambox.Models.Payment>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <h2>Index</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentTotalDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentTotalDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentExpiryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PaymentID })
+                </td>
+            </tr>
+        }
+
+    </table>*@

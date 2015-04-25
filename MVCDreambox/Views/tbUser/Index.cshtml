@@ -28,14 +28,20 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="password" name="Password" ng-model="Password" class="form-control" required placeholder="Password" />
-                        <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>
+                        <input type="password" name="Password" ng-model="Password" class="form-control" required placeholder="Password"  />
+                        <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>                       
                     </div>
                 </div>
+                @*<span style="color:red" ng-show="myform.password.$error.passwordMatch">Passwords do not match!<br /></span>
+                    <input type="password" name="password" ng-model="myform.NewPassword" required="true"
+                           password-match="myform.RetypePassword" />
+                    <input type="password" name="retypePassword" ng-model="myform.RetypePassword" required="true" />*@
+
                 <div class="form-group" ng-show="showRepassword">
                     @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="password" ng-model="RePassword" class="form-control" />
+                        <input type="password" name="Repasswrd" ng-model="RePassword" class="form-control" required password-match="Password" />
+                        <p class="help-block" ng-show="appForm.RePassword.$error.passwordMatch">Passwords do not match</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
@@ -77,7 +83,7 @@
                                 <input type="radio" name="Role" value="Admin" ng-model="Role">
                                 Admin
                             </label>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

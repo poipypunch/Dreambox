@@ -124,6 +124,58 @@ app.service("channelService", function ($http) {
 
 });
 
+app.service("packagemapService", function ($http) {
+    this.getActivePackagesList = function () {
+        return $http.get("/PackageMapping/GetActivePackageListTypes");
+    };
+    this.getMappingChannelsList = function (PackageID) {
+        return $http({
+            url: "/PackageMapping/GetMappingChannelList",
+            method: "GET",
+            params: { PackageID: PackageID }
+        });
+        //return $http.get("/PackageMapping/GetMappingChannelList/" + PackageID);
+    };
+    this.getActiveChannelsList = function (PackageID) {
+        return $http({
+            url: "/PackageMapping/GetActiveChannelList",
+            method: "GET",
+            params: { PackageID: PackageID }
+        });
+    };
+    //Delete 
+    this.Delete = function (PackageID, ChannelID) {
+        var response = $http({
+            method: "post",
+            url: "/PackageMapping/Delete",
+            params: {
+                pid: PackageID,
+                cid: ChannelID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (PackageID, Channels) {
+        //var response = $http({
+        //    method: "post",
+        //    url: "/PackageMapping/Add",
+        //    params: {
+        //        pid: PackageID,
+        //        channelids: Channels
+        //    }
+        //});
+        var response = $http({
+            method: "post",
+            url: "/PackageMapping/Add",
+            data: { pid: PackageID, channelids: Channels },
+            dataType: "json"
+        });
+        return response;
+    }
+
+});
 app.service("memberService", function ($http) {
     this.getMembers = function () {
         return $http.get("/Member/GetAllMember");
@@ -165,7 +217,7 @@ app.service("memberService", function ($http) {
 
         });
         return response;
-    }    
+    }
 });
 app.service("memberTypeService", function ($http) {
     this.GetMemberTypes = function () {
@@ -203,5 +255,34 @@ app.service("memberTypeService", function ($http) {
 
         });
         return response;
-    }    
+    }
+});
+//---------------- PaymentService --------------------------------//
+app.service("paymentService", function ($http) {
+    this.getPayments = function () {
+        return $http.get("/Payment/GetPaymentsList");
+    };
+    //Delete 
+    this.Delete = function (PaymentID) {
+        var response = $http({
+            method: "post",
+            url: "/Payment/Delete",
+            params: {
+                id: PaymentID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (payment) {
+        var response = $http({
+            method: "post",
+            url: "/Payment/Add",
+            data: JSON.stringify(payment),
+            dataType: "json"
+        });
+        return response;
+    }
+
 });

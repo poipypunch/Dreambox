@@ -1,90 +1,139 @@
-﻿@model List<MVCDreambox.Models.Category>
-@{
-    ViewBag.Title = "Category";
+﻿@{
+    ViewBag.Title = "Dreambox solution";
 }
 <style>
-    /*Here We will add some css for style our treeview*/
-    .MVCcollapse {
-        width: 15px;
-        background-image: url('../Images/ui-icons_454545_256x240.png');
-        background-repeat: no-repeat;
-        background-position: -36px -17px;
-        display: inline-block;
-        cursor: pointer;
+    /* tree */
+    .uiTree {
+        list-style-type: none;
+        margin-left: 10px;
+        padding-bottom: 5px;
     }
 
-    .MVCexpand {
-        width: 15px;
-        background-image: url('../Images/ui-icons_454545_256x240.png');
-        background-repeat: no-repeat;
-        background-position: -50px -17px;
-        display: inline-block;
-        cursor: pointer;
-    }
-
-    .MVCtreeview ul {
-        font: 14px Arial, Sans-Serif;
-        margin: 0px;
-        padding-left: 20px;
-        list-style: none;
-    }
-
-    .MVCtreeview > li > a {
-        font-weight: bold;
-    }
-
-    .MVCtreeview li {
-    }
-
-        .MVCtreeview li a {
-            padding: 4px;
-            font-size: 12px;
+        .uiTree li a.glyphicon {
             display: inline-block;
-            text-decoration: none;
-            width: auto;
+            width: 24px;
+            cursor: pointer;
+            vertical-align: text-bottom;
         }
+
+        .uiTree li .node:hover > a.addChild {
+            display: inline-block;
+        }
+
+        .uiTree li a.addChild {
+            margin-left: 10px;
+            cursor: pointer;
+            display: none;
+            vertical-align: text-bottom;
+        }
+
+        .uiTree li .node {
+            padding-bottom: 5px;
+        }
+
+        .uiTree span.nodeLabel {
+            cursor: pointer;
+        }
+
+            .uiTree span.nodeLabel.selected {
+                border: 1px solid #aaa;
+                background-color: #ddd;
+                padding: 1px 3px;
+            }
 </style>
-<h2>Simple Treeview from Database Data</h2>
-<div>
-    <table style=" width:100%">
-        <tr>
-            <td valign="top" style=" width:30%; border-right:solid 1px black; padding:10px; ">
-                <div class="MVCtreeview">
-                    @if (Model != null && Model.Count() > 0)
-                    {
-                        <ul>
-                            @Treeview.GetTreeView(Model, Model.FirstOrDefault().ParentID)
-                        </ul>
-                    }
-                </div>
-            </td>
-            <td style="padding-left:10px;"><div id="viewPlaceHolder"></div></td>
-        </tr>
-    </table>
+
+<div ng-app="MyApp" ng-controller='CategoryController'>
+    <ui-tree ng-model="assets" load-fn="loadChildren" expand-to="hierarchy" selected-id="111" attr-node-id="assetId"></ui-tree>
+    <div>selected: {{ selected.name }}</div>
 </div>
 
-@* Here We need some Jquery code for make this treeview collapsible *@
-@section Scripts{
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function () {
-            $(".MVCtreeview li>ul").css('display', 'none'); // Hide all 2-level ul
-            $(".MVCcollapsible").click(function (e) {
-                e.preventDefault();
-                $(this).toggleClass("MVCcollapse MVCexpand");
-                $(this).closest('li').children('ul').slideToggle();
-            });
-        });
-    </script>
-    <script>
-
-        function LoadPartialView(parentid) {
-            $("#viewPlaceHolder").load("/Category/PatialCreate",
-             { ParentID: parentid, viewName: "Create" });
+@*@model List<MVCDreambox.Models.Category>
+    @{
+        ViewBag.Title = "Category";
+    }
+    <style>
+        /*Here We will add some css for style our treeview*/
+        .MVCcollapse {
+            width: 15px;
+            background-image: url('../Images/ui-icons_454545_256x240.png');
+            background-repeat: no-repeat;
+            background-position: -36px -17px;
+            display: inline-block;
+            cursor: pointer;
         }
 
-    </script>
-}
+        .MVCexpand {
+            width: 15px;
+            background-image: url('../Images/ui-icons_454545_256x240.png');
+            background-repeat: no-repeat;
+            background-position: -50px -17px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .MVCtreeview ul {
+            font: 14px Arial, Sans-Serif;
+            margin: 0px;
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .MVCtreeview > li > a {
+            font-weight: bold;
+        }
+
+        .MVCtreeview li {
+        }
+
+            .MVCtreeview li a {
+                padding: 4px;
+                font-size: 12px;
+                display: inline-block;
+                text-decoration: none;
+                width: auto;
+            }
+    </style>
+    <h2>Simple Treeview from Database Data</h2>
+    <div>
+        <table style=" width:100%">
+            <tr>
+                <td valign="top" style=" width:30%; border-right:solid 1px black; padding:10px; ">
+                    <div class="MVCtreeview">
+                        @if (Model != null && Model.Count() > 0)
+                        {
+                            <ul>
+                                @Treeview.GetTreeView(Model, Model.FirstOrDefault().ParentID)
+                            </ul>
+                        }
+                    </div>
+                </td>
+                <td style="padding-left:10px;"><div id="viewPlaceHolder"></div></td>
+            </tr>
+        </table>
+    </div>
+
+    @* Here We need some Jquery code for make this treeview collapsible *@
+@*@section Scripts{
+        @Scripts.Render("~/bundles/jqueryval")
+        <script>
+            $(document).ready(function () {
+                $(".MVCtreeview li>ul").css('display', 'none'); // Hide all 2-level ul
+                $(".MVCcollapsible").click(function (e) {
+                    e.preventDefault();
+                    $(this).toggleClass("MVCcollapse MVCexpand");
+                    $(this).closest('li').children('ul').slideToggle();
+                });
+            });
+        </script>
+        <script>
+
+            function LoadPartialView(parentid) {
+                $("#viewPlaceHolder").load("/Category/PatialCreate",
+                 { ParentID: parentid, viewName: "Create" });
+            }
+
+        </script>
+    }*@
 
 @*@model IEnumerable<MVCDreambox.Models.Category>
 
@@ -149,3 +198,8 @@
     }
 
     </table>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    <link href="@Url.Content("~/Content/bootstrap-combined.min.css")" rel="stylesheet" type="text/css" />
+}

@@ -30,6 +30,10 @@ app.config(['$routeProvider', function ($routeprovider) {
             templateurl: '/Views/Payment/index.cshtml',
             controller: 'PaymentController'
         }).
+        when('/PackageMapping', {
+            templateurl: '/Views/PackageMapping/index.cshtml',
+            controller: 'PackageMappingController'
+        }).
       otherwise({
           redirectto: '/Home'
       });
