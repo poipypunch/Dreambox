@@ -190,6 +190,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\PackageMappingController.cs" />
+    <Compile Include="Controllers\PackagePermissionController.cs" />
     <Compile Include="Models\CommonConstant.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChannelController.cs" />
@@ -1133,6 +1134,7 @@
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Scripts\ng-table.min.js.map" />
     <Content Include="Views\PackageMapping\Index.cshtml" />
+    <Content Include="Views\PackagePermission\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

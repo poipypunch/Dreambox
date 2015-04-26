@@ -42,7 +42,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
                     @*@if (Session["UserID"].ToString() =="Admin")
                         {*@
                     <li>@Html.ActionLink("User", "Index", "tbUser")</li>
@@ -54,6 +54,7 @@
                     <li>@Html.ActionLink("Member", "Index", "Member")</li>
                     <li>@Html.ActionLink("Category", "Index", "Category")</li>
                     <li>@Html.ActionLink("Package Mapping", "Index", "PackageMapping")</li>
+                    <li>@Html.ActionLink("Package Permission", "Index", "PackagePermission")</li>
                 </ul>
             </div>
         </div>

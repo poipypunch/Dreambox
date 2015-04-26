@@ -126,7 +126,7 @@ app.service("channelService", function ($http) {
 
 app.service("packagemapService", function ($http) {
     this.getActivePackagesList = function () {
-        return $http.get("/PackageMapping/GetActivePackageListTypes");
+        return $http.get("/PackageMapping/GetActivePackageList");
     };
     this.getMappingChannelsList = function (PackageID) {
         return $http({
@@ -176,6 +176,52 @@ app.service("packagemapService", function ($http) {
     }
 
 });
+
+app.service("packagePerService", function ($http) {
+    this.getActiveUserList = function () {
+        return $http.get("/PackagePermission/GetActiveUserList");
+    };
+    this.getMappingPackageList = function (DealerID) {
+        return $http({
+            url: "/PackagePermission/GetMappingPackageList",
+            method: "GET",
+            params: { DealerID: DealerID }
+        });
+        //return $http.get("/PackageMapping/GetMappingChannelList/" + PackageID);
+    };
+    this.getActivePackagesList = function (DealerID) {
+        return $http({
+            url: "/PackagePermission/GetActivePackageList",
+            method: "GET",
+            params: { DealerID: DealerID }
+        });
+    };
+    //Delete 
+    this.Delete = function (DealerID, PackageID) {
+        var response = $http({
+            method: "post",
+            url: "/PackagePermission/Delete",
+            params: {
+                uid: DealerID,
+                pid: PackageID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (DealerID, packs) {
+        var response = $http({
+            method: "post",
+            url: "/PackagePermission/Add",
+            data: { uid: DealerID, packids: packs },
+            dataType: "json"
+        });
+        return response;
+    }
+
+});
+
 app.service("memberService", function ($http) {
     this.getMembers = function () {
         return $http.get("/Member/GetAllMember");

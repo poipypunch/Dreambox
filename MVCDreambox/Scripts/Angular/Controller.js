@@ -409,6 +409,95 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
         }
     }
 });
+//---------------------- PackagePermissionController -------------------------------//
+app.controller("PackagePermissionController", function ($scope, packagePerService, $filter) {
+    $scope.divMappingPackage = false;
+    $scope.divActivePackage = false;
+    $scope.SelectItemPacks = [];
+    GetActiveUserList();
+    //To Get All Records
+    function GetActiveUserList() {
+        var Data = packagePerService.getActiveUserList();
+        Data.then(function (pack) {
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = pack.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetMappingPackagesList(DealerID) {
+        var Data = packagePerService.getMappingPackageList(DealerID);
+        Data.then(function (pack) {
+            $scope.itemsmapByPage = 10;
+            $scope.mapCollection = pack.data;
+            $scope.displayedmapCollection = [].concat($scope.mapCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetActivePackagesList(DealerID) {
+        var Data = packagePerService.getActivePackagesList(DealerID);
+        Data.then(function (pack) {
+            $scope.itemspackByPage = 10;
+            $scope.packCollection = pack.data;
+            $scope.displayedpackCollection = [].concat($scope.packCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    $scope.selectRow = function (user) {
+        $scope.divMappingPackage = true;
+        $scope.SelectItemPacks = [];
+        $scope.divActivePackage = false;
+        $scope.SelectedDealerID = user.DealerID;
+        GetMappingPackagesList(user.DealerID);
+    }
+    $scope.addPackage = function () {
+        $scope.SelectItemPacks = [];
+        $scope.divActivePackage = true;
+        GetActivePackagesList($scope.SelectedDealerID);
+    }
+    $scope.cancel = function () {
+        $scope.SelectItemPacks = [];
+        $scope.divActivePackage = false;
+    }
+    $scope.addSelect = function (pack) {
+        if ($scope.SelectItemPacks.indexOf(pack.PackageID) != -1) return;
+        $scope.SelectItemPacks.push(pack.PackageID);
+    }
+
+    $scope.add = function () {
+        if ($scope.SelectItemPacks == null || $scope.SelectItemPacks.length <= 0) {
+            $scope.errormessage = "Please select package to map.";
+        } else {
+            var getMSG = packagePerService.Add($scope.SelectedDealerID, $scope.SelectItemPacks);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    GetMappingPackagesList($scope.SelectedDealerID);
+                    $scope.SelectItemPacks = [];
+                    $scope.divActivePackage = false;
+                } else {
+                    alert(messagefromController.data);
+                }
+            }, function () {
+                $scope.errormessage = "Mapping package failed.";
+            });
+        }
+    }
+    $scope.delete = function (pack) {
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = packagePerService.Delete(pack.DealerID, pack.PackageID);
+            getMSG.then(function (messagefromController) {
+                //GetChannelList();
+                GetMappingPackagesList(pack.DealerID);
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete package permission failed.";
+            });
+        }
+    }
+});
 //---------------------- MemberTypeController -----------------------------------//
 app.controller("MemberTypeController", function ($scope, memberTypeService) {
     $scope.divModification = false;

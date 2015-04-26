@@ -16,7 +16,7 @@ namespace MVCDreambox.Controllers
         {
             return View();
         }
-        public JsonResult GetActivePackageListTypes()
+        public JsonResult GetActivePackageList()
         {
             try
             {
@@ -47,19 +47,7 @@ namespace MVCDreambox.Controllers
 
                 string str = ex.Message.ToString();
             }
-            return null;
-
-            try
-            {
-                var PackageList = db.Packages.Where(m => m.PackageStatus == "Active").ToList();
-                return Json(PackageList, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-
-                string str = ex.Message.ToString();
-            }
-            return null;
+            return null;           
         }
         public JsonResult GetActiveChannelList(string PackageID)
         {
