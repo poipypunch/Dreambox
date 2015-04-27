@@ -832,22 +832,94 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
     }
 });
 app.controller("CategoryController", function ($scope) {
-    $scope.assets = [
-         { assetId: 1, name: "parent 1", hasChildren: true },
-         { assetId: 2, name: "parent 2", hasChildren: false }
+    $scope.divAdd = false;
+    $scope.selected = { title: "Desktops", id: '2' };
+    //$scope.assets = [
+    //     { assetId: 1, name: "parent 1", hasChildren: true },
+    //     { assetId: 2, name: "parent 2", hasChildren: false }
+    //];
+    //$scope.selected = { name: "child 111" };
+    //$scope.hierarchy = "1,11";
+    //$scope.loadChildren = function (nodeId) {
+    //    return [
+    //        { assetId: parseInt(nodeId + "1"), name: "child " + nodeId + "1", hasChildren: true },
+    //        { assetId: parseInt(nodeId + "2"), name: "child " + nodeId + "2" }
+    //    ];
+    //}
+    //$scope.$on("nodeSelected", function (event, node) {
+    //    $scope.selected = node;
+    //    $scope.$broadcast("selectNode", node);
+    //});
+   
+    $scope.categories = [
+  {
+      title: 'Computers',
+      id:'1',
+      categories: [
+        {
+            title: 'Laptops',
+            categories: [
+              {
+                  title: 'Ultrabooks'
+              },
+              {
+                  title: 'Macbooks'
+              }
+            ]
+        },
+
+        {
+            title: 'Desktops',
+            id:'2',
+        },
+
+        {
+            title: 'Tablets',
+            id:'3',
+            categories: [
+              {
+                  title: 'Apple',
+                  categories: [
+                          { title: 'ttt' }
+                          , { title: 'dfdfdfd' }
+                  ]
+              },
+              {
+                  title: 'Android'
+                  ,id:'4'
+              }
+            ]
+        }
+      ]
+  },
+  {
+      title: 'Printers',
+      id:'5'
+  }
     ];
-    $scope.selected = { name: "child 111" };
-    $scope.hierarchy = "1,11";
-    $scope.loadChildren = function (nodeId) {
-        return [
-            { assetId: parseInt(nodeId + "1"), name: "child " + nodeId + "1", hasChildren: true },
-            { assetId: parseInt(nodeId + "2"), name: "child " + nodeId + "2" }
-        ];
+
+    $scope.SelectNode = function (cate) {
+        alert(cate.title);
+        $scope.divModification = true;
+        $scope.selected = cate;
     }
-    $scope.$on("nodeSelected", function (event, node) {
-        $scope.selected = node;
-        $scope.$broadcast("selectNode", node);
-    });
+    $scope.add = function () {
+        $scope.divAdd = true;
+        $scope.ParentID = $scope.selected.id;
+        $scope.CategoryDesc = "";
+    }
+    $scope.edit = function () {        
+        $scope.divAdd = true;
+        $scope.ParentID = $scope.selected.id;
+        $scope.CategoryDesc = $scope.title;
+    }
+    $scope.cancel = function (cate) {
+        $scope.divAdd = false;
+    }
+    $scope.delete = function (cate) {
+        alert(cate.title);
+        $scope.selected = cate;
+    }
 });
 
 

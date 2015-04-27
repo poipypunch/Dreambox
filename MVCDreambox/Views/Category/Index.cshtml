@@ -1,50 +1,103 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
-<style>
-    /* tree */
-    .uiTree {
-        list-style-type: none;
-        margin-left: 10px;
-        padding-bottom: 5px;
-    }
+@*<style>
 
-        .uiTree li a.glyphicon {
-            display: inline-block;
-            width: 24px;
-            cursor: pointer;
-            vertical-align: text-bottom;
-        }
-
-        .uiTree li .node:hover > a.addChild {
-            display: inline-block;
-        }
-
-        .uiTree li a.addChild {
+        .uiTree {
+            list-style-type: none;
             margin-left: 10px;
-            cursor: pointer;
-            display: none;
-            vertical-align: text-bottom;
-        }
-
-        .uiTree li .node {
             padding-bottom: 5px;
         }
 
-        .uiTree span.nodeLabel {
-            cursor: pointer;
-        }
-
-            .uiTree span.nodeLabel.selected {
-                border: 1px solid #aaa;
-                background-color: #ddd;
-                padding: 1px 3px;
+            .uiTree li a.glyphicon {
+                display: inline-block;
+                width: 24px;
+                cursor: pointer;
+                vertical-align: text-bottom;
             }
-</style>
+
+            .uiTree li .node:hover > a.addChild {
+                display: inline-block;
+            }
+
+            .uiTree li a.addChild {
+                margin-left: 10px;
+                cursor: pointer;
+                display: none;
+                vertical-align: text-bottom;
+            }
+
+            .uiTree li .node {
+                padding-bottom: 5px;
+            }
+
+            .uiTree span.nodeLabel {
+                cursor: pointer;
+            }
+
+                .uiTree span.nodeLabel.selected {
+                    border: 1px solid #aaa;
+                    background-color: #ddd;
+                    padding: 1px 3px;
+                }
+    </style>*@
 
 <div ng-app="MyApp" ng-controller='CategoryController'>
-    <ui-tree ng-model="assets" load-fn="loadChildren" expand-to="hierarchy" selected-id="111" attr-node-id="assetId"></ui-tree>
-    <div>selected: {{ selected.name }}</div>
+
+    <script type="text/ng-template" id="categoryTree">
+        <div ng-click="SelectNode(category)">{{ category.title }}</div> 
+        <ul ng-if="category.categories">
+            <li ng-repeat="category in category.categories" ng-include="'categoryTree'" >
+            </li>
+        </ul>
+    </script>
+    <div>
+        <ul>
+            <li ng-repeat="category in categories" ng-include="'categoryTree'" ></li>
+        </ul>
+    </div>
+    <div ng-show="divModification">
+        <input type="button" value="New" ng-click="add()" class="btn" />
+        <input type="button" value="Edit" ng-click="add()" class="btn" />
+        <input type="button" value="Delete" ng-click="add()" class="btn" />
+        <div ng-show="divAdd">
+            <form name="appForm" novalidate>
+                <div class="form-horizontal">
+                    <p>{{Operation}} Category</p>
+                    <span class="alert-danger">{{errormessage}}</span>
+                    <div class="form-group" >
+                        @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            {{selected.title}}
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors='{showSuccess: true}'>
+                        @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="text" name="CategoryDesc" ng-model="CategoryDesc" class="form-control" required placeholder="Category name" />
+                            <p class="help-block" ng-if="appForm.CategoryDesc.$error.required">Category name is requied</p>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors='{showSuccess: true}'>
+                        @Html.Label("Image path", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="text" name="ImgPath" ng-model="ImgPath" class="form-control" required placeholder="Image path" />
+                            <p class="help-block" ng-if="appForm.ImgPath.$error.required">Image path is requied</p>
+                        </div>
+                    </div>                    
+                    <input type="text" style="width:20px;" ng-model="ParentID" class="form-control"  />
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" value="Save" ng-click="save()" class="btn" />
+                            <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*<ui-tree ng-model="assets" load-fn="loadChildren" expand-to="hierarchy" selected-id="111" attr-node-id="assetId"></ui-tree>
+        <div>selected: {{ selected.name }}</div>*@
 </div>
 
 @*@model List<MVCDreambox.Models.Category>
