@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
+using System.Web.Script.Serialization;
+using System.Collections.ObjectModel;
 
 namespace MVCDreambox.Controllers
 {
@@ -18,11 +20,43 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            List<Category> all = new List<Category>();
-            all = db.Categories.OrderBy(a => a.ParentID).ToList();
-            return View(all);
+            //List<Category> all = new List<Category>();
+            //all = db.Categories.OrderBy(a => a.ParentID).ToList();
+            return View();
         }
-       
+
+        public JsonResult GetCategoryTrees()
+        {
+
+
+            //treeViewEmployees.ItemsSource = employeesHierarchy;
+
+            //var nodes = root.Descendants().Where(node => node == SomeSpecialKey);
+            //var nodes = db.Categories.ToList();
+            //foreach (Category g in nodes)
+            //    if (g.ParentID != "0")
+            //        nodes.Single(group => group.CategoryID == g.ParentID).Subgroups.Add(g);
+
+            //var rootgroups = nodes.Where(g => g.ParentID == "0");
+
+            //JavaScriptSerializer js = new JavaScriptSerializer();
+            //Console.WriteLine(js.Serialize(rootgroups));
+            //return js.Serialize(rootgroups);
+            //var nodes = db.Categories.ToList();
+            //var flatNodes = nodes.FlattenTree(d => d.CategoryID, d => d.ParentID);
+            //var results = flatNodes.Select(
+            //    list => list
+            //        .Select((d, i) => new KeyValuePair<int, Category>(i, d))
+            //        .ToDictionary(pair => string.Format("level{0}", pair.Key + 1), pair => pair.Value.CategoryDesc))
+            //    .ToList();
+            var results = db.Categories.OrderBy(m => m.CategoryDesc).ToList();
+            return Json(results, JsonRequestBehavior.AllowGet);
+            //var json = JsonConvert.SerializeObject(new { data = results }, Formatting.Indented);
+            //Debug.WriteLine(json);           
+
+
+        }
+
         public ActionResult PatialCreate(string ParentID, string viewName)
         {
             Category model = new Category();
@@ -30,7 +64,7 @@ namespace MVCDreambox.Controllers
             viewName = "Create";
             cate = db.Categories.Find(ParentID);
             model.ParentID = ParentID;
-            ViewBag.ParentName ="Parent : "+ cate.CategoryDesc;           
+            ViewBag.ParentName = "Parent : " + cate.CategoryDesc;
             return PartialView(viewName, model);
         }
         [HttpPost]

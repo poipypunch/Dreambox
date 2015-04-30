@@ -332,3 +332,42 @@ app.service("paymentService", function ($http) {
     }
 
 });
+
+app.service("categoryService", function ($http) {
+    this.GetCategorys = function () {
+        return $http.get("/Category/GetCategoryTrees");
+    };
+    this.update = function (memtype) {
+        var response = $http({
+            method: "post",
+            url: "/Category/Update",
+            data: JSON.stringify(memtype),
+            dataType: "json"
+        });
+        return response;
+    }
+
+    //Delete 
+    this.Delete = function (categoryid) {
+        var response = $http({
+            method: "post",
+            url: "/Category/Delete",
+            params: {
+                id: categoryid
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (cate) {
+        var response = $http({
+            method: "post",
+            url: "/Category/Add",
+            data: JSON.stringify(cate),
+            dataType: "json"
+
+        });
+        return response;
+    }
+});

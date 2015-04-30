@@ -36,5 +36,6 @@ namespace MVCDreambox.Models
         }
 
         public DbSet<Category> Categories { get; set; }
+
     }
 }

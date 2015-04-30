@@ -789,9 +789,6 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
         $scope.divModification = true;
         $scope.divGrid = false;
     }
-    $scope.change = function (value) {
-        alert('change');
-    }
 
     $scope.Save = function () {
         $scope.$broadcast('show-errors-check-validity');
@@ -831,9 +828,73 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
         }
     }
 });
-app.controller("CategoryController", function ($scope) {
+app.controller("CategoryController", function ($scope, categoryService, $filter) {
     $scope.divAdd = false;
-    $scope.selected = { title: "Desktops", id: '2' };
+    GetCategoryTreeList();
+    function GetCategoryTreeList() {
+        var Data = categoryService.GetCategorys();
+        Data.then(function (pack) {
+            $scope.data = _queryTreeSort(pack);
+            $scope.categories = _makeTree($scope.data);
+        }, function () {
+            alert('get data error');
+        });
+    }
+
+    var _makeTree = function (options) {
+        var children, e, id, o, pid, temp, _i, _len, _ref;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        children = options.categories || "categories";
+        temp = {};
+        o = [];
+        _ref = options;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            e = _ref[_i];
+            e[children] = [];
+            temp[e[id]] = e;
+            if (temp[e[pid]] != null) {
+                temp[e[pid]][children].push(e);
+            } else {
+                o.push(e);
+            }
+        }
+        return o;
+    };
+
+    var _queryTreeSort = function (options) {
+        var cfi, e, i, id, o, pid, rfi, ri, thisid, _i, _j, _len, _len1, _ref, _ref1;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        ri = [];
+        rfi = {};
+        cfi = {};
+        o = [];
+        _ref = options.data;
+        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            e = _ref[i];
+            rfi[e[id]] = i;
+            if (cfi[e[pid]] == null) {
+                cfi[e[pid]] = [];
+            }
+            cfi[e[pid]].push(options.data[i][id]);
+        }
+        _ref1 = options.data;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            e = _ref1[_j];
+            if (rfi[e[pid]] == null) {
+                ri.push(e[id]);
+            }
+        }
+        while (ri.length) {
+            thisid = ri.splice(0, 1);
+            o.push(options.data[rfi[thisid]]);
+            if (cfi[thisid] != null) {
+                ri = cfi[thisid].concat(ri);
+            }
+        }
+        return o;
+    };
     //$scope.assets = [
     //     { assetId: 1, name: "parent 1", hasChildren: true },
     //     { assetId: 2, name: "parent 2", hasChildren: false }
@@ -850,56 +911,56 @@ app.controller("CategoryController", function ($scope) {
     //    $scope.selected = node;
     //    $scope.$broadcast("selectNode", node);
     //});
-   
-    $scope.categories = [
-  {
-      title: 'Computers',
-      id:'1',
-      categories: [
-        {
-            title: 'Laptops',
-            categories: [
-              {
-                  title: 'Ultrabooks'
-              },
-              {
-                  title: 'Macbooks'
-              }
-            ]
-        },
 
-        {
-            title: 'Desktops',
-            id:'2',
-        },
+    //  $scope.categories = [
+    //{
+    //    title: 'Computers',
+    //    id: '1',
+    //    categories: [
+    //      {
+    //          title: 'Laptops',
+    //          categories: [
+    //            {
+    //                title: 'Ultrabooks'
+    //            },
+    //            {
+    //                title: 'Macbooks'
+    //            }
+    //          ]
+    //      },
 
-        {
-            title: 'Tablets',
-            id:'3',
-            categories: [
-              {
-                  title: 'Apple',
-                  categories: [
-                          { title: 'ttt' }
-                          , { title: 'dfdfdfd' }
-                  ]
-              },
-              {
-                  title: 'Android'
-                  ,id:'4'
-              }
-            ]
-        }
-      ]
-  },
-  {
-      title: 'Printers',
-      id:'5'
-  }
-    ];
+    //      {
+    //          title: 'Desktops',
+    //          id: '2',
+    //      },
+
+    //      {
+    //          title: 'Tablets',
+    //          id: '3',
+    //          categories: [
+    //            {
+    //                title: 'Apple',
+    //                categories: [
+    //                        { title: 'ttt' }
+    //                        , { title: 'dfdfdfd' }
+    //                ]
+    //            },
+    //            {
+    //                title: 'Android'
+    //                , id: '4'
+    //            }
+    //          ]
+    //      }
+    //    ]
+    //},
+    //{
+    //    title: 'Printers',
+    //    id: '5'
+    //}
+    //  ];
 
     $scope.SelectNode = function (cate) {
-        alert(cate.title);
+        alert(cate.CategoryDesc);
         $scope.divModification = true;
         $scope.selected = cate;
     }
@@ -908,7 +969,7 @@ app.controller("CategoryController", function ($scope) {
         $scope.ParentID = $scope.selected.id;
         $scope.CategoryDesc = "";
     }
-    $scope.edit = function () {        
+    $scope.edit = function () {
         $scope.divAdd = true;
         $scope.ParentID = $scope.selected.id;
         $scope.CategoryDesc = $scope.title;
@@ -916,9 +977,72 @@ app.controller("CategoryController", function ($scope) {
     $scope.cancel = function (cate) {
         $scope.divAdd = false;
     }
+    $scope.Save = function () {
+        $scope.$broadcast('show-errors-check-validity');
+        if ($scope.appForm.$valid) {
+            var cate = {
+                CategoryDesc: $scope.CategoryDesc,
+                ImgPath: $scope.ImgPath,
+                ParentID: $scope.ParentID,
+            };
+            var Operation = $scope.Operation;
+
+            if (Operation == "Update") {
+                cate.CategoryID = $scope.CategoryID;
+                var getMSG = categoryService.update(cate);
+                getMSG.then(function (messagefromController) {
+                    // GetMemberTypeList();
+                    //GetMemberList();
+                    if (messagefromController.data == "Success") {
+                        alert(messagefromController.data);
+                        $scope.divAdd = false;
+                        $scope.divModification = false;
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Update category failed.";
+                });
+            }
+            else {
+                var getMSG = categoryService.Add(Member);
+                getMSG.then(function (messagefromController) {
+                    //GetMemberTypeList();
+                    //GetMemberList();
+                    if (messagefromController.data == "Success") {
+                        alert(messagefromController.data);
+                        $scope.divAdd = false;
+                        $scope.divModification = false;
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Add category failed.";
+                });
+            }
+        }
+    }
+
+    $scope.add_child = function () {
+        parent_node = $scope.selected;
+        var child_node = { 'CategoryID': '0009', 'CategoryDesc': $scope.CategoryDesc, 'ImgPath': $scope.ImgPath, 'ParentID': $scope.selected.CategoryID, 'DealerID': '0002' }
+        if (parent_node.categories)
+        { parent_node.categories.push(child_node); }
+        else {
+            parent_node.categories = child_node;
+        }
+    }
     $scope.delete = function (cate) {
-        alert(cate.title);
-        $scope.selected = cate;
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = categoryService.Delete(cate.CategoryID);
+            getMSG.then(function (messagefromController) {
+                // GetMemberTypeList();
+                //GetMemberList();
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete category failed.";
+            });
+        }
     }
 });
 

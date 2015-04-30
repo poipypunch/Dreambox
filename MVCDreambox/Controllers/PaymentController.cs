@@ -43,11 +43,11 @@ namespace MVCDreambox.Controllers
                 Payment payment;
                 if (paymentdummy != null)
                 {
-                    int NewID = GetMaxPaymentID() + 1;
+                    //int NewID = GetMaxPaymentID() + 1;
                     for (int i = 0; i < paymentdummy.Quantity; i++)
                     {
                         payment = new Payment();
-                        payment.PaymentID = String.Format("{000000000000}", NewID + i);
+                        payment.PaymentID = DateTime.Now.ToString("ssyyyymmddHHMMf"); 
                         payment.PaymentName = paymentdummy.PaymentName;
                         payment.PaymentStatus = paymentdummy.PaymentStatus;
                         payment.PaymentCost = paymentdummy.PaymentCost;

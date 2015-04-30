@@ -42,18 +42,18 @@
                 }
     </style>*@
 
-<div ng-app="MyApp" ng-controller='CategoryController'>
+<div ng-controller='CategoryController'>
 
     <script type="text/ng-template" id="categoryTree">
-        <div ng-click="SelectNode(category)">{{ category.title }}</div> 
+        <div ng-click="SelectNode(category)">{{ category.CategoryDesc }}</div> 
         <ul ng-if="category.categories">
-            <li ng-repeat="category in category.categories" ng-include="'categoryTree'" >
+            <li ng-repeat="category in category.categories" ng-include="'categoryTree'">
             </li>
         </ul>
     </script>
     <div>
         <ul>
-            <li ng-repeat="category in categories" ng-include="'categoryTree'" ></li>
+            <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
         </ul>
     </div>
     <div ng-show="divModification">
@@ -68,7 +68,7 @@
                     <div class="form-group" >
                         @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            {{selected.title}}
+                            {{selected.CategoryDesc}}
                         </div>
                     </div>
                     <div class="form-group" show-errors='{showSuccess: true}'>
@@ -88,7 +88,7 @@
                     <input type="text" style="width:20px;" ng-model="ParentID" class="form-control"  />
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <input type="button" value="Save" ng-click="save()" class="btn" />
+                            <input type="button" value="Save" ng-click="add_child()" class="btn" />
                             <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
                         </div>
                     </div>
