@@ -21,19 +21,5 @@ namespace MVCDreambox.Models
         public string DealerID { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-    }
-
-
-    public class CategoryHierarchy
-    {
-        public Category Category { get; set; }
-        public IEnumerable<CategoryHierarchy> Categorys { get; set; }
-    }
-
-    public class HierarchyNode<T> where T : class
-    {
-        public T Entity { get; set; }
-        public IEnumerable<HierarchyNode<T>> ChildNodes { get; set; }
-        public int Depth { get; set; }
-    }
+    }    
 }

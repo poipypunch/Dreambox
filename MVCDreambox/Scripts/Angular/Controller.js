@@ -960,27 +960,32 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     //  ];
 
     $scope.SelectNode = function (cate) {
-        alert(cate.CategoryDesc);
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
         $scope.divModification = true;
         $scope.selected = cate;
     }
     $scope.add = function () {
         $scope.divAdd = true;
-        $scope.ParentID = $scope.selected.id;
+        $scope.ParentID = $scope.selected.CategoryID;
         $scope.CategoryDesc = "";
     }
     $scope.edit = function () {
         $scope.divAdd = true;
-        $scope.ParentID = $scope.selected.id;
-        $scope.CategoryDesc = $scope.title;
+        $scope.ParentID = $scope.selected.CategoryID
+        $scope.CategoryDesc = $scope.selected.CategoryDesc;
+        $scope.ImgPath = $scope.selected.ImgPath;
     }
     $scope.cancel = function (cate) {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
         $scope.divAdd = false;
     }
     $scope.Save = function () {
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var cate = {
+                CategoryID:"",
                 CategoryDesc: $scope.CategoryDesc,
                 ImgPath: $scope.ImgPath,
                 ParentID: $scope.ParentID,
@@ -991,8 +996,6 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
                 cate.CategoryID = $scope.CategoryID;
                 var getMSG = categoryService.update(cate);
                 getMSG.then(function (messagefromController) {
-                    // GetMemberTypeList();
-                    //GetMemberList();
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divAdd = false;
@@ -1005,16 +1008,23 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
                 });
             }
             else {
-                var getMSG = categoryService.Add(Member);
-                getMSG.then(function (messagefromController) {
-                    //GetMemberTypeList();
-                    //GetMemberList();
-                    if (messagefromController.data == "Success") {
-                        alert(messagefromController.data);
+                var getMSG = categoryService.Add(cate);
+                getMSG.then(function (messagefromController) {                    
+                    var str = [];
+                    str = messagefromController.data.split('|');
+                    if (str[0] == "Success") {
+                        alert(str[0]);
                         $scope.divAdd = false;
                         $scope.divModification = false;
+                        parent_node = $scope.selected;
+                        cate.CategoryID = str[1];
+                        if (parent_node.categories)
+                        { parent_node.categories.push(cate); }
+                        else {
+                            parent_node.categories = cate;
+                        }
                     } else {
-                        $scope.errormessage = messagefromController.data;
+                        $scope.errormessage = str[1];
                     }
                 }, function () {
                     $scope.errormessage = "Add category failed.";
@@ -1022,22 +1032,10 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
             }
         }
     }
-
-    $scope.add_child = function () {
-        parent_node = $scope.selected;
-        var child_node = { 'CategoryID': '0009', 'CategoryDesc': $scope.CategoryDesc, 'ImgPath': $scope.ImgPath, 'ParentID': $scope.selected.CategoryID, 'DealerID': '0002' }
-        if (parent_node.categories)
-        { parent_node.categories.push(child_node); }
-        else {
-            parent_node.categories = child_node;
-        }
-    }
     $scope.delete = function (cate) {
         if (confirm('Please confirm to delete.')) {
             var getMSG = categoryService.Delete(cate.CategoryID);
             getMSG.then(function (messagefromController) {
-                // GetMemberTypeList();
-                //GetMemberList();
                 alert(messagefromController.data);
             }, function () {
                 $scope.errormessage = "Delete category failed.";

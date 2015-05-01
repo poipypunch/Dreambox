@@ -216,7 +216,6 @@
     <Compile Include="Models\PackageMapping.cs" />
     <Compile Include="Models\PackagePermission.cs" />
     <Compile Include="Models\Payment.cs" />
-    <Compile Include="Models\RecursiveJoinExtension.cs" />
     <Compile Include="Models\SysUser.cs" />
     <Compile Include="Models\tbUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
