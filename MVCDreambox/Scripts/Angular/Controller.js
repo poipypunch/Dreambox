@@ -829,6 +829,7 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
     }
 });
 app.controller("CategoryController", function ($scope, categoryService, $filter) {
+    $scope.iscollapsed = true;
     $scope.divAdd = false;
     GetCategoryTreeList();
     function GetCategoryTreeList() {
@@ -840,7 +841,9 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
             alert('get data error');
         });
     }
-
+    $scope.selectNodeHead = function (category) {
+        category.iscollapsed = !category.iscollapsed;
+    }
     var _makeTree = function (options) {
         var children, e, id, o, pid, temp, _i, _len, _ref;
         id = options.id || "CategoryID";
@@ -895,22 +898,7 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         }
         return o;
     };
-    //$scope.assets = [
-    //     { assetId: 1, name: "parent 1", hasChildren: true },
-    //     { assetId: 2, name: "parent 2", hasChildren: false }
-    //];
-    //$scope.selected = { name: "child 111" };
-    //$scope.hierarchy = "1,11";
-    //$scope.loadChildren = function (nodeId) {
-    //    return [
-    //        { assetId: parseInt(nodeId + "1"), name: "child " + nodeId + "1", hasChildren: true },
-    //        { assetId: parseInt(nodeId + "2"), name: "child " + nodeId + "2" }
-    //    ];
-    //}
-    //$scope.$on("nodeSelected", function (event, node) {
-    //    $scope.selected = node;
-    //    $scope.$broadcast("selectNode", node);
-    //});
+
 
     //  $scope.categories = [
     //{
@@ -959,22 +947,25 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     //}
     //  ];
 
-    $scope.SelectNode = function (cate) {
+    $scope.SelectNode = function (cate, parent) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = true;
-        $scope.selected = cate;
+        $scope.currentNode = cate;
+        $scope.currentParentNode = parent;
     }
     $scope.add = function () {
+        $scope.Operation = "Add";
         $scope.divAdd = true;
-        $scope.ParentID = $scope.selected.CategoryID;
+        $scope.ParentID = $scope.currentNode.CategoryID;
         $scope.CategoryDesc = "";
     }
     $scope.edit = function () {
+        $scope.Operation = "Update";
         $scope.divAdd = true;
-        $scope.ParentID = $scope.selected.CategoryID
-        $scope.CategoryDesc = $scope.selected.CategoryDesc;
-        $scope.ImgPath = $scope.selected.ImgPath;
+        $scope.ParentID = $scope.currentNode.CategoryID
+        $scope.CategoryDesc = $scope.currentNode.CategoryDesc;
+        $scope.ImgPath = $scope.currentNode.ImgPath;
     }
     $scope.cancel = function (cate) {
         $scope.errormessage = "";
@@ -985,21 +976,27 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var cate = {
-                CategoryID:"",
+                CategoryID: "",
                 CategoryDesc: $scope.CategoryDesc,
                 ImgPath: $scope.ImgPath,
                 ParentID: $scope.ParentID,
             };
             var Operation = $scope.Operation;
-
             if (Operation == "Update") {
-                cate.CategoryID = $scope.CategoryID;
+                cate.CategoryID = $scope.CategoryID;   
                 var getMSG = categoryService.update(cate);
                 getMSG.then(function (messagefromController) {
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divAdd = false;
                         $scope.divModification = false;
+                        parent_node = $scope.currentParentNode;
+                        parent_node = parent_node || $scope.categories;
+                        var index = parent_node.categories.indexOf($scope.currentNode);
+                        if (index != -1) {
+                            update_node = parent_node.categories[index];
+                            update_node.CategoryDesc = $scope.CategoryDesc;
+                        }
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -1009,19 +1006,19 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
             }
             else {
                 var getMSG = categoryService.Add(cate);
-                getMSG.then(function (messagefromController) {                    
+                getMSG.then(function (messagefromController) {
                     var str = [];
                     str = messagefromController.data.split('|');
                     if (str[0] == "Success") {
                         alert(str[0]);
                         $scope.divAdd = false;
                         $scope.divModification = false;
-                        parent_node = $scope.selected;
+                        current_node = $scope.currentNode;
                         cate.CategoryID = str[1];
-                        if (parent_node.categories)
-                        { parent_node.categories.push(cate); }
+                        if (current_node.categories)
+                        { current_node.categories.push(cate); }
                         else {
-                            parent_node.categories = cate;
+                            current_node.categories = cate;
                         }
                     } else {
                         $scope.errormessage = str[1];
@@ -1032,11 +1029,17 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
             }
         }
     }
-    $scope.delete = function (cate) {
+    $scope.delete = function () {
         if (confirm('Please confirm to delete.')) {
-            var getMSG = categoryService.Delete(cate.CategoryID);
+            var getMSG = categoryService.Delete($scope.currentNode.CategoryID);
             getMSG.then(function (messagefromController) {
                 alert(messagefromController.data);
+                parent_node = $scope.currentParentNode;
+                parent_node = parent_node || $scope.categories;
+                var index = parent_node.categories.indexOf($scope.currentNode);
+                if (index != -1) {
+                    parent_node.categories.splice(index, 1);
+                }
             }, function () {
                 $scope.errormessage = "Delete category failed.";
             });

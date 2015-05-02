@@ -1,53 +1,23 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
-@*<style>
-
-        .uiTree {
-            list-style-type: none;
-            margin-left: 10px;
-            padding-bottom: 5px;
-        }
-
-            .uiTree li a.glyphicon {
-                display: inline-block;
-                width: 24px;
-                cursor: pointer;
-                vertical-align: text-bottom;
-            }
-
-            .uiTree li .node:hover > a.addChild {
-                display: inline-block;
-            }
-
-            .uiTree li a.addChild {
-                margin-left: 10px;
-                cursor: pointer;
-                display: none;
-                vertical-align: text-bottom;
-            }
-
-            .uiTree li .node {
-                padding-bottom: 5px;
-            }
-
-            .uiTree span.nodeLabel {
-                cursor: pointer;
-            }
-
-                .uiTree span.nodeLabel.selected {
-                    border: 1px solid #aaa;
-                    background-color: #ddd;
-                    padding: 1px 3px;
-                }
-    </style>*@
+<style>
+    .blueBase {
+        background-color: #E1EDFA;
+        border-radius: 6px;
+    }
+</style>
 
 <div ng-controller='CategoryController'>
 
     <script type="text/ng-template" id="categoryTree">
-        <div ng-click="SelectNode(category)">{{ category.CategoryDesc }}</div> 
-        <ul ng-if="category.categories">
-            <li ng-repeat="category in category.categories" ng-include="'categoryTree'">
+        <label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)">-</label>
+        <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)">+</label>
+        <div ng-click="SelectNode(category,parent)" ng-class="{blueBase:category===currentNode}">
+            {{ category.CategoryDesc }}
+        </div>
+        <ul ng-if="category.categories && category.iscollapsed">
+            <li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parent=$parent.category">
             </li>
         </ul>
     </script>
@@ -58,14 +28,14 @@
     </div>
     <div ng-show="divModification">
         <input type="button" value="New" ng-click="add()" class="btn" />
-        <input type="button" value="Edit" ng-click="add()" class="btn" />
-        <input type="button" value="Delete" ng-click="add()" class="btn" />
+        <input type="button" value="Edit" ng-click="edit()" class="btn" />
+        <input type="button" value="Delete" ng-click="delete()" class="btn" />
         <div ng-show="divAdd">
             <form name="appForm" novalidate>
                 <div class="form-horizontal">
                     <p>{{Operation}} Category</p>
                     <span class="alert-danger">{{errormessage}}</span>
-                    <div class="form-group" >
+                    <div class="form-group">
                         @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             {{selected.CategoryDesc}}
@@ -84,8 +54,8 @@
                             <input type="text" name="ImgPath" ng-model="ImgPath" class="form-control" required placeholder="Image path" />
                             <p class="help-block" ng-if="appForm.ImgPath.$error.required">Image path is requied</p>
                         </div>
-                    </div>                    
-                    <input type="text" style="width:20px;" ng-model="ParentID" class="form-control"  />
+                    </div>
+                    <input type="text" style="width:20px;" ng-model="ParentID" class="form-control" />
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="button" value="Save" ng-click="Save()" class="btn" />
