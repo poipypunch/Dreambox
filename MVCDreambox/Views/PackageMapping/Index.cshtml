@@ -1,112 +1,106 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Dreambox solution";
 }
-
-<h2>Index</h2>
-<div ng-controller="PackageMappingController">
-    <table>
-        <tr>
-            <td>
-                <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
-                    <thead>
-                        <tr>
-                            <th><p>Package</p></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="row in displayedCollection">
-                            <td>
-                                {{row.PackageDesc}}
-                            </td>
-                            <td>
-                                <button type="button" ng-click="selectRow(row)" class="btn btn-sm ">
-                                    <i class="glyphicon glyphicon-edit">
-                                    </i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage"></div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </td>
-            <td>
-                <div ng-show="divActiveChannel"> 
-                    <input type="button" value="Add" ng-click="add()" class="btn" />
-                    <input type="button" value="Cancel" ng-click="cancel()" class="btn" />   
-                    @*<div>The following fruits are checked: {{SelectItemChans | json}}</div>*@                
-                    <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th><p>Channel name</p></th>
-                                <th><p>Create date</p></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="chanA in chanCollection">
-                                @*<td cs-select="chanA" ng-click='addSelect(chanA)'></td>*@
-                                <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans'> </td>
-                                <td>
-                                    {{chanA.ChannelDesc}}
-                                </td>
-                                <td>
-                                    {{chanA.CreateDate}}
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <div st-pagination="" st-items-by-page="itemschanByPage"></div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div ng-show="divMappingChannel">
-                    <input type="button" value="New channel" ng-click="addChannel()" class="btn" />
-                    <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
-                        <thead>
-                            <tr>                                
-                                <th><p>Channel name</p></th>
-                                <th><p>Create date</p></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="chan in mapCollection">
-                                <td>
-                                    {{chan.ChannelDesc}}
-                                </td>
-                                <td>
-                                    {{chan.CreateDate}}
-                                </td>
-                                <td>
-                                    <button type="button" ng-click="delete(chan)" class="btn btn-sm ">
-                                        <i class="glyphicon  glyphicon-remove">
-                                        </i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <div st-pagination="" st-items-by-page="itemsmapByPage"></div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </td>
-        </tr>
-    </table>
-
+<style>
+    .clickable {
+        cursor: pointer;
+    }
+</style>
+<h2>Mapping channel to package</h2>
+<br />
+<div ng-controller="PackageMappingController" class="row panel panel-default" style=" width:100%;padding:5px;">
+    <div class="col-xs-6 col-md-4">
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+                    <th><h3>Package</h3></th>
+                    @*<th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentPackage}" class="clickable">
+                    <td>
+                        {{row.PackageDesc}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="1" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-xs-12 col-md-8">
+        <div ng-show="divActiveChannel" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
+            <h3>Add channel to {{currentPackage.PackageDesc}}</h3>
+            <input type="button" value="Add" ng-click="add()" class="btn" />
+            <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+            <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Select</p></th>
+                        <th><p>Channel name</p></th>
+                        <th><p>Create date</p></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="chanA in chanCollection">
+                        <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans' class="clickable"> </td>
+                        <td>
+                            {{chanA.ChannelDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(chanA.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemschanByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div ng-show="divMappingChannel" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
+            <h3>Mapped channel in {{currentPackage.PackageDesc}}</h3>
+            <input type="button" value="New channel" ng-click="addChannel()" class="btn" />
+            <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Channel name</p></th>
+                        <th><p>Create date</p></th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="chan in mapCollection">
+                        <td>
+                            {{chan.ChannelDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(chan.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                        <td>
+                            <button type="button" ng-click="delete(chan)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsmapByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
 </div>

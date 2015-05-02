@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
-
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class ChannelController : Controller
@@ -18,14 +18,14 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
 
         public JsonResult GetChannelsList()
         {
             try
             {
-                var channelList = (List<Channel>)db.Channels.OrderBy(a => a.ChannelDesc).ToList();
+                var channelList = (List<Channel>)db.Channels.Where(m => m.ChannelStatus == CommonConstant.Status.Active).OrderBy(a => a.ChannelDesc).ToList();
                 return Json(channelList, JsonRequestBehavior.AllowGet);
 
             }
@@ -46,9 +46,9 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, channel.ChannelDesc))
                     {
                         channel.ChannelID = Guid.NewGuid().ToString();
-                        channel.UpdateBy = Session["UserID"].ToString();
+                        channel.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         channel.UpdateDate = DateTime.Now;
-                        channel.CreateBy = Session["UserID"].ToString();
+                        channel.CreateBy = Session[CommonConstant.SessionUserID].ToString();
                         channel.CreateDate = DateTime.Now;
                         db.Channels.Add(channel);
                         db.SaveChanges();
@@ -79,7 +79,7 @@ namespace MVCDreambox.Controllers
                         chan.ChannelPath = channel.ChannelPath;
                         chan.ChannelStatus = channel.ChannelStatus;
                         chan.UpdateDate = DateTime.Now;
-                        chan.UpdateBy = Session["UserID"].ToString();
+                        chan.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         db.Entry(chan).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";

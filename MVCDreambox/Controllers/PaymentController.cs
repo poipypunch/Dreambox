@@ -6,19 +6,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
-
+using Newtonsoft.Json;
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class PaymentController : Controller
     {
         private DreamboxContext db = new DreamboxContext();
-
         //
         // GET: /Payment/
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
 
         public JsonResult GetPaymentsList()
@@ -34,7 +34,7 @@ namespace MVCDreambox.Controllers
                 string str = ex.Message.ToString();
             }
             return null;
-        }
+        }        
 
         public string Add(PaymentDummy paymentdummy)
         {
@@ -53,10 +53,10 @@ namespace MVCDreambox.Controllers
                         payment.PaymentCost = paymentdummy.PaymentCost;
                         payment.PaymentExpiryDate = paymentdummy.PaymentExpiryDate;
                         payment.PaymentTotalDay = paymentdummy.PaymentTotalDay;
-                        payment.PaymentStatus = "New";
-                        payment.CreateBy = Session["UserID"].ToString();
+                        payment.PaymentStatus = CommonConstant.CardStatus.New;
+                        payment.CreateBy = Session[CommonConstant.SessionUserID].ToString();
                         payment.CreateDate = DateTime.Now;
-                        payment.UpdateBy = Session["UserID"].ToString();
+                        payment.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         payment.UpdateDate = DateTime.Now;
                         db.Payments.Add(payment);
                     }

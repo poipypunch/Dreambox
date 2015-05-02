@@ -11,16 +11,18 @@
     }
 </style>
 <h2>Channel Management</h2>
+<br />
 <div ng-controller="ChannelController">
     @*<a href="/permission">Permission</a><br />*@
     @*Filter: <input type="text" value="ChannelDesc" ng-model="FilterByChannelDesc" />
         <br />*@
 
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm" novalidate>
             <div class="form-horizontal">
-                <p>{{Operation}} Channel</p>
+                <h3>{{Operation}} Channel</h3>
                 <span class="alert-danger">{{errormessage}}</span>
+                <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Channel name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -38,18 +40,14 @@
                 <div class="form-group">
                     @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ChannelStatus" value="Active" ng-model="ChannelStatus">
-                                Active
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ChannelStatus" value="Not Active" ng-model="ChannelStatus">
-                                Not Active
-                            </label>
-                        </div>
+                        <label class="radio-inline">
+                            <input type="radio" name="ChannelStatus" value="Active" ng-model="ChannelStatus">
+                            Active
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ChannelStatus" value="Not Active" ng-model="ChannelStatus">
+                            Not Active
+                        </label>
                     </div>
                 </div>
                 <input type="text" style="width:20px;" ng-model="ChannelID" class="hidden" />
@@ -62,16 +60,19 @@
             </div>
         </form>
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New channel" ng-click="add()" class="btn" />
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        @if (Session["Role"].ToString() == "Dealer")
+        { <input ng-show="AddNew" type="button" value="New channel" ng-click="add()" class="btn" />}
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th></th>
+                    @*<th></th>*@
                     <th st-sort="ChannelDesc"><b>Channel name</b></th>
                     <th st-sort="ChannelPath"><b>Channel Path</b></th>
                     <th st-sort="ChannelStatus"><b>Channel Status</b></th>
-                    <th><b>Operation</b></th>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <th><b>Operation</b></th>}
                 </tr>
                 @*<tr>
                         <th>
@@ -84,7 +85,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
-                    <td cs-select="row"></td>
+                    @*<td cs-select="row"></td>*@
                     <td>
                         {{row.ChannelDesc}}
                     </td>
@@ -94,21 +95,24 @@
                     <td>
                         {{row.ChannelStatus}}
                     </td>
-                    <td>
-                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit">
-                            </i>
-                        </button>
-                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
-                            </i>
-                        </button>
-                    </td>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <td>
+                            <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                            <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    }
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" class="text-center">
+                    <td colspan="4" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage"></div>
                     </td>
                 </tr>

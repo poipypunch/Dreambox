@@ -1,4 +1,18 @@
-﻿app.service("userService", function ($http) {
+﻿app.service("loginService", function ($http) {
+    //Login 
+    this.Login = function (UserName,Password) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/CheckUser",
+            params: {
+                UserID: UserName,
+                Password:Password
+            }
+        });
+        return response;
+    }
+});
+app.service("userService", function ($http) {
     this.getUsers = function () {
         return $http.get("/tbUser/GetUsersList");
     };

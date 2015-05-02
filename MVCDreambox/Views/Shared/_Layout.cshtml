@@ -9,7 +9,6 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/angular-route.js"></script>
-    <script src="~/Scripts/angular-sanitize.js"></script>
     <script src="~/Scripts/Angular/Module.js"></script>
     <script src="~/Scripts/Angular/Service.js"></script>
     <script src="~/Scripts/Angular/Controller.js"></script>
@@ -42,19 +41,23 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
-                    @*@if (Session["UserID"].ToString() =="Admin")
-                        {*@
-                    <li>@Html.ActionLink("User", "Index", "tbUser")</li>
-                    <li>@Html.ActionLink("Payment", "Index", "Payment")</li>
-                    <li>@Html.ActionLink("Package", "Index", "Package")</li>
-                    @*}*@
-                    <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
-                    <li>@Html.ActionLink("Member Type", "Index", "MemberType")</li>
-                    <li>@Html.ActionLink("Member", "Index", "Member")</li>
-                    <li>@Html.ActionLink("Category", "Index", "Category")</li>
-                    <li>@Html.ActionLink("Package Mapping", "Index", "PackageMapping")</li>
-                    <li>@Html.ActionLink("Package Permission", "Index", "PackagePermission")</li>
+                    @if (Session["Role"] != null)
+                    {
+                        if (Session["Role"].ToString() == "Admin")
+                        {
+                            <li>@Html.ActionLink("User", "Index", "tbUser")</li>
+                            <li>@Html.ActionLink("Payment", "Index", "Payment")</li>
+                            <li>@Html.ActionLink("Package", "Index", "Package")</li>
+                            @*<li>@Html.ActionLink("Package Mapping", "Index", "PackageMapping")</li>
+                            <li>@Html.ActionLink("Package Permission", "Index", "PackagePermission")</li>*@
+                        }
+                        <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
+                        <li>@Html.ActionLink("Member Type", "Index", "MemberType")</li>
+                        <li>@Html.ActionLink("Member", "Index", "Member")</li>
+                        <li>@Html.ActionLink("Category", "Index", "Category")</li>
+                         <li>@Html.ActionLink("Logout", "Login", "tbUser")</li>
+                    }
+
                 </ul>
             </div>
         </div>
@@ -72,4 +75,3 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
-

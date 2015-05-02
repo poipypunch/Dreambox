@@ -11,12 +11,12 @@
     }
 </style>
 <h2>Member management</h2>
-<div ng-controller="MemberController">
-    <div ng-show="divModification">
+<br />
+<div ng-controller="MemberController">    
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm">
             <div class="form-horizontal">
-                <h4>{{Operation}} Member</h4>
-                <hr />
+                <h3>{{Operation}} Member</h3>
                 <span class="alert-danger">{{errormessage}}</span>
                 <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
@@ -33,19 +33,19 @@
                         <p class="help-block" ng-if="appForm.UserName.$error.required">Username is requied</p>
                     </div>
                 </div>
-                <div class="form-group" show-errors='{showSuccess: true}'>
-                    @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <input type="password" name="Password" ng-model="Password" class="form-control" required />
-                        <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>
+                @*<div class="form-group" show-errors='{showSuccess: true}'>
+                        @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="password" name="Password" ng-model="Password" class="form-control" required />
+                            <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group" ng-show="showRepassword">
-                    @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <input type="password" ng-model="RePassword" class="form-control" />
-                    </div>
-                </div>
+                    <div class="form-group" ng-show="showRepassword">
+                        @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="password" ng-model="RePassword" class="form-control" />
+                        </div>
+                    </div>*@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -83,8 +83,11 @@
         </form>
 
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New member" ng-click="add()" class="btn" />
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        @if (Session["Role"].ToString() == "Dealer")
+        {
+            <input ng-show="AddNew" type="button" value="New member" ng-click="add()" class="btn" />
+        }
         @*<div class="form-group">
                 @Html.Label("Filter:", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -98,7 +101,10 @@
                     <th st-sort="MemberName"><b>Member Name</b></th>
                     <th st-sort="MemberTypeDesc"><b>Member type</b></th>
                     <th st-sort="RealName"><b>Dealer name</b></th>
-                    <td><b>Operation</b></td>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <td><b>Operation</b></td>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -114,16 +120,19 @@
                         {{row.MemberTypeDesc}}
                     </td>
                     <td>{{row.RealName}}</td>
-                    <td>
-                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit">
-                            </i>
-                        </button>
-                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
-                            </i>
-                        </button>
-                    </td>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <td>
+                            <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                            <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    }
                 </tr>
             </tbody>
             <tfoot>
@@ -136,110 +145,3 @@
         </table>
     </div>
 </div>
-@*@model IEnumerable<MVCDreambox.Models.Member>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    @using (Html.BeginForm())
-    {
-        <p>
-            Select Department: @Html.DropDownList("SelectedDepartment", "All")
-            <input type="submit" value="Filter" />
-        </p>
-    }
-
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MemberName)
-            </th>
-            <th>
-                Member type
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.memberType.MemberTypeDesc)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.MemberID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.MemberID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.MemberID })
-                </td>
-            </tr>
-        }
-
-    </table>*@
-@*<table>
-        <tr>
-
-            <th>
-                @Html.DisplayName("User name")
-            </th>
-            <th>
-                @Html.DisplayName("Member name")
-            </th>
-            <th>
-                @Html.DisplayName("Email")
-            </th>
-            <th>
-                @Html.DisplayName("Phone")
-            </th>
-            <th>
-                @Html.DisplayName("Expiry date")
-            </th>
-            <th>
-                @Html.DisplayName("Member type")
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.member.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.member.MemberName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.member.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.member.Phone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.member.ExpiryDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.membertype.MemberTypeDesc)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.member.MemberID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.member.MemberID })
-                </td>
-            </tr>
-        }
-
-    </table>*@

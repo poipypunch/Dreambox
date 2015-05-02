@@ -7,9 +7,9 @@
         border-radius: 6px;
     }
 </style>
-
-<div ng-controller='CategoryController'>
-
+<h2>Category Management</h2>
+<br />
+<div ng-controller='CategoryController' class="row panel panel-default" style=" width:100%;padding:5px;">
     <script type="text/ng-template" id="categoryTree">
         <label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)">-</label>
         <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)">+</label>
@@ -21,19 +21,19 @@
             </li>
         </ul>
     </script>
-    <div>
+    <div class="col-xs-6 col-md-4">
         <ul>
             <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
         </ul>
     </div>
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default" >
         <input type="button" value="New" ng-click="add()" class="btn" />
         <input type="button" value="Edit" ng-click="edit()" class="btn" />
         <input type="button" value="Delete" ng-click="delete()" class="btn" />
         <div ng-show="divAdd">
             <form name="appForm" novalidate>
                 <div class="form-horizontal">
-                    <p>{{Operation}} Category</p>
+                    <h3>{{Operation}} Category</h3>
                     <span class="alert-danger">{{errormessage}}</span>
                     <div class="form-group">
                         @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -66,10 +66,7 @@
             </form>
         </div>
     </div>
-    @*<ui-tree ng-model="assets" load-fn="loadChildren" expand-to="hierarchy" selected-id="111" attr-node-id="assetId"></ui-tree>
-        <div>selected: {{ selected.name }}</div>*@
 </div>
-
 @*@model List<MVCDreambox.Models.Category>
     @{
         ViewBag.Title = "Category";

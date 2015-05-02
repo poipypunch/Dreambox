@@ -11,11 +11,12 @@
     }
 </style>
 <h2>Package Management</h2>
+<br />
 <div ng-controller="PackageController">
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm" novalidate>
             <div class="form-horizontal">
-                <p>{{Operation}} Package</p>
+                <h3>{{Operation}} Package</h3>
                 <span class="alert-danger">{{errormessage}}</span>
                 <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
@@ -24,22 +25,20 @@
                         <input type="text" name="PackageDesc" ng-model="PackageDesc" class="form-control" required placeholder="Package name" />
                         <p class="help-block" ng-if="appForm.PackageDesc.$error.required">Package name is requied</p>
                     </div>
-                </div>               
+                </div>
                 <div class="form-group">
                     @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="PackageStatus" value="Active" ng-model="PackageStatus">
-                                Active
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="PackageStatus" value="Not Active" ng-model="PackageStatus">
-                                Not Active
-                            </label>
-                        </div>
+
+                        <label class="radio-inline">
+                            <input type="radio" name="PackageStatus" value="Active" ng-model="PackageStatus">
+                            Active
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="PackageStatus" value="Not Active" ng-model="PackageStatus">
+                            Not Active
+                        </label>
+
                     </div>
                 </div>
                 <input type="text" style="width:20px;" ng-model="PackageID" class="hidden" />
@@ -52,8 +51,9 @@
             </div>
         </form>
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New Package" ng-click="add()" class="btn" />
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        <input ng-show="AddNew" type="button" value="New Package" ng-click="add()" class="btn btn-default" />
+        <a class="btn btn-default" role="button" href="/PackageMapping/Index">Channel Mapping</a>
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
@@ -74,18 +74,18 @@
                         {{row.PackageStatus}}
                     </td>
                     <td>
-                        {{row.CreateDate}}
+                        {{ToJavaScriptDateToString(row.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
-                        {{row.UpdateDate}}
-                    </td>                    
+                        {{ToJavaScriptDateToString(row.UpdateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">
                             </i>
                         </button>
                         <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
+                            <i class="glyphicon glyphicon-trash">
                             </i>
                         </button>
                     </td>
@@ -101,55 +101,4 @@
         </table>
     </div>
 </div>
-@*@model IEnumerable<MVCDreambox.Models.Package>
 
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PackageDesc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PackageStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateDate)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PackageDesc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PackageStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.PackageID }) |
-                    @Html.ActionLink("Channel list", "ChannelList", new { id = item.PackageID, PackageDesc = item.PackageDesc })
-                </td>
-            </tr>
-        }
-
-    </table>*@

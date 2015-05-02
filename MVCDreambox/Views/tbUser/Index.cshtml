@@ -11,11 +11,12 @@
     }
 </style>
 <h2>User Management</h2>
+<br />
 <div ng-controller="UserController">
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm" novalidate>
             <div class="form-horizontal">
-                <p>{{Operation}} User</p>
+                <h3>{{Operation}} User</h3>
                 <span class="alert-danger">{{errormessage}}</span>
                 <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
@@ -25,25 +26,25 @@
                         <p class="help-block" ng-if="appForm.UserName.$error.required">UserName is requied</p>
                     </div>
                 </div>
-                <div class="form-group" show-errors='{showSuccess: true}'>
-                    @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <input type="password" name="Password" ng-model="Password" class="form-control" required placeholder="Password"  />
-                        <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>                       
-                    </div>
-                </div>
+                @*<div class="form-group" show-errors='{showSuccess: true}'>
+                        @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="password" name="Password" ng-model="Password" class="form-control" required placeholder="Password"  />
+                            <p class="help-block" ng-if="appForm.Password.$error.required">Password is requied</p>
+                        </div>
+                    </div>*@
                 @*<span style="color:red" ng-show="myform.password.$error.passwordMatch">Passwords do not match!<br /></span>
                     <input type="password" name="password" ng-model="myform.NewPassword" required="true"
                            password-match="myform.RetypePassword" />
                     <input type="password" name="retypePassword" ng-model="myform.RetypePassword" required="true" />*@
 
-                <div class="form-group" ng-show="showRepassword">
-                    @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <input type="password" name="Repasswrd" ng-model="RePassword" class="form-control" required password-match="Password" />
-                        <p class="help-block" ng-show="appForm.RePassword.$error.passwordMatch">Passwords do not match</p>
-                    </div>
-                </div>
+                @*<div class="form-group" ng-show="showRepassword">
+                        @Html.Label("Confirm password", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="password" name="Repasswrd" ng-model="RePassword" class="form-control" required password-match="Password" />
+                            <p class="help-block" ng-show="appForm.RePassword.$error.passwordMatch">Passwords do not match</p>
+                        </div>
+                    </div>*@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Real name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -72,35 +73,27 @@
                 <div class="form-group">
                     @Html.Label("Role", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="Role" value="Dealer" ng-model="Role">
-                                Dealer
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="Role" value="Admin" ng-model="Role">
-                                Admin
-                            </label>
-                        </div>
+                        <label class="radio-inline">
+                            <input type="radio" name="Role" value="Dealer" ng-model="Role">
+                            Dealer
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="Role" value="Admin" ng-model="Role">
+                            Admin
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="Status" value="Active" ng-model="Status">
-                                Active
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="Status" value="Not Active" ng-model="Status">
-                                Not Active
-                            </label>
-                        </div>
+                        <label class="radio-inline">
+                            <input type="radio" name="Status" value="Active" ng-model="Status">
+                            Active
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="Status" value="Not Active" ng-model="Status">
+                            Not Active
+                        </label>
                     </div>
                 </div>
                 <input type="text" style="width:20px;" ng-model="DealerID" class="hidden" />
@@ -113,14 +106,14 @@
             </div>
         </form>
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New user" ng-click="add()" class="btn" />
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        <input ng-show="AddNew" type="button" value="New user" ng-click="add()" class="btn btn-default" />
+        <a class="btn btn-default" role="button" href="/PackagePermission/Index">Package Mapping</a>
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
 
                     <th st-sort="UserName"><b>Username</b></th>
-                    <th st-sort="Password"><b>Password</b></th>
                     <th st-sort="RealName"><b>Real name</b></th>
                     <th st-sort="Phone"><b>Phone</b></th>
                     <th st-sort="Email"><b>E-mail</b></th>
@@ -135,9 +128,7 @@
                     <td>
                         {{row.UserName}}
                     </td>
-                    <td>
-                        {{row.Password}}
-                    </td>
+
                     <td>
                         {{row.RealName}}
                     </td>
@@ -159,7 +150,7 @@
                             </i>
                         </button>
                         <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
+                            <i class="glyphicon glyphicon-trash">
                             </i>
                         </button>
                     </td>
@@ -175,78 +166,4 @@
         </table>
     </div>
 </div>
-@*@model IEnumerable<MVCDreambox.Models.tbUser>
 
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RealName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RealName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.DealerID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.DealerID })
-                </td>
-            </tr>
-        }
-
-    </table>*@

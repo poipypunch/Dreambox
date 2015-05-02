@@ -11,12 +11,14 @@
     }
 </style>
 <h2>Payment Management</h2>
+<br />
 <div ng-controller="PaymentController">
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm" novalidate>
             <div class="form-horizontal">
-                <p>{{Operation}} Payment</p>
+                <h3>{{Operation}} Payment</h3>
                 <span class=" text-danger">{{errormessage}}</span>
+                <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Payment name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -40,7 +42,7 @@
                 </div><div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Expire date", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" id="PaymentExpiryDate" name="PaymentExpiryDate" ng-model="PaymentExpiryDate" class="form-control" placeholder=" expire date"  required="true" />
+                        <input type="text" id="PaymentExpiryDate" name="PaymentExpiryDate" ng-model="PaymentExpiryDate" class="form-control" placeholder=" expire date" required="true" />
                         <p class="help-block" ng-if="appForm.PaymentExpiryDate.$error.required">Expire date is requied</p>
                     </div>
                 </div>
@@ -62,8 +64,8 @@
             </div>
         </form>
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New payment" ng-click="add()" class="btn" />
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        <input ng-show="AddNew" type="button" value="New payment" ng-click="add()" class="btn" />
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
@@ -93,13 +95,13 @@
                         {{row.PaymentCost}}
                     </td>
                     <td>
-                        {{row.PaymentExpiryDate}}
+                        {{ToJavaScriptDateToString(row.PaymentExpiryDate) | date:'yyyy-MM-dd'}}
                     </td>
                     <td>
                         {{row.PaymentStatus}}
                     </td>
                     <td>
-                        {{row.CreateDate}}
+                        {{ToJavaScriptDateToString(row.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
                         <button type="button" ng-click="delete(row)" class="btn btn-sm ">

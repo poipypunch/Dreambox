@@ -9,7 +9,6 @@ namespace MVCDreambox.Models
 {
     public class DreamboxContext : DbContext
     {
-        public DbSet<SysUser> SysUsers { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Channel> Channels { get; set; }

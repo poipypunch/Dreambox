@@ -8,7 +8,7 @@ using System.Web.Mvc;
 using MVCDreambox.Models;
 using System.Web.Script.Serialization;
 using System.Collections.ObjectModel;
-
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class CategoryController : Controller
@@ -20,7 +20,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
 
         public JsonResult GetCategoryTrees()
@@ -39,7 +39,7 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, category.CategoryDesc))
                     {
                         category.CategoryID = Guid.NewGuid().ToString();
-                        category.DealerID = Session["UserID"].ToString();
+                        category.DealerID = Session[CommonConstant.SessionUserID].ToString();
                         category.UpdateDate = DateTime.Now;
                         category.CreateDate = DateTime.Now;
                         db.Categories.Add(category);
@@ -117,7 +117,7 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                string strUserID = Session["UserID"].ToString();
+                string strUserID = Session[CommonConstant.SessionUserID].ToString();
                 Category cate;
                 cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID).First();
                 return cate != null ? true : false;

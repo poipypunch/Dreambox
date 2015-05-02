@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
 using System.Data.Objects.SqlClient;
-
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class tbUserController : Controller
@@ -16,6 +16,11 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+        }
+        public ActionResult Login()
+        {
+            Session.Clear();
             return View();
         }
 
@@ -25,7 +30,6 @@ namespace MVCDreambox.Controllers
             {
                 var userList = (List<tbUser>)db.tbUsers.OrderBy(a => a.UserName).ToList();
                 return Json(userList, JsonRequestBehavior.AllowGet);
-
             }
             catch (Exception ex)
             {
@@ -48,6 +52,8 @@ namespace MVCDreambox.Controllers
                         tbuser.UpdateDate = DateTime.Now;
                         tbuser.CreateBy = Session["UserID"].ToString();
                         tbuser.CreateDate = DateTime.Now;
+                        RSACrypto crypto = new RSACrypto();
+                        tbuser.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
                         db.tbUsers.Add(tbuser);
                         db.SaveChanges();
                         return "Success";
@@ -74,7 +80,6 @@ namespace MVCDreambox.Controllers
                     {
                         var user = db.tbUsers.Find(tbuser.DealerID);
                         user.UserName = tbuser.UserName;
-                        user.Password = tbuser.Password;
                         user.RealName = tbuser.RealName;
                         user.Email = tbuser.RealName;
                         user.Phone = tbuser.Phone;
@@ -115,6 +120,41 @@ namespace MVCDreambox.Controllers
 
             }
             return "Delete failed.";
+        }
+
+        public string CheckUser(string UserID, string Password)
+        {
+            try
+            {
+                if (UserID != string.Empty && Password != string.Empty)
+                {
+
+                    tbUser tbuser = db.tbUsers.Where(m => m.UserName == UserID && m.Status==CommonConstant.Status.Active).FirstOrDefault();
+                    if (tbuser != null)
+                    {
+                        RSACrypto crypto = new RSACrypto();
+                        if (Password == crypto.Decrypt(tbuser.Password))
+                        {
+                            Session[CommonConstant.SessionUserID] = tbuser.DealerID;
+                            Session[CommonConstant.SessionRole] = tbuser.Role;
+                            Session["RealName"] = tbuser.RealName;
+                            return "Success";
+                        }
+                        else {
+                            return "Password is incorrect.";
+                        }                        
+                    }
+                    else
+                    {
+                        return "This username is not exist.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Login failed.";
+            }
+            return "Login failed.";
         }
         //
         // GET: /SysUser/

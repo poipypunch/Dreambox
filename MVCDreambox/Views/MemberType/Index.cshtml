@@ -11,14 +11,14 @@
     }
 </style>
 <h2>Member type Management</h2>
+<br />
 <div ng-controller="MemberTypeController">
-    <div ng-show="divModification">
+    <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
         <form name="appForm">
-            @*<p ng-model="mahsa"> ID of selected MemberType is : {{MemberTypeID}} </p>*@
             <div class="form-horizontal">
-                <h4>{{Operation}} Member type</h4>
-                <hr />
+                <h3>{{Operation}} Member type</h3>
                 <span class="alert-danger">{{errormessage}}</span>
+                <br />
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member type name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -29,7 +29,7 @@
                 <input type="text" style="width:20px;" ng-model="MemberTypeID" class="hidden" />
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="button" value="Save" ng-click="Save()" class="btn btn-default" />
+                        <input type="button" value="Save" ng-click="Save()" class="btn" />
                         <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
                     </div>
                 </div>
@@ -37,8 +37,12 @@
         </form>
 
     </div>
-    <div ng-show="divGrid">
-        <input type="button" value="New member type" ng-click="add()" class="btn" />       
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        @if (Session["Role"].ToString() == "Dealer")
+        {
+            <input ng-show="AddNew" type="button" value="New member type" ng-click="add()" class="btn" />
+        }
+        <a class="btn btn-default" role="button" href="/MemberTypeMapping/Index">Category Mapping</a>
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
@@ -46,10 +50,13 @@
                     <th st-sort="RealName"><b>Dealer name</b></th>
                     <th st-sort="CreateDate"><b>Create date</b></th>
                     <th st-sort="UpdateDate"><b>Update date</b></th>
-                    <td><b>Operation</b></td>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <td><b>Operation</b></td>
+                    }
                 </tr>
             </thead>
-            <tbody>                
+            <tbody>
                 <tr ng-repeat="row in displayedCollection">
                     <td>
                         {{row.MemberTypeDesc}}
@@ -58,21 +65,24 @@
                         {{row.RealName}}
                     </td>
                     <td>
-                        {{row.CreateDate | date: 'MMM-dd-yyyy'}}
+                        {{ToJavaScriptDateToString(row.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
-                        {{row.UpdateDate | date: 'MMM-dd-yyyy'}}
-                    </td>                    
-                    <td>
-                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit">
-                            </i>
-                        </button>
-                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                            <i class="glyphicon glyphicon-edit glyphicon-remove-circle">
-                            </i>
-                        </button>
+                        {{ToJavaScriptDateToString(row.UpdateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
+                    @if (Session["Role"].ToString() == "Dealer")
+                    {
+                        <td>
+                            <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                            <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    }
                 </tr>
             </tbody>
             <tfoot>
@@ -85,54 +95,3 @@
         </table>
     </div>
 </div>
-@*@model IEnumerable<MVCDreambox.Models.MemberType>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MemberTypeDesc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DealerID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateDate)
-            </th>
-            <th></th>
-        </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberTypeDesc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DealerID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.MemberTypeID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.MemberTypeID })
-            </td>
-        </tr>
-    }
-
-    </table>*@

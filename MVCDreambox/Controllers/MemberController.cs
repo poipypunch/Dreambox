@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
 using System.Net;
-
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class MemberController : Controller
@@ -23,17 +23,19 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
 
         public JsonResult GetAllMember()
         {
             try
             {
+                string strUserID = Session[CommonConstant.SessionUserID].ToString();
                 var memberlist = (from mem in db.Members.ToList()
                                   join memtype in db.MemberTypes on mem.MemberTypeID equals memtype.MemberTypeID
                                   join tbuser in db.tbUsers on mem.DealerID equals tbuser.DealerID
-                                  select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeDesc,tbuser.RealName }).ToList();
+                                  where mem.DealerID == strUserID
+                                  select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeDesc, tbuser.RealName }).ToList();
                 return Json(memberlist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -66,11 +68,13 @@ namespace MVCDreambox.Controllers
                 {
                     if (!IsDuplicate(string.Empty, member.UserName))
                     {
+                        RSACrypto crypto = new RSACrypto();
                         member.MemberID = Guid.NewGuid().ToString();
-                        member.DealerID = Session["UserID"].ToString();
-                        member.UpdateBy = Session["UserID"].ToString();
+                        member.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
+                        member.DealerID = Session[CommonConstant.SessionUserID].ToString();
+                        member.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         member.UpdateDate = DateTime.Now;
-                        member.CreateBy = Session["UserID"].ToString();
+                        member.CreateBy = Session[CommonConstant.SessionUserID].ToString();
                         member.CreateDate = DateTime.Now;
                         db.Members.Add(member);
                         db.SaveChanges();
@@ -100,11 +104,11 @@ namespace MVCDreambox.Controllers
                         mem.UserName = member.UserName;
                         mem.MemberName = member.MemberName;
                         mem.MemberTypeID = member.MemberTypeID;
-                        mem.Password = member.Password;
+                        //mem.Password = member.Password;
                         mem.Email = member.Email;
                         mem.Address = member.Address;
-                        mem.Phone = member.Phone;                        
-                        mem.UpdateBy = Session["UserID"].ToString();
+                        mem.Phone = member.Phone;
+                        mem.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         mem.UpdateDate = DateTime.Now;
                         db.Entry(mem).State = EntityState.Modified;
                         db.SaveChanges();
@@ -140,7 +144,7 @@ namespace MVCDreambox.Controllers
 
             }
             return "Delete failed";
-        }       
+        }
 
         private bool IsDuplicate(string id, string strUserName)
         {

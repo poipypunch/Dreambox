@@ -2,6 +2,10 @@
 
 app.config(['$routeProvider', function ($routeprovider) {
     $routeprovider.
+        when('/Home', {
+            templateurl: '/Views/Home/index.cshtml',
+            controller: 'HomeController'
+        }).
       when('/Channel', {
           templateurl: '/Views/Channel/index.cshtml',
           controller: 'ChannelController'

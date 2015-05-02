@@ -182,6 +182,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Code\RSACrypto.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\PackageMappingController.cs" />
     <Compile Include="Controllers\PackagePermissionController.cs" />
-    <Compile Include="Models\CommonConstant.cs" />
+    <Compile Include="App_Code\CommonConstant.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChannelController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
@@ -216,10 +217,8 @@
     <Compile Include="Models\PackageMapping.cs" />
     <Compile Include="Models\PackagePermission.cs" />
     <Compile Include="Models\Payment.cs" />
-    <Compile Include="Models\SysUser.cs" />
     <Compile Include="Models\tbUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\MappingChannelToPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-combined.min.css" />
@@ -284,7 +283,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
-    <Content Include="App_Code\Treeview.cshtml" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\ng-table.less" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
@@ -1109,6 +1107,7 @@
     <Content Include="Scripts\ng-table.min.js.map" />
     <Content Include="Views\PackageMapping\Index.cshtml" />
     <Content Include="Views\PackagePermission\Index.cshtml" />
+    <Content Include="Views\tbUser\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class PackageMappingController : Controller
@@ -14,13 +15,13 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
         public JsonResult GetActivePackageList()
         {
             try
             {
-                var PackageList = db.Packages.Where(m => m.PackageStatus == "Active").ToList();
+                var PackageList = db.Packages.Where(m => m.PackageStatus == CommonConstant.Status.Active).ToList();
                 return Json(PackageList, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -54,7 +55,7 @@ namespace MVCDreambox.Controllers
             try
             {
                 var channels = (from s in db.Channels
-                                where s.ChannelStatus == "Active" && !db.PackageMappings.Any(p => (p.ChannelID == s.ChannelID) && (p.PackageID == PackageID))
+                                where s.ChannelStatus == CommonConstant.Status.Active && !db.PackageMappings.Any(p => (p.ChannelID == s.ChannelID) && (p.PackageID == PackageID))
                                 select s).ToList();
                 // Package objpackage = new Package();
 
@@ -99,8 +100,8 @@ namespace MVCDreambox.Controllers
                         pack = new PackageMapping();
                         pack.PackageID = pid;
                         pack.ChannelID = channelids[i];
-                        pack.CreateBy = Session["UserID"].ToString();
-                        pack.UpdateBy = Session["UserID"].ToString();
+                        pack.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        pack.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         pack.CreateDate = DateTime.Now;
                         pack.UpdateDate = DateTime.Now;
                         db.PackageMappings.Add(pack);

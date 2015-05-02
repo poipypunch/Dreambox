@@ -1,7 +1,36 @@
-﻿//------------------------------- UserController ----------------------------------------------------//
+﻿//------------------------------- LoginController ----------------------------------------------------//
+app.controller("LoginController", function ($scope, loginService, $location) {
+    $scope.$broadcast('show-errors-reset');
+    $scope.errormessage = "";
+    $scope.UserName = "";
+    $scope.Password = "";
+    $scope.Login = function () {
+        $scope.$broadcast('show-errors-check-validity');
+        if ($scope.appForm.$valid) {
+            var getMSG = loginService.Login($scope.UserName, $scope.Password);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    window.location = "/Home/Index";
+                } else {
+                    $scope.errormessage = messagefromController.data;
+                }
+            }, function () {
+                $scope.errormessage = "Login failed.";
+            });
+        }
+    }
+    $scope.Cancel = function () {
+        $scope.$broadcast('show-errors-check-validity');
+        $scope.errormessage = "";
+        $scope.UserName = "";
+        $scope.Password = "";
+    }
+});
+
+//------------------------------- UserController ----------------------------------------------------//
 app.controller("UserController", function ($scope, userService, $filter) {
     $scope.divModification = false;
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     GetUsersList();
     //To Get All Records
     function GetUsersList() {
@@ -18,7 +47,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.errormessage = "";
         $scope.DealerID = tbuser.DealerID;
         $scope.UserName = tbuser.UserName;
-        $scope.Password = tbuser.Password;
+        //$scope.Password = tbuser.Password;
         $scope.RealName = tbuser.RealName;
         $scope.Email = tbuser.Email;
         $scope.Phone = tbuser.Phone;
@@ -27,24 +56,24 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.Status = tbuser.Status;
         $scope.Operation = "Update";
         $scope.divModification = true;
-        $scope.showRepassword = false;
-        $scope.divGrid = false;
+        //$scope.showRepassword = false;
+        $scope.AddNew = false;
     }
 
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.showRepassword = false;
-        $scope.divGrid = true;
+        //$scope.showRepassword = false;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
-        $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
         $scope.DealerID = "";
         $scope.UserName = "";
-        $scope.Password = "";
+        //$scope.Password = "";
         $scope.RealName = "";
         $scope.Email = "";
         $scope.Phone = "";
@@ -53,8 +82,8 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.Status = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
-        $scope.showRepassword = true;
-        $scope.divGrid = false;
+        //$scope.showRepassword = true;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -63,7 +92,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
             var tbuser = {
                 DealerID: $scope.DealerID,
                 UserName: $scope.UserName,
-                Password: $scope.Password,
+                //Password: $scope.Password,
                 RealName: $scope.RealName,
                 Email: $scope.Email,
                 Phone: $scope.Phone,
@@ -80,7 +109,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetUsersList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -94,7 +123,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetUsersList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -106,6 +135,8 @@ app.controller("UserController", function ($scope, userService, $filter) {
     }
 
     $scope.delete = function (tbuser) {
+        $scope.divModification = false;
+        $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
             var getMSG = userService.Delete(tbuser.DealerID);
             getMSG.then(function (messagefromController) {
@@ -118,10 +149,12 @@ app.controller("UserController", function ($scope, userService, $filter) {
     }
 });
 
+
+
 //----------------------- Package ------------------------------------------------//
 app.controller("PackageController", function ($scope, packageService, $filter) {
     $scope.divModification = false;
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     GetPackagesList();
     //To Get All Records
     function GetPackagesList() {
@@ -134,6 +167,16 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
             alert('get data error');
         });
     }
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.edit = function (Package) {
         $scope.errormessage = "";
         $scope.PackageID = Package.PackageID;
@@ -141,14 +184,14 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
         $scope.PackageStatus = Package.PackageStatus;
         $scope.Operation = "Update";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.divGrid = true;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
@@ -159,7 +202,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
         $scope.PackageStatus = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -179,7 +222,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetPackagesList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -193,7 +236,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetPackagesList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -205,6 +248,8 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
     }
 
     $scope.delete = function (Package) {
+        $scope.divModification = false;
+        $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
             var getMSG = packageService.Delete(Package.PackageID);
             getMSG.then(function (messagefromController) {
@@ -220,7 +265,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
 //----------------------- ChannelController -----------------------------------------//
 app.controller("ChannelController", function ($scope, channelService, $filter) {
     $scope.divModification = false;
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     GetChannelList();
     //To Get All Records
     function GetChannelList() {
@@ -233,6 +278,16 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
             alert('get data error');
         });
     }
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.edit = function (channel) {
         $scope.errormessage = "";
         $scope.ChannelID = channel.ChannelID;
@@ -241,14 +296,14 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
         $scope.ChannelStatus = channel.ChannelStatus;
         $scope.Operation = "Update";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.divGrid = true;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
@@ -260,7 +315,7 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
         $scope.ChannelStatus = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -280,7 +335,7 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetChannelList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -294,7 +349,7 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
                     if (messagefromController.data == "Success") {
                         GetChannelList();
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -306,6 +361,8 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
     }
 
     $scope.delete = function (channel) {
+        $scope.divModification = false;
+        $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
             var getMSG = channelService.Delete(channel.ChannelID);
             getMSG.then(function (messagefromController) {
@@ -357,17 +414,27 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
             alert('get data error');
         });
     }
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.selectRow = function (pack) {
         $scope.divMappingChannel = true;
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
-        $scope.SelectedPackageID = pack.PackageID;
-        GetMappingChannelsList(pack.PackageID);
+        $scope.currentPackage = pack;
+        GetMappingChannelsList($scope.currentPackage.PackageID);
     }
     $scope.addChannel = function () {
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = true;
-        GetActiveChannelsList($scope.SelectedPackageID);
+        GetActiveChannelsList($scope.currentPackage.PackageID);
     }
     $scope.cancel = function () {
         $scope.SelectItemChans = [];
@@ -382,10 +449,10 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
         if ($scope.SelectItemChans == null || $scope.SelectItemChans.length <= 0) {
             $scope.errormessage = "Please select channel to map.";
         } else {
-            var getMSG = packagemapService.Add($scope.SelectedPackageID, $scope.SelectItemChans);
+            var getMSG = packagemapService.Add($scope.currentPackage.PackageID, $scope.SelectItemChans);
             getMSG.then(function (messagefromController) {
                 if (messagefromController.data == "Success") {
-                    GetMappingChannelsList($scope.SelectedPackageID);
+                    GetMappingChannelsList($scope.currentPackage.PackageID);
                     $scope.SelectItemChans = [];
                     $scope.divActiveChannel = false;
                 } else {
@@ -397,6 +464,8 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
         }
     }
     $scope.delete = function (pack) {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = false;
         if (confirm('Please confirm to delete.')) {
             var getMSG = packagemapService.Delete(pack.PackageID, pack.ChannelID);
             getMSG.then(function (messagefromController) {
@@ -415,7 +484,6 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
     $scope.divActivePackage = false;
     $scope.SelectItemPacks = [];
     GetActiveUserList();
-    //To Get All Records
     function GetActiveUserList() {
         var Data = packagePerService.getActiveUserList();
         Data.then(function (pack) {
@@ -446,17 +514,27 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
             alert('get data error');
         });
     }
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.selectRow = function (user) {
         $scope.divMappingPackage = true;
         $scope.SelectItemPacks = [];
         $scope.divActivePackage = false;
-        $scope.SelectedDealerID = user.DealerID;
-        GetMappingPackagesList(user.DealerID);
+        $scope.currentDealer = user;
+        GetMappingPackagesList($scope.currentDealer.DealerID);
     }
     $scope.addPackage = function () {
         $scope.SelectItemPacks = [];
         $scope.divActivePackage = true;
-        GetActivePackagesList($scope.SelectedDealerID);
+        GetActivePackagesList($scope.currentDealer.DealerID);
     }
     $scope.cancel = function () {
         $scope.SelectItemPacks = [];
@@ -469,12 +547,12 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
 
     $scope.add = function () {
         if ($scope.SelectItemPacks == null || $scope.SelectItemPacks.length <= 0) {
-            $scope.errormessage = "Please select package to map.";
+            $scope.errormessage = "Please select package.";
         } else {
-            var getMSG = packagePerService.Add($scope.SelectedDealerID, $scope.SelectItemPacks);
+            var getMSG = packagePerService.Add($scope.currentDealer.DealerID, $scope.SelectItemPacks);
             getMSG.then(function (messagefromController) {
                 if (messagefromController.data == "Success") {
-                    GetMappingPackagesList($scope.SelectedDealerID);
+                    GetMappingPackagesList($scope.currentDealer.DealerID);
                     $scope.SelectItemPacks = [];
                     $scope.divActivePackage = false;
                 } else {
@@ -486,6 +564,8 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
         }
     }
     $scope.delete = function (pack) {
+        $scope.SelectItemPacks = [];
+        $scope.divActivePackage = false;
         if (confirm('Please confirm to delete.')) {
             var getMSG = packagePerService.Delete(pack.DealerID, pack.PackageID);
             getMSG.then(function (messagefromController) {
@@ -501,7 +581,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
 //---------------------- MemberTypeController -----------------------------------//
 app.controller("MemberTypeController", function ($scope, memberTypeService) {
     $scope.divModification = false;
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     GetMemberTypesList();
     //To Get All Records  
     function GetMemberTypesList() {
@@ -514,21 +594,30 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
             alert('Error');
         });
     }
-
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.edit = function (memtype) {
         $scope.errormessage = "";
         $scope.MemberTypeID = memtype.MemberTypeID;
         $scope.MemberTypeDesc = memtype.MemberTypeDesc;
         $scope.Operation = "Update";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.divGrid = true;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
@@ -538,7 +627,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
         $scope.MemberTypeDesc = "";
         $scope.Operation = "New";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -558,7 +647,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -573,7 +662,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -585,6 +674,8 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
     }
 
     $scope.delete = function (memtype) {
+        $scope.divModification = false;
+        $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
             var getMSG = memberTypeService.Delete(memtype.MemberTypeID);
             getMSG.then(function (messagefromController) {
@@ -600,7 +691,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
 //-------------------------------- MemberController ---------------------------------------//
 app.controller("MemberController", function ($scope, memberService) {
     $scope.divModification = false;
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     GetMemberTypeList();
     GetMemberList();
     //To Get All Records  
@@ -625,7 +716,16 @@ app.controller("MemberController", function ($scope, memberService) {
             alert('Error');
         });
     }
-
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.SavePermission = function () {
         var Permission = {
             ID: $scope.selectedItem.ID,
@@ -647,7 +747,7 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.errormessage = "";
         $scope.MemberID = member.MemberID;
         $scope.UserName = member.UserName;
-        $scope.Password = member.Password;
+        //$scope.Password = member.Password;
         $scope.MemberName = member.MemberName;
         $scope.Address = member.Address;
         $scope.Email = member.Email;
@@ -656,15 +756,15 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.Operation = "Update";
         $scope.divModification = true;
         $scope.showRepassword = false;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.showRepassword = false;
-        $scope.divGrid = true;
+        //$scope.showRepassword = false;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
@@ -672,7 +772,7 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.$broadcast('show-errors-reset');
         $scope.MemberID = "";
         $scope.UserName = "";
-        $scope.Password = "";
+        //$scope.Password = "";
         $scope.RePassword = "";
         $scope.MemberName = "";
         $scope.Address = "";
@@ -682,7 +782,7 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.Operation = "New";
         $scope.showRepassword = true;
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -692,7 +792,7 @@ app.controller("MemberController", function ($scope, memberService) {
                 MemberID: $scope.MemberID,
                 UserName: $scope.UserName,
                 MemberName: $scope.MemberName,
-                Password: $scope.Password,
+                //Password: $scope.Password,
                 RePassword: $scope.RePassword,
                 Address: $scope.Address,
                 Email: $scope.Email,
@@ -710,7 +810,7 @@ app.controller("MemberController", function ($scope, memberService) {
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divModification = false;
-                        $scope.divGrid = true;
+                        $scope.AddNew = true;
                     } else {
                         $scope.errormessage = messagefromController.data;
                     }
@@ -720,28 +820,30 @@ app.controller("MemberController", function ($scope, memberService) {
             }
             else {
                 var getMSG = memberService.Add(Member);
-                if (Member.Password == Member.RePassword) {
-                    getMSG.then(function (messagefromController) {
-                        GetMemberTypeList();
-                        GetMemberList();
-                        if (messagefromController.data == "Success") {
-                            alert(messagefromController.data);
-                            $scope.divModification = false;
-                            $scope.divGrid = true;
-                        } else {
-                            $scope.errormessage = messagefromController.data;
-                        }
-                    }, function () {
-                        $scope.errormessage = "Add member failed.";
-                    });
-                } else {
-                    $scope.errormessage = "Confirm password mismatch.";
-                }
+                //if (Member.Password == Member.RePassword) {
+                getMSG.then(function (messagefromController) {
+                    GetMemberTypeList();
+                    GetMemberList();
+                    if (messagefromController.data == "Success") {
+                        alert(messagefromController.data);
+                        $scope.divModification = false;
+                        $scope.AddNew = true;
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Add member failed.";
+                });
+                //} else {
+                //    $scope.errormessage = "Confirm password mismatch.";
+                //}
             }
         }
     }
 
     $scope.delete = function (member) {
+        $scope.AddNew = true;
+        $scope.divModification = false;
         if (confirm('Please confirm to delete.')) {
             var getMSG = memberService.Delete(member.MemberID);
             getMSG.then(function (messagefromController) {
@@ -756,7 +858,7 @@ app.controller("MemberController", function ($scope, memberService) {
 });
 //------------------------------- UserController ----------------------------------------------------//
 app.controller("PaymentController", function ($scope, paymentService, $filter) {
-    $scope.divGrid = true;
+    $scope.AddNew = true;
     $scope.divModification = false;
     GetPaymentsList();
     //To Get All Records
@@ -770,11 +872,27 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
             alert('get data error');
         });
     }
+    //$scope.ToJavaScriptDate = function (value) {
+    //    var pattern = /Date\(([^)]+)\)/;
+    //    var results = pattern.exec(value);
+    //    var dt = new Date(parseFloat(results[1]));
+    //    return dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate();
+    //}
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
     $scope.Cancel = function () {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        $scope.divGrid = true;
+        $scope.AddNew = true;
     }
 
     $scope.add = function () {
@@ -787,7 +905,7 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
         $scope.Quantity = 1;
         $scope.Operation = "New";
         $scope.divModification = true;
-        $scope.divGrid = false;
+        $scope.AddNew = false;
     }
 
     $scope.Save = function () {
@@ -806,7 +924,7 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
                 if (messagefromController.data == "Success") {
                     GetPaymentsList();
                     $scope.divModification = false;
-                    $scope.divGrid = true;
+                    $scope.AddNew = true;
                 } else {
                     $scope.errormessage = messagefromController.data;
                 }
@@ -817,6 +935,8 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
     }
 
     $scope.delete = function (payment) {
+        $scope.AddNew = true;
+        $scope.divModification = false;
         if (confirm('Please confirm to delete.')) {
             var getMSG = paymentService.Delete(payment.PaymentID);
             getMSG.then(function (messagefromController) {
@@ -983,7 +1103,7 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
             };
             var Operation = $scope.Operation;
             if (Operation == "Update") {
-                cate.CategoryID = $scope.CategoryID;   
+                cate.CategoryID = $scope.CategoryID;
                 var getMSG = categoryService.update(cate);
                 getMSG.then(function (messagefromController) {
                     if (messagefromController.data == "Success") {

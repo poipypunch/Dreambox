@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
-
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class MemberTypeController : Controller
@@ -17,7 +17,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
             //return View(db.MemberTypes.ToList());
         }
 

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
-using MVCDreambox.ViewModels;
 using System.Data.Entity.Validation;
 using System.Net;
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class PackageController : Controller
@@ -18,7 +18,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
 
         public JsonResult GetPackagesList()
@@ -45,9 +45,9 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, package.PackageDesc))
                     {
                         package.PackageID = Guid.NewGuid().ToString();
-                        package.UpdateBy = Session["UserID"].ToString();
+                        package.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         package.UpdateDate = DateTime.Now;
-                        package.CreateBy = Session["UserID"].ToString();
+                        package.CreateBy = Session[CommonConstant.SessionUserID].ToString();
                         package.CreateDate = DateTime.Now;
                         db.Packages.Add(package);
                         db.SaveChanges();
@@ -77,7 +77,7 @@ namespace MVCDreambox.Controllers
                         pack.PackageDesc = package.PackageDesc;
                         pack.PackageStatus = package.PackageStatus;                       
                         pack.UpdateDate = DateTime.Now;
-                        pack.UpdateBy = Session["UserID"].ToString();
+                        pack.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         db.Entry(pack).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";

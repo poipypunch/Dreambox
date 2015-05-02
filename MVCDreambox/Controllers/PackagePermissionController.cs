@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
+using MVCDreambox.App_Code;
 namespace MVCDreambox.Controllers
 {
     public class PackagePermissionController : Controller
@@ -14,13 +15,13 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
         }
         public JsonResult GetActiveUserList()
         {
             try
             {
-                var UserList = db.tbUsers.Where(m => m.Status == MVCDreambox.Models.Status.Active && m.Role != MVCDreambox.Models.Role.Admin).ToList();
+                var UserList = db.tbUsers.Where(m => m.Status == CommonConstant.Status.Active && m.Role != CommonConstant.Role.Admin).ToList();
                 return Json(UserList, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -54,7 +55,7 @@ namespace MVCDreambox.Controllers
             try
             {
                 var packages = (from s in db.Packages
-                                where s.PackageStatus == MVCDreambox.Models.Status.Active && !db.PackagePermissions.Any(p => (p.PackageID == s.PackageID) && (p.DealerID == DealerID))
+                                where s.PackageStatus == CommonConstant.Status.Active && !db.PackagePermissions.Any(p => (p.PackageID == s.PackageID) && (p.DealerID == DealerID))
                                 select s).ToList();
                 return Json(packages, JsonRequestBehavior.AllowGet);
             }
@@ -95,8 +96,8 @@ namespace MVCDreambox.Controllers
                         pack = new PackagePermission();
                         pack.DealerID = uid;
                         pack.PackageID = packids[i];
-                        pack.CreateBy = Session["UserID"].ToString();
-                        pack.UpdateBy = Session["UserID"].ToString();
+                        pack.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        pack.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
                         pack.CreateDate = DateTime.Now;
                         pack.UpdateDate = DateTime.Now;
                         db.PackagePermissions.Add(pack);

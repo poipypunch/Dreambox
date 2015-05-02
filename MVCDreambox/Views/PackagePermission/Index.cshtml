@@ -1,111 +1,106 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-<div ng-controller="PackagePermissionController">
-    <table>
-        <tr>
-            <td>
-                <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
-                    <thead>
-                        <tr>
-                            <th><p>User</p></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="row in displayedCollection">
-                            <td>
-                                {{row.RealName}}
-                            </td>
-                            <td>
-                                <button type="button" ng-click="selectRow(row)" class="btn btn-sm ">
-                                    <i class="glyphicon glyphicon-edit">
-                                    </i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage"></div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </td>
-            <td>
-                <div ng-show="divActivePackage">
-                    <input type="button" value="Add" ng-click="add()" class="btn" />
-                    <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
-                    @*<div>The following fruits are checked: {{SelectItemPacks | json}}</div>*@
-                    <table st-table="displayedpackCollection" st-safe-src="packCollection" class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th><p>Package name</p></th>
-                                <th><p>Create date</p></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="pack in packCollection">
-                                @*<td cs-select="chanA" ng-click='addSelect(chanA)'></td>*@
-                                <td><input type='checkbox' value="{{pack.PackageID}}" check-list='SelectItemPacks'> </td>
-                                <td>
-                                    {{pack.PackageDesc}}
-                                </td>
-                                <td>
-                                    {{pack.CreateDate}}
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <div st-pagination="" st-items-by-page="itemspackByPage"></div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div ng-show="divMappingPackage">
-                    <input type="button" value="New package" ng-click="addPackage()" class="btn" />
-                    <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
-                        <thead>
-                            <tr>
-                                <th><p>Package name</p></th>
-                                <th><p>Create date</p></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="packm in mapCollection">
-                                <td>
-                                    {{packm.PackageDesc}}
-                                </td>
-                                <td>
-                                    {{packm.CreateDate}}
-                                </td>
-                                <td>
-                                    <button type="button" ng-click="delete(packm)" class="btn btn-sm ">
-                                        <i class="glyphicon  glyphicon-remove">
-                                        </i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <div st-pagination="" st-items-by-page="itemsmapByPage"></div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </td>
-        </tr>
-    </table>
+<style>
+    .clickable {
+        cursor: pointer;
+    }
+</style>
+<h2>Mapping package to dealer</h2>
+<br />
+<div ng-controller="PackagePermissionController" class="row panel panel-default" style=" width:100%;padding:5px;">
+    <div class="col-xs-6 col-md-4">
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+                    <th><p>User</p></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentDealer}" class="clickable">
+                    <td>
+                        {{row.RealName}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="1" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-xs-12 col-md-8">
+        <div ng-show="divActivePackage" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
+            <h3>Add package to {{currentDealer.RealName}}</h3>
+            <input type="button" value="Add" ng-click="add()" class="btn" />
+            <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+            @*<div>The following are checked: {{SelectItemPacks | json}}</div>*@
+            <table st-table="displayedpackCollection" st-safe-src="packCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Select</p></th>
+                        <th><p>Package name</p></th>
+                        <th><p>Create date</p></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="pack in packCollection">
+                        <td><input type='checkbox' value="{{pack.PackageID}}" check-list='SelectItemPacks' class="clickable"> </td>
+                        <td>
+                            {{pack.PackageDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(pack.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemspackByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div ng-show="divMappingPackage" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
+            <h3>Mapped package in {{currentDealer.RealName}}</h3>
+            <input type="button" value="New package" ng-click="addPackage()" class="btn" />
+            <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Package name</p></th>
+                        <th><p>Create date</p></th>
+                        <th><p>Operation</p></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="packm in mapCollection">
+                        <td>
+                            {{packm.PackageDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(packm.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                        <td>
+                            <button type="button" ng-click="delete(packm)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsmapByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
 </div>
