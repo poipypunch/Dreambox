@@ -18,7 +18,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
 
         public JsonResult GetPaymentsList()
@@ -54,9 +54,9 @@ namespace MVCDreambox.Controllers
                         payment.PaymentExpiryDate = paymentdummy.PaymentExpiryDate;
                         payment.PaymentTotalDay = paymentdummy.PaymentTotalDay;
                         payment.PaymentStatus = CommonConstant.CardStatus.New;
-                        payment.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        payment.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         payment.CreateDate = DateTime.Now;
-                        payment.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        payment.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         payment.UpdateDate = DateTime.Now;
                         db.Payments.Add(payment);
                     }

@@ -189,6 +189,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ContentManagementController.cs" />
     <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\PackageMappingController.cs" />
     <Compile Include="Controllers\PackagePermissionController.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Channel.cs" />
+    <Compile Include="Models\ContentManagement.cs" />
     <Compile Include="Models\DreamboxContext.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\MemberSubscription.cs" />
@@ -1108,6 +1110,7 @@
     <Content Include="Views\PackageMapping\Index.cshtml" />
     <Content Include="Views\PackagePermission\Index.cshtml" />
     <Content Include="Views\tbUser\Login.cshtml" />
+    <Content Include="Views\ContentManagement\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

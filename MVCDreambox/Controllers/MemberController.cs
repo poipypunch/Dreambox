@@ -14,16 +14,13 @@ namespace MVCDreambox.Controllers
     {
         private DreamboxContext db = new DreamboxContext();
 
-        public MemberController()
-        {
-            db = new DreamboxContext();
-        }
+
         //
         // GET: /Member/
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
 
         public JsonResult GetAllMember()
@@ -34,7 +31,7 @@ namespace MVCDreambox.Controllers
                 var memberlist = (from mem in db.Members.ToList()
                                   join memtype in db.MemberTypes on mem.MemberTypeID equals memtype.MemberTypeID
                                   join tbuser in db.tbUsers on mem.DealerID equals tbuser.DealerID
-                                  where mem.DealerID == strUserID
+                                  where mem.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])
                                   select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeDesc, tbuser.RealName }).ToList();
                 return Json(memberlist, JsonRequestBehavior.AllowGet);
             }
@@ -50,7 +47,7 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var memberTypeList = db.MemberTypes.ToList();
+                var memberTypeList = db.MemberTypes.Where(m => m.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])).ToList();
                 return Json(memberTypeList, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -68,13 +65,14 @@ namespace MVCDreambox.Controllers
                 {
                     if (!IsDuplicate(string.Empty, member.UserName))
                     {
+                        string UserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         RSACrypto crypto = new RSACrypto();
                         member.MemberID = Guid.NewGuid().ToString();
                         member.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
-                        member.DealerID = Session[CommonConstant.SessionUserID].ToString();
-                        member.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        member.DealerID = UserID;
+                        member.UpdateBy = UserID;
                         member.UpdateDate = DateTime.Now;
-                        member.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        member.CreateBy = UserID;
                         member.CreateDate = DateTime.Now;
                         db.Members.Add(member);
                         db.SaveChanges();
@@ -100,6 +98,7 @@ namespace MVCDreambox.Controllers
                 {
                     if (!IsDuplicate(member.MemberID, member.UserName))
                     {
+                        
                         Member mem = db.Members.Find(member.MemberID);
                         mem.UserName = member.UserName;
                         mem.MemberName = member.MemberName;
@@ -108,7 +107,7 @@ namespace MVCDreambox.Controllers
                         mem.Email = member.Email;
                         mem.Address = member.Address;
                         mem.Phone = member.Phone;
-                        mem.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        mem.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         mem.UpdateDate = DateTime.Now;
                         db.Entry(mem).State = EntityState.Modified;
                         db.SaveChanges();

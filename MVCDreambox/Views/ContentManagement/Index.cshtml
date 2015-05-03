@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Dreambox solution";
+}
+<h2>Content Management</h2>
+<br />
+<div ng-controller='ContentManagementController' class="row panel panel-default" style=" width:100%;padding:5px;">
+    <script type="text/ng-template" id="categoryTree">
+        <span class="iwt">
+            @*<label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-open clickable"></i></label>
+            <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-close clickable"></i></label>*@
+            <i ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
+            <i ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
+            <span ng-click="SelectNode(category,parent)" ng-class="{CurrentNode:category===currentNode}" class="clickable">
+                {{ category.CategoryDesc }}
+            </span>
+        </span>
+
+
+        <ul ng-if="category.categories && category.iscollapsed">
+            <li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parent=$parent.category">
+            </li>
+        </ul>
+    </script>
+    <div class="col-xs-6 col-md-4">
+        <ul>
+            <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
+        </ul>
+    </div>
+    <div class="col-xs-12 col-md-8">
+        <div ng-show="divActiveChannel" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
+            <h3>Add channel to {{currentNode.CategoryDesc}}</h3>
+            <input type="button" value="Add" ng-click="add()" class="btn" />
+            <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+            <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Select</p></th>
+                        <th><p>Channel name</p></th>
+                        <th><p>Create date</p></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="chanA in chanCollection">
+                        <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans' class="clickable"> </td>
+                        <td>
+                            {{chanA.ChannelDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(chanA.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemschanByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div ng-show="divMappingChannel" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
+            <h3>Mapped channel in {{currentNode.CategoryDesc}}</h3>
+            <input type="button" value="New channel" ng-click="addChannel()" class="btn" />
+            <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
+                <thead>
+                    <tr>
+                        <th><p>Channel name</p></th>
+                        <th><p>Create date</p></th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="chan in mapCollection">
+                        <td>
+                            {{chan.ChannelDesc}}
+                        </td>
+                        <td>
+                            {{ToJavaScriptDateToString(chan.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                        <td>
+                            <button type="button" ng-click="delete(chan)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-trash">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsmapByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    @*<div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default">
+            <input type="button" value="New" ng-click="add()" class="btn" />
+            <input type="button" value="Edit" ng-click="edit()" class="btn" />
+            <input type="button" value="Delete" ng-click="delete()" class="btn" />
+            <div ng-show="divAdd">
+                <form name="appForm" novalidate>
+                    <div class="form-horizontal">
+                        <h3>{{Operation}} Category</h3>
+                        <span class="alert-danger">{{errormessage}}</span>
+                        <div class="form-group">
+                            @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                {{selected.CategoryDesc}}
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors='{showSuccess: true}'>
+                            @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" name="CategoryDesc" ng-model="CategoryDesc" class="form-control" required placeholder="Category name" />
+                                <p class="help-block" ng-if="appForm.CategoryDesc.$error.required">Category name is requied</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors='{showSuccess: true}'>
+                            @Html.Label("Image path", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <input type="text" name="ImgPath" ng-model="ImgPath" class="form-control" required placeholder="Image path" />
+                                <p class="help-block" ng-if="appForm.ImgPath.$error.required">Image path is requied</p>
+                            </div>
+                        </div>
+                        <input type="text" style="width:20px;" ng-model="ParentID" class="form-control" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="button" value="Save" ng-click="Save()" class="btn" />
+                                <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>*@
+</div>

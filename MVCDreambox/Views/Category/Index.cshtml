@@ -1,21 +1,20 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
-<style>
-    .blueBase {
-        background-color: #E1EDFA;
-        border-radius: 6px;
-    }
-</style>
+
 <h2>Category Management</h2>
 <br />
 <div ng-controller='CategoryController' class="row panel panel-default" style=" width:100%;padding:5px;">
     <script type="text/ng-template" id="categoryTree">
-        <label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)">-</label>
-        <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)">+</label>
-        <div ng-click="SelectNode(category,parent)" ng-class="{blueBase:category===currentNode}">
-            {{ category.CategoryDesc }}
-        </div>
+        <span class="iwt">
+            @*<label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-open clickable"></i></label>
+                <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-close clickable"></i></label>*@
+            <i ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
+            <i ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
+            <span ng-click="SelectNode(category,parent)" ng-class="{CurrentNode:category===currentNode}" class="clickable">
+                {{ category.CategoryDesc }}
+            </span>
+        </span>
         <ul ng-if="category.categories && category.iscollapsed">
             <li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parent=$parent.category">
             </li>
@@ -26,19 +25,20 @@
             <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
         </ul>
     </div>
-    <div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default" >
+    <div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default">
         <input type="button" value="New" ng-click="add()" class="btn" />
         <input type="button" value="Edit" ng-click="edit()" class="btn" />
         <input type="button" value="Delete" ng-click="delete()" class="btn" />
-        <div ng-show="divAdd">
+        <div ng-show="divAdd" style=" width:100%;">
             <form name="appForm" novalidate>
-                <div class="form-horizontal">
+                <div class="form-horizontal" style=" width:100%; border:2px solid black;">
                     <h3>{{Operation}} Category</h3>
                     <span class="alert-danger">{{errormessage}}</span>
+                    <br />
                     <div class="form-group">
                         @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            {{selected.CategoryDesc}}
+                            <p>  {{currentParentNode.CategoryDesc}}</p>
                         </div>
                     </div>
                     <div class="form-group" show-errors='{showSuccess: true}'>

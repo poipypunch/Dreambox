@@ -18,7 +18,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
 
         public JsonResult GetPackagesList()
@@ -45,9 +45,9 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, package.PackageDesc))
                     {
                         package.PackageID = Guid.NewGuid().ToString();
-                        package.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        package.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         package.UpdateDate = DateTime.Now;
-                        package.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        package.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         package.CreateDate = DateTime.Now;
                         db.Packages.Add(package);
                         db.SaveChanges();
@@ -77,7 +77,7 @@ namespace MVCDreambox.Controllers
                         pack.PackageDesc = package.PackageDesc;
                         pack.PackageStatus = package.PackageStatus;                       
                         pack.UpdateDate = DateTime.Now;
-                        pack.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        pack.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         db.Entry(pack).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";

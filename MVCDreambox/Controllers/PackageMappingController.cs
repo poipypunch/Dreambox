@@ -15,7 +15,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
         public JsonResult GetActivePackageList()
         {
@@ -100,8 +100,8 @@ namespace MVCDreambox.Controllers
                         pack = new PackageMapping();
                         pack.PackageID = pid;
                         pack.ChannelID = channelids[i];
-                        pack.CreateBy = Session[CommonConstant.SessionUserID].ToString();
-                        pack.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        pack.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                        pack.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         pack.CreateDate = DateTime.Now;
                         pack.UpdateDate = DateTime.Now;
                         db.PackageMappings.Add(pack);

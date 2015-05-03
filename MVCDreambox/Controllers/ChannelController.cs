@@ -18,7 +18,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
 
         public JsonResult GetChannelsList()
@@ -46,9 +46,9 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, channel.ChannelDesc))
                     {
                         channel.ChannelID = Guid.NewGuid().ToString();
-                        channel.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        channel.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         channel.UpdateDate = DateTime.Now;
-                        channel.CreateBy = Session[CommonConstant.SessionUserID].ToString();
+                        channel.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         channel.CreateDate = DateTime.Now;
                         db.Channels.Add(channel);
                         db.SaveChanges();
@@ -79,7 +79,7 @@ namespace MVCDreambox.Controllers
                         chan.ChannelPath = channel.ChannelPath;
                         chan.ChannelStatus = channel.ChannelStatus;
                         chan.UpdateDate = DateTime.Now;
-                        chan.UpdateBy = Session[CommonConstant.SessionUserID].ToString();
+                        chan.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         db.Entry(chan).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";

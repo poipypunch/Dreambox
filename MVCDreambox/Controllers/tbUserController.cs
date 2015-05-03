@@ -16,7 +16,7 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
         public ActionResult Login()
         {
@@ -48,9 +48,9 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, tbuser.UserName))
                     {
                         tbuser.DealerID = Guid.NewGuid().ToString();
-                        tbuser.UpdateBy = Session["UserID"].ToString();
+                        tbuser.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         tbuser.UpdateDate = DateTime.Now;
-                        tbuser.CreateBy = Session["UserID"].ToString();
+                        tbuser.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         tbuser.CreateDate = DateTime.Now;
                         RSACrypto crypto = new RSACrypto();
                         tbuser.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
@@ -87,7 +87,7 @@ namespace MVCDreambox.Controllers
                         user.Status = tbuser.Status;
                         user.Role = tbuser.Role;
                         user.UpdateDate = DateTime.Now;
-                        user.UpdateBy = Session["UserID"].ToString();
+                        user.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         db.Entry(user).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";

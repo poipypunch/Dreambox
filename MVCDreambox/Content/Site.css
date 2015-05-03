@@ -22,3 +22,27 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.CurrentNode {
+    background-color: #E1EDFA;
+    border-radius: 6px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+}
+.iwt{
+ white-space:nowrap;
+
+}
+    .form-group .help-block {
+        display: none;
+    }
+
+    .form-group.has-error .help-block {
+        display: block;
+    }

@@ -38,6 +38,10 @@ app.config(['$routeProvider', function ($routeprovider) {
             templateurl: '/Views/PackageMapping/index.cshtml',
             controller: 'PackageMappingController'
         }).
+         when('/ContentManagement', {
+             templateurl: '/Views/ContentManagement/index.cshtml',
+             controller: 'ContentManagementController'
+         }).
       otherwise({
           redirectto: '/Home'
       });

@@ -26,6 +26,91 @@ namespace MVCDreambox.App_Code
         {
             public const string InUsed = "InUsed";
             public const string New = "New";
-        } 
+        }
+
+        public static string GetFieldValueString(object Value)
+        {
+            if (Value == null) return string.Empty;
+            if (DBNull.Equals(Value, System.DBNull.Value)) return string.Empty;
+            return Convert.ToString(Value);
+        }
+        public static int GetFieldValueInteger(object Value)
+        {
+            string valuestring = GetFieldValueString(Value);
+            int result;
+            if (valuestring == string.Empty) return result = 0;
+            else
+            {
+                try
+                {
+                    result = Convert.ToInt32(valuestring, 10);
+                }
+                catch (Exception)
+                {
+                    result = 0;
+                }
+            }
+            return result;
+        }
+        public static decimal GetFieldValueDecimal(object Value)
+        {
+            string valuestring = GetFieldValueString(Value);
+            decimal result;
+            if (valuestring == string.Empty) return result = 0;
+            else
+            {
+                try
+                {
+                    result = Convert.ToDecimal(valuestring);
+                }
+                catch (Exception)
+                {
+                    result = 0;
+                }
+            }
+            return result;
+        }
+        public static double GetFieldValueDouble(object Value)
+        {
+            string valuestring = GetFieldValueString(Value);
+            double result;
+            if (valuestring == string.Empty) return result = 0;
+            else
+            {
+                try
+                {
+                    result = Convert.ToDouble(valuestring);
+                }
+                catch (Exception)
+                {
+                    result = 0;
+                }
+            }
+            return result;
+        }
+        public static bool GetFieldValueBoolean(object Value)
+        {
+            if (Value == null) return false;
+            if (DBNull.Equals(Value, System.DBNull.Value)) return true;
+            return (bool)Value;
+        }
+        public static DateTime GetFieldValueDateTime(object Value)
+        {
+            DateTime tmpDT = new DateTime();
+            if (Value == null) return tmpDT;
+            if (DBNull.Equals(Value, System.DBNull.Value)) return tmpDT;
+            return (DateTime)Value;
+        }
+
+        public static object SetFieldValueDateTime(DateTime Value)
+        {
+            if (Value == DateTime.MinValue) return System.DBNull.Value;
+            return (DateTime)Value;
+        }
+        public static object SetFieldValueObject(object Value)
+        {
+            if (Value == null) return System.DBNull.Value;
+            return Value;
+        }
     }      
 }

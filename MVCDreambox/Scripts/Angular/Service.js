@@ -385,3 +385,47 @@ app.service("categoryService", function ($http) {
         return response;
     }
 });
+
+app.service("contentService", function ($http) {
+    this.GetCategorys = function () {
+        return $http.get("/ContentManagement/GetCategoryList");
+    };
+    this.getMappingChannelsList = function (CategoryID) {
+        return $http({
+            url: "/ContentManagement/GetMappingChannelList",
+            method: "GET",
+            params: { CategoryID: CategoryID }
+        });
+    };
+    this.getActiveChannelsList = function (CategoryID) {
+        return $http({
+            url: "/ContentManagement/GetActiveChannelList",
+            method: "GET",
+            params: { CategoryID: CategoryID }
+        });
+    };
+    //Delete 
+    this.Delete = function (CategoryID, ChannelID) {
+        var response = $http({
+            method: "post",
+            url: "/ContentManagement/Delete",
+            params: {
+                cid: CategoryID,
+                chid: ChannelID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (CategoryID, Channels) {
+        var response = $http({
+            method: "post",
+            url: "/ContentManagement/Add",
+            data: { cid: CategoryID, channelids: Channels },
+            dataType: "json"
+        });
+        return response;
+    }
+
+});

@@ -1167,6 +1167,167 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     }
 });
 
+//---------------------- ContentManagementController -------------------------------//
+app.controller("ContentManagementController", function ($scope, contentService, $filter) {
+    $scope.iscollapsed = true;
+    $scope.divMappingChannel = false;
+    $scope.divActiveChannel = false;
+    $scope.SelectItemChans = [];
+    GetCategoryTreeList();
+
+    function GetCategoryTreeList() {
+        var Data = contentService.GetCategorys();
+        Data.then(function (cates) {
+            $scope.data = _queryTreeSort(cates);
+            $scope.categories = _makeTree($scope.data);
+        }, function () {
+            alert('get data error');
+        });
+    }
+
+    function GetMappingChannelsList(CategoryID) {
+        var Data = contentService.getMappingChannelsList(CategoryID);
+        Data.then(function (pack) {
+            $scope.itemsmapByPage = 10;
+            $scope.mapCollection = pack.data;
+            $scope.displayedmapCollection = [].concat($scope.mapCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+
+    function GetActiveChannelsList(CategoryID) {
+        var Data = contentService.getActiveChannelsList(CategoryID);
+        Data.then(function (pack) {
+            $scope.itemschanByPage = 10;
+            $scope.chanCollection = pack.data;
+            $scope.displayedchanCollection = [].concat($scope.chanCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+
+    $scope.selectNodeHead = function (category) {
+        category.iscollapsed = !category.iscollapsed;
+    }
+    $scope.SelectNode = function (cate, parentnode) {
+        if (!(cate.categories != null && cate.categories.length > 0)) {
+            $scope.divActiveChannel = false;
+            $scope.SelectItemChans = [];
+            $scope.errormessage = "";
+            $scope.currentNode = cate;
+            $scope.currentParentNode = parentnode;
+            GetMappingChannelsList($scope.currentNode.CategoryID)
+            $scope.divMappingChannel = true;
+        }
+    }
+    var _makeTree = function (options) {
+        var children, e, id, o, pid, temp, _i, _len, _ref;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        children = options.categories || "categories";
+        temp = {};
+        o = [];
+        _ref = options;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            e = _ref[_i];
+            e[children] = [];
+            temp[e[id]] = e;
+            if (temp[e[pid]] != null) {
+                temp[e[pid]][children].push(e);
+            } else {
+                o.push(e);
+            }
+        }
+        return o;
+    };
+
+    var _queryTreeSort = function (options) {
+        var cfi, e, i, id, o, pid, rfi, ri, thisid, _i, _j, _len, _len1, _ref, _ref1;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        ri = [];
+        rfi = {};
+        cfi = {};
+        o = [];
+        _ref = options.data;
+        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            e = _ref[i];
+            rfi[e[id]] = i;
+            if (cfi[e[pid]] == null) {
+                cfi[e[pid]] = [];
+            }
+            cfi[e[pid]].push(options.data[i][id]);
+        }
+        _ref1 = options.data;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            e = _ref1[_j];
+            if (rfi[e[pid]] == null) {
+                ri.push(e[id]);
+            }
+        }
+        while (ri.length) {
+            thisid = ri.splice(0, 1);
+            o.push(options.data[rfi[thisid]]);
+            if (cfi[thisid] != null) {
+                ri = cfi[thisid].concat(ri);
+            }
+        }
+        return o;
+    };
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
+    $scope.addChannel = function () {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = true;
+        GetActiveChannelsList($scope.currentNode.CategoryID);
+    }
+    $scope.cancel = function () {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = false;
+    }
+
+    $scope.add = function () {
+        if ($scope.SelectItemChans == null || $scope.SelectItemChans.length <= 0) {
+            $scope.errormessage = "Please select channel to map.";
+        } else {
+            var getMSG = contentService.Add($scope.currentNode.CategoryID, $scope.SelectItemChans);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    GetMappingChannelsList($scope.currentNode.CategoryID);
+                    $scope.SelectItemChans = [];
+                    $scope.divActiveChannel = false;
+                } else {
+                    alert(messagefromController.data);
+                }
+            }, function () {
+                $scope.errormessage = "Mapping failed.";
+            });
+        }
+    }
+    $scope.delete = function (cate) {
+        $scope.SelectItemChans = [];
+        $scope.divActiveChannel = false;
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = contentService.Delete(cate.CategoryID, cate.ChannelID);
+            getMSG.then(function (messagefromController) {
+                GetMappingChannelsList(cate.CategoryID);
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete failed.";
+            });
+        }
+    }
+});
+
 
 
 

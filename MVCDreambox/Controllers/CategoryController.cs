@@ -20,13 +20,21 @@ namespace MVCDreambox.Controllers
 
         public ActionResult Index()
         {
-            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("tbUser", "Login"); } else { return View(); }
+            if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
 
         public JsonResult GetCategoryTrees()
         {
+            string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+            var results = db.Categories.Where(m => m.DealerID == strUserID).OrderBy(m => m.CategoryDesc).ToList();
 
-            var results = db.Categories.OrderBy(m => m.CategoryDesc).ToList();
+            Category cate = new Category();
+            cate.CategoryID = "0";
+            cate.CategoryDesc = "Root";
+            cate.DealerID = strUserID;
+            cate.ParentID = null;
+            results.Add(cate);
+
             return Json(results, JsonRequestBehavior.AllowGet);
         }
 
@@ -39,7 +47,7 @@ namespace MVCDreambox.Controllers
                     if (!IsDuplicate(string.Empty, category.CategoryDesc))
                     {
                         category.CategoryID = Guid.NewGuid().ToString();
-                        category.DealerID = Session[CommonConstant.SessionUserID].ToString();
+                        category.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         category.UpdateDate = DateTime.Now;
                         category.CreateDate = DateTime.Now;
                         db.Categories.Add(category);
@@ -117,9 +125,8 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                string strUserID = Session[CommonConstant.SessionUserID].ToString();
                 Category cate;
-                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID).First();
+                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]) && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])).First();
                 return cate != null ? true : false;
             }
             catch (Exception ex)
