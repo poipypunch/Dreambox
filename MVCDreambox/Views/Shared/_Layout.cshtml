@@ -45,18 +45,23 @@
                     {
                         if (Session["Role"].ToString() == "Admin")
                         {
-                            <li>@Html.ActionLink("User", "Index", "tbUser")</li>
-                            <li>@Html.ActionLink("Payment", "Index", "Payment")</li>
+                            <li>@Html.ActionLink("Dealer", "Index", "tbUser")</li>
+                            <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
                             <li>@Html.ActionLink("Package", "Index", "Package")</li>
+                            <li>@Html.ActionLink("Payment", "Index", "Payment")</li>
                             @*<li>@Html.ActionLink("Package Mapping", "Index", "PackageMapping")</li>
-                            <li>@Html.ActionLink("Package Permission", "Index", "PackagePermission")</li>*@
+                                <li>@Html.ActionLink("Package Permission", "Index", "PackagePermission")</li>*@
                         }
-                        <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
-                        <li>@Html.ActionLink("Member Type", "Index", "MemberType")</li>
-                        <li>@Html.ActionLink("Member", "Index", "Member")</li>
-                        <li>@Html.ActionLink("Category", "Index", "Category")</li>
-                        <li>@Html.ActionLink("ContentManagement", "Index", "ContentManagement")</li>
-                         <li>@Html.ActionLink("Logout", "Login", "tbUser")</li>
+                        else
+                        {
+                            <li>@Html.ActionLink("MemberType", "Index", "MemberType")</li>
+                            <li>@Html.ActionLink("Member", "Index", "Member")</li>
+                            <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
+                            <li>@Html.ActionLink("Category", "Index", "Category")</li>
+                            <li>@Html.ActionLink("ContentManagement", "Index", "ContentManagement")</li>
+                        }
+                        <li>@Html.ActionLink("ChangePassword", "ChangePassword", "tbUser")</li>
+                        <li>@Html.ActionLink("Logout", "Login", "tbUser")</li>
                     }
 
                 </ul>

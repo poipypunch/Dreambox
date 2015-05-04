@@ -1,10 +1,34 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
+<style>
+    .button {
+        -moz-appearance: button;
+        /* Firefox */
+        -webkit-appearance: button;
+        /* Safari and Chrome */
+        padding: 10px;
+        margin: 10px;
+        width: 70px;
+    }
 
+    .drop-box {
+        background: #F8F8F8;
+        border: 5px dashed #DDD;
+        width: 200px;
+        height: 65px;
+        text-align: center;
+        padding-top: 25px;
+        margin: 10px;
+    }
+
+    .dragover {
+        border: 5px dashed blue;
+    }
+</style>
 <h2>Category Management</h2>
 <br />
-<div ng-controller='CategoryController' class="row panel panel-default" style=" width:100%;padding:5px;">
+<div ng-controller='CategoryController' class="row " style=" width:100%;padding:5px;">
     <script type="text/ng-template" id="categoryTree">
         <span class="iwt">
             @*<label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-open clickable"></i></label>
@@ -15,49 +39,51 @@
                 {{ category.CategoryDesc }}
             </span>
         </span>
-        <ul ng-if="category.categories && category.iscollapsed">
+        <ul ng-if="(category.categories && category.iscollapsed)||category.CategoryID=='0'">
             <li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parent=$parent.category">
             </li>
         </ul>
     </script>
-    <div class="col-xs-6 col-md-4">
+    <div class="col-xs-6 col-md-4 panel panel-default">
         <ul>
             <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
         </ul>
     </div>
-    <div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default">
+    <div ng-show="divModification" class="col-xs-12 col-md-8">
         <input type="button" value="New" ng-click="add()" class="btn" />
         <input type="button" value="Edit" ng-click="edit()" class="btn" />
         <input type="button" value="Delete" ng-click="delete()" class="btn" />
-        <div ng-show="divAdd" style=" width:100%;">
+        <br />
+        <br />
+        <div ng-show="divAdd" class="panel panel-default">
             <form name="appForm" novalidate>
-                <div class="form-horizontal" style=" width:100%; border:2px solid black;">
+                <div class="form-horizontal">
                     <h3>{{Operation}} Category</h3>
                     <span class="alert-danger">{{errormessage}}</span>
                     <br />
                     <div class="form-group">
-                        @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <p>  {{currentParentNode.CategoryDesc}}</p>
+                        @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
+                            <p class="form-control-static">{{ParentName}}</p>
                         </div>
                     </div>
                     <div class="form-group" show-errors='{showSuccess: true}'>
-                        @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
                             <input type="text" name="CategoryDesc" ng-model="CategoryDesc" class="form-control" required placeholder="Category name" />
                             <p class="help-block" ng-if="appForm.CategoryDesc.$error.required">Category name is requied</p>
                         </div>
                     </div>
-                    <div class="form-group" show-errors='{showSuccess: true}'>
-                        @Html.Label("Image path", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <input type="text" name="ImgPath" ng-model="ImgPath" class="form-control" required placeholder="Image path" />
-                            <p class="help-block" ng-if="appForm.ImgPath.$error.required">Image path is requied</p>
+                    <div class="form-group">
+                        @Html.Label("Image path", htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-6">
+                            <input type="file" file-model="ImgPath" />
                         </div>
                     </div>
-                    <input type="text" style="width:20px;" ng-model="ParentID" class="form-control" />
+                    <input type="text" style="width:20px;" ng-model="ParentID" class="hidden" />
+                    <input type="text" style="width:20px;" ng-model="ImageUrl" class="hidden" />
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
+                        <div class="col-md-offset-4 col-md-8">
                             <input type="button" value="Save" ng-click="Save()" class="btn" />
                             <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
                         </div>
@@ -67,159 +93,3 @@
         </div>
     </div>
 </div>
-@*@model List<MVCDreambox.Models.Category>
-    @{
-        ViewBag.Title = "Category";
-    }
-    <style>
-        /*Here We will add some css for style our treeview*/
-        .MVCcollapse {
-            width: 15px;
-            background-image: url('../Images/ui-icons_454545_256x240.png');
-            background-repeat: no-repeat;
-            background-position: -36px -17px;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .MVCexpand {
-            width: 15px;
-            background-image: url('../Images/ui-icons_454545_256x240.png');
-            background-repeat: no-repeat;
-            background-position: -50px -17px;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .MVCtreeview ul {
-            font: 14px Arial, Sans-Serif;
-            margin: 0px;
-            padding-left: 20px;
-            list-style: none;
-        }
-
-        .MVCtreeview > li > a {
-            font-weight: bold;
-        }
-
-        .MVCtreeview li {
-        }
-
-            .MVCtreeview li a {
-                padding: 4px;
-                font-size: 12px;
-                display: inline-block;
-                text-decoration: none;
-                width: auto;
-            }
-    </style>
-    <h2>Simple Treeview from Database Data</h2>
-    <div>
-        <table style=" width:100%">
-            <tr>
-                <td valign="top" style=" width:30%; border-right:solid 1px black; padding:10px; ">
-                    <div class="MVCtreeview">
-                        @if (Model != null && Model.Count() > 0)
-                        {
-                            <ul>
-                                @Treeview.GetTreeView(Model, Model.FirstOrDefault().ParentID)
-                            </ul>
-                        }
-                    </div>
-                </td>
-                <td style="padding-left:10px;"><div id="viewPlaceHolder"></div></td>
-            </tr>
-        </table>
-    </div>
-
-    @* Here We need some Jquery code for make this treeview collapsible *@
-@*@section Scripts{
-        @Scripts.Render("~/bundles/jqueryval")
-        <script>
-            $(document).ready(function () {
-                $(".MVCtreeview li>ul").css('display', 'none'); // Hide all 2-level ul
-                $(".MVCcollapsible").click(function (e) {
-                    e.preventDefault();
-                    $(this).toggleClass("MVCcollapse MVCexpand");
-                    $(this).closest('li').children('ul').slideToggle();
-                });
-            });
-        </script>
-        <script>
-
-            function LoadPartialView(parentid) {
-                $("#viewPlaceHolder").load("/Category/PatialCreate",
-                 { ParentID: parentid, viewName: "Create" });
-            }
-
-        </script>
-    }*@
-
-@*@model IEnumerable<MVCDreambox.Models.Category>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryDesc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImgPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParentID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DealerID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateDate)
-            </th>
-            <th></th>
-        </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryDesc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImgPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DealerID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.CategoryID }) |
-                @Html.ActionLink("Details", "Details", new { id=item.CategoryID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.CategoryID })
-            </td>
-        </tr>
-    }
-
-    </table>*@
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryui")
-    <link href="@Url.Content("~/Content/bootstrap-combined.min.css")" rel="stylesheet" type="text/css" />
-}

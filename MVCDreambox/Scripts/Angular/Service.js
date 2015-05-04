@@ -12,10 +12,26 @@
         return response;
     }
 });
+app.service("changePassService", function ($http) {
+    this.getUsers = function () {
+        return $http.get("/tbUser/ChangePassword");
+    };
+    //Login 
+    this.UpdatePassword = function (NewPassword) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/UpdatePassword",
+            params: {
+                Password: NewPassword
+            }
+        });
+        return response;
+    }
+});
 app.service("userService", function ($http) {
     this.getUsers = function () {
         return $http.get("/tbUser/GetUsersList");
-    };
+    };   
 
     //Save (Update)  
     this.update = function (tbuser) {
@@ -40,6 +56,17 @@ app.service("userService", function ($http) {
         return response;
     }
 
+    // reset password
+    this.ResetPassword = function (DealerID) {
+        var response = $http({
+            method: "post",
+            url: "/tbUser/ResetPassword",
+            params: {
+                id: DealerID
+            }
+        });
+        return response;
+    }
     //Add 
     this.Add = function (tbuser) {
         var response = $http({
@@ -267,6 +294,18 @@ app.service("memberService", function ($http) {
         return response;
     }
 
+    // reset password
+    this.ResetPassword = function (memberID) {
+        var response = $http({
+            method: "post",
+            url: "/Member/ResetPassword",
+            params: {
+                id: memberID
+            }
+        });
+        return response;
+    }
+
     //Add 
     this.Add = function (member) {
         var response = $http({
@@ -374,16 +413,36 @@ app.service("categoryService", function ($http) {
     }
 
     //Add 
+    //this.Add = function (cate) {
+    //    var response = $http({
+    //        method: "post",
+    //        url: "/Category/Add",
+    //        data: JSON.stringify(cate),
+    //        dataType: "json"
+    //    });
+    //    return response;
+    //}
     this.Add = function (cate) {
         var response = $http({
             method: "post",
             url: "/Category/Add",
-            data: JSON.stringify(cate),
+            data: getModelAsFormData(cate),
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined },
+           // data: { category: JSON.stringify(cate), Attachment: getModelAsFormData(Attachment) },
             dataType: "json"
 
         });
         return response;
     }
+    
+    var getModelAsFormData = function (data) {
+        var dataAsFormData = new FormData();
+        angular.forEach(data, function (value, key) {
+            dataAsFormData.append(key, value);
+        });
+        return dataAsFormData;
+    };
 });
 
 app.service("contentService", function ($http) {
@@ -428,4 +487,48 @@ app.service("contentService", function ($http) {
         return response;
     }
 
+});
+
+
+app.service("membertypeMapService", function ($http) {
+    this.getActiveMemberTypeList = function () {
+        return $http.get("/MemberTypeMapping/GetActiveMemberTypeList");
+    };
+    this.getMappingCategoryList = function (MemberTypeID) {
+        return $http({
+            url: "/MemberTypeMapping/GetMappingCategoryList",
+            method: "GET",
+            params: { MemberTypeID: MemberTypeID }
+        });
+    };
+    this.getActiveCategorysList = function (MemberTypeID) {
+        return $http({
+            url: "/MemberTypeMapping/GetActiveCategorysList",
+            method: "GET",
+            params: { MemberTypeID: MemberTypeID }
+        });
+    };
+    //Delete 
+    this.Delete = function (MemberTypeID, CategoryID) {
+        var response = $http({
+            method: "post",
+            url: "/MemberTypeMapping/Delete",
+            params: {
+                mid: MemberTypeID,
+                cid: CategoryID
+            }
+        });
+        return response;
+    }
+
+    //Add 
+    this.Add = function (MemberTypeID, Categorys) {
+        var response = $http({
+            method: "post",
+            url: "/MemberTypeMapping/Add",
+            data: { mid: MemberTypeID, categoryids: Categorys },
+            dataType: "json"
+        });
+        return response;
+    }
 });

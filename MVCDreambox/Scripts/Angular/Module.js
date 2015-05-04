@@ -42,6 +42,14 @@ app.config(['$routeProvider', function ($routeprovider) {
              templateurl: '/Views/ContentManagement/index.cshtml',
              controller: 'ContentManagementController'
          }).
+         when('/ChangePassword', {
+             templateurl: '/Views/tbUser/ChangePassword.cshtml',
+             controller: 'ChangePassowrdController'
+         }).
+         when('/MemberTypeMapping', {
+             templateurl: '/Views/MemberTypeMapping/index.cshtml',
+             controller: 'MemberTypeMappingController'
+         }).
       otherwise({
           redirectto: '/Home'
       });

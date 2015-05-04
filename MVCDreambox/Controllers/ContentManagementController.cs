@@ -12,7 +12,7 @@ namespace MVCDreambox.Controllers
         //
         // GET: /ContentManagement/
 
-        DreamboxContext db = new DreamboxContext();        
+        DreamboxContext db = new DreamboxContext();
         //
         // GET: /PackageMapping/
 
@@ -24,12 +24,12 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                string strUserID =CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 var CategoryList = db.Categories.Where(m => m.DealerID == strUserID).ToList();
                 Category cate = new Category();
                 cate.CategoryID = "0";
                 cate.CategoryDesc = "Root";
-                cate.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                cate.DealerID = strUserID;
                 cate.ParentID = null;
                 CategoryList.Add(cate);
                 return Json(CategoryList, JsonRequestBehavior.AllowGet);
@@ -46,7 +46,7 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var Channellist = (from content in db.ContentMangements.ToList()
+                var Channellist = (from content in db.ContentMangements
                                    join cate in db.Categories on content.CategoryID equals cate.CategoryID
                                    join chan in db.Channels on content.ChannelID equals chan.ChannelID
                                    where content.CategoryID == CategoryID
@@ -64,10 +64,16 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var channels = (from s in db.Channels
-                                where s.ChannelStatus == CommonConstant.Status.Active  && !db.ContentMangements.Any(p => (p.ChannelID == s.ChannelID) && (p.CategoryID == CategoryID))
-                                select s).ToList();
-                return Json(channels, JsonRequestBehavior.AllowGet);
+                string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                var Channellist = (from chan in db.Channels
+                                   join packmap in db.PackageMappings on chan.ChannelID equals packmap.ChannelID
+                                   join packper in db.PackagePermissions on packmap.PackageID equals packper.PackageID
+                                   where packper.DealerID == strUserID && chan.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == chan.ChannelID) && (p.CategoryID == CategoryID))
+                                   select new { chan.ChannelID,chan.ChannelDesc,chan.ChannelPath,chan.CreateDate }).OrderByDescending(m => m.ChannelDesc).ToList();
+                //var channels = (from s in db.Channels
+                //                where s.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == s.ChannelID) && (p.CategoryID == CategoryID))
+                //                select s).ToList();
+                return Json(Channellist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

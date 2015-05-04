@@ -112,5 +112,28 @@ namespace MVCDreambox.App_Code
             if (Value == null) return System.DBNull.Value;
             return Value;
         }
-    }      
+        public static string GetSiteRoot()
+        {
+            string Port = System.Web.HttpContext.Current.Request.ServerVariables["SERVER_PORT"];
+            if ((Port == null) || Port == "80" || Port == "443")
+            {
+                Port = "";
+            }
+            else
+            {
+                Port = ":" + Port;
+            }
+            string Protocol = System.Web.HttpContext.Current.Request.ServerVariables["SERVER_PORT_SECURE"];
+            if ((Protocol == null) || Protocol == "0")
+            {
+                Protocol = "http://";
+            }
+            else
+            {
+                Protocol = "https://";
+            }
+            string strOut = Protocol + System.Web.HttpContext.Current.Request.ServerVariables["SERVER_NAME"] + Port + System.Web.HttpContext.Current.Request.ApplicationPath;
+            return strOut;
+        }
+    }
 }

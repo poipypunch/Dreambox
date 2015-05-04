@@ -25,9 +25,10 @@ namespace MVCDreambox.Controllers
         {
             try
             {
+                string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 var memberTypelist = (from memtype in db.MemberTypes.ToList()
                                       join tbuser in db.tbUsers on memtype.DealerID equals tbuser.DealerID
-                                      where memtype.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])
+                                      where memtype.DealerID == strUserID
                                       select new { memtype.MemberTypeID, memtype.MemberTypeDesc, memtype.DealerID, memtype.CreateDate, memtype.CreateBy, memtype.UpdateDate, memtype.UpdateBy, tbuser.RealName }).OrderBy(m => m.MemberTypeDesc).ToList();
 
                 //var memberTypeList = (List<MemberType>)db.MemberTypes.OrderBy(a => a.MemberTypeDesc).ToList();
@@ -227,9 +228,9 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                //string UserID = Session["UserID"].ToString();
+                string UserID =CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 MemberType objMemberType;
-                objMemberType = id != string.Empty ? db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]) && x.MemberTypeID != id).First() : db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])).First();
+                objMemberType = id != string.Empty ? db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID && x.MemberTypeID != id).First() : db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID).First();
                 return objMemberType != null ? true : false;
             }
             catch (Exception ex)

@@ -1,21 +1,21 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
-<h2>Mapping Channel to Package</h2>
+<h2>Mapping Category to Member type</h2>
 <br />
-<div ng-controller="PackageMappingController" class="row panel panel-default" style=" width:100%;padding:5px;">
+<div ng-controller="MemberTypeMappingController" class="row panel panel-default" style=" width:100%;padding:5px;">
     <div class="col-xs-6 col-md-4">
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th><h3>Package</h3></th>
+                    <th><h3>Member Type</h3></th>
                     @*<th></th>*@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentPackage}" class="clickable">
+                <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentMemType}" class="clickable">
                     <td>
-                        {{row.PackageDesc}}
+                        {{row.MemberTypeDesc}}
                     </td>
                 </tr>
             </tbody>
@@ -29,26 +29,26 @@
         </table>
     </div>
     <div class="col-xs-12 col-md-8">
-        <div ng-show="divActiveChannel" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
-            <h3>Add channel to {{currentPackage.PackageDesc}}</h3>
+        <div ng-show="divActiveCategory" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
+            <h3>Add Category to {{currentMemType.MemberTypeDesc}}</h3>
             <input type="button" value="Add" ng-click="add()" class="btn" />
             <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
-            <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
+            <table st-table="displayedchanCollection" st-safe-src="cateCollection" class="table">
                 <thead>
                     <tr>
                         <th><p>Select</p></th>
-                        <th><p>Channel name</p></th>
+                        <th><p>Category name</p></th>
                         <th><p>Create date</p></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="chanA in chanCollection">
-                        <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans' class="clickable"> </td>
+                    <tr ng-repeat="cateA in cateCollection">
+                        <td><input type='checkbox' value="{{cateA.CategoryID}}" check-list='SelectItemCates' class="clickable"> </td>
                         <td>
-                            {{chanA.ChannelDesc}}
+                            {{cateA.CategoryDesc}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(chanA.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{ToJavaScriptDateToString(cateA.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                     </tr>
                 </tbody>
@@ -61,27 +61,27 @@
                 </tfoot>
             </table>
         </div>
-        <div ng-show="divMappingChannel" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
-            <h3>Mapped channel in {{currentPackage.PackageDesc}}</h3>
-            <input type="button" value="New channel" ng-click="addChannel()" class="btn" />
+        <div ng-show="divMappingCategory" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
+            <h3>Mapped Category in {{currentMemType.MemberTypeDesc}}</h3>
+            <input type="button" value="New category" ng-click="addCategory()" class="btn" />
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Channel name</p></th>
+                        <th><p>Category name</p></th>
                         <th><p>Create date</p></th>
-                        <th>Operation</th>
+                        <th><p>Operation</p></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="chan in mapCollection">
+                    <tr ng-repeat="cate in mapCollection">
                         <td>
-                            {{chan.ChannelDesc}}
+                            {{cate.CategoryDesc}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(chan.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{ToJavaScriptDateToString(cate.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td>
-                            <button type="button" ng-click="delete(chan)" class="btn btn-sm ">
+                            <button type="button" ng-click="delete(cate)" class="btn btn-sm ">
                                 <i class="glyphicon glyphicon-trash">
                                 </i>
                             </button>

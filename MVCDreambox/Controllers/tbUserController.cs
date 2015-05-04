@@ -24,6 +24,14 @@ namespace MVCDreambox.Controllers
             return View();
         }
 
+        public ActionResult ChangePassword()
+        {
+            return View();
+            //string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+            //var user = db.tbUsers.Where(a => a.DealerID == strUserID).FirstOrDefault();
+            //return Json(user, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GetUsersList()
         {
             try
@@ -102,7 +110,49 @@ namespace MVCDreambox.Controllers
             return "Update failed";
         }
 
+        public string UpdatePassword(string Password)
+        {
+            try
+            {
+                if (Password != string.Empty)
+                {
+                    string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                    var user = db.tbUsers.Find(strUserID);
+                    RSACrypto crypto = new RSACrypto();
+                    user.Password = crypto.Encrypt(Password);
+                    user.UpdateDate = DateTime.Now;
+                    user.UpdateBy = strUserID;
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex) { }
+            return "Change password failed";
+        }
 
+        public string ResetPassword(string id)
+        {
+            try
+            {
+                if (id != string.Empty)
+                {
+                    RSACrypto crypto = new RSACrypto();
+                    tbUser user = db.tbUsers.Find(id);
+                    user.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
+                    user.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                    user.UpdateDate = DateTime.Now;
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "Update failed";
+        }
         public string Delete(string id)
         {
             try
@@ -129,7 +179,7 @@ namespace MVCDreambox.Controllers
                 if (UserID != string.Empty && Password != string.Empty)
                 {
 
-                    tbUser tbuser = db.tbUsers.Where(m => m.UserName == UserID && m.Status==CommonConstant.Status.Active).FirstOrDefault();
+                    tbUser tbuser = db.tbUsers.Where(m => m.UserName == UserID && m.Status == CommonConstant.Status.Active).FirstOrDefault();
                     if (tbuser != null)
                     {
                         RSACrypto crypto = new RSACrypto();
@@ -140,9 +190,10 @@ namespace MVCDreambox.Controllers
                             Session["RealName"] = tbuser.RealName;
                             return "Success";
                         }
-                        else {
+                        else
+                        {
                             return "Password is incorrect.";
-                        }                        
+                        }
                     }
                     else
                     {

@@ -5,6 +5,7 @@ app.controller("LoginController", function ($scope, loginService, $location) {
     $scope.UserName = "";
     $scope.Password = "";
     $scope.Login = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var getMSG = loginService.Login($scope.UserName, $scope.Password);
@@ -20,10 +21,48 @@ app.controller("LoginController", function ($scope, loginService, $location) {
         }
     }
     $scope.Cancel = function () {
-        $scope.$broadcast('show-errors-check-validity');
+        $scope.$broadcast('show-errors-reset');
         $scope.errormessage = "";
         $scope.UserName = "";
         $scope.Password = "";
+    }
+});
+
+//------------------------------- LoginController ----------------------------------------------------//
+app.controller("ChangePassowrdController", function ($scope, changePassService) {
+    $scope.$broadcast('show-errors-reset');
+    $scope.errormessage = "";
+    $scope.NewPassword = "";
+    $scope.ConfirmPassword = "";
+    $scope.Save = function () {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-check-validity');
+        if ($scope.appForm.$valid) {
+            if ($scope.NewPassword == $scope.ConfirmPassword) {
+                var getMSG = changePassService.UpdatePassword($scope.NewPassword);
+                getMSG.then(function (messagefromController) {
+                    if (messagefromController.data == "Success") {
+                        $scope.$broadcast('show-errors-reset');
+                        $scope.NewPassword = "";
+                        $scope.ConfirmPassword = "";
+                        alert("Change password success.");
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Change password failed.";
+                });
+            } else {
+                $scope.errormessage = "Confirm password is mismatch.";
+            }
+        }
+    }
+    $scope.Cancel = function () {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.CurrentPassword = "";
+        $scope.NewPassword = "";
+        $scope.ConfirmPassword = "";
     }
 });
 
@@ -87,6 +126,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var tbuser = {
@@ -133,8 +173,25 @@ app.controller("UserController", function ($scope, userService, $filter) {
             }
         }
     }
-
+    $scope.Resetpassword = function () {
+        $scope.errormessage = "";
+        if (confirm('Please confirm to reset password.')) {
+            var getMSG = userService.ResetPassword($scope.DealerID);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    $scope.divModification = false;
+                    $scope.AddNew = true;
+                    alert("Reset password complete.");
+                } else {
+                    $scope.errormessage = messagefromController.data;
+                }
+            }, function () {
+                $scope.errormessage = "Reset password failed.";
+            });
+        }
+    }
     $scope.delete = function (tbuser) {
+        $scope.errormessage = "";
         $scope.divModification = false;
         $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
@@ -206,6 +263,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var Package = {
@@ -248,6 +306,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
     }
 
     $scope.delete = function (Package) {
+        $scope.errormessage = "";
         $scope.divModification = false;
         $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
@@ -319,6 +378,7 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var Channel = {
@@ -361,6 +421,7 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
     }
 
     $scope.delete = function (channel) {
+        $scope.errormessage = "";
         $scope.divModification = false;
         $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
@@ -425,6 +486,7 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
         }
     }
     $scope.selectRow = function (pack) {
+        $scope.errormessage = "";
         $scope.divMappingChannel = true;
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
@@ -432,11 +494,13 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
         GetMappingChannelsList($scope.currentPackage.PackageID);
     }
     $scope.addChannel = function () {
+        $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = true;
         GetActiveChannelsList($scope.currentPackage.PackageID);
     }
     $scope.cancel = function () {
+        $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
     }
@@ -446,6 +510,7 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
     }
 
     $scope.add = function () {
+        $scope.errormessage = "";
         if ($scope.SelectItemChans == null || $scope.SelectItemChans.length <= 0) {
             $scope.errormessage = "Please select channel to map.";
         } else {
@@ -525,6 +590,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
         }
     }
     $scope.selectRow = function (user) {
+        $scope.errormessage = "";
         $scope.divMappingPackage = true;
         $scope.SelectItemPacks = [];
         $scope.divActivePackage = false;
@@ -532,6 +598,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
         GetMappingPackagesList($scope.currentDealer.DealerID);
     }
     $scope.addPackage = function () {
+        $scope.errormessage = "";
         $scope.SelectItemPacks = [];
         $scope.divActivePackage = true;
         GetActivePackagesList($scope.currentDealer.DealerID);
@@ -546,6 +613,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
     }
 
     $scope.add = function () {
+        $scope.errormessage = "";
         if ($scope.SelectItemPacks == null || $scope.SelectItemPacks.length <= 0) {
             $scope.errormessage = "Please select package.";
         } else {
@@ -564,6 +632,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
         }
     }
     $scope.delete = function (pack) {
+        $scope.errormessage = "";
         $scope.SelectItemPacks = [];
         $scope.divActivePackage = false;
         if (confirm('Please confirm to delete.')) {
@@ -631,6 +700,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var memtype = {
@@ -674,6 +744,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
     }
 
     $scope.delete = function (memtype) {
+        $scope.errormessage = "";
         $scope.divModification = false;
         $scope.AddNew = true;
         if (confirm('Please confirm to delete.')) {
@@ -786,6 +857,7 @@ app.controller("MemberController", function ($scope, memberService) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var Member = {
@@ -840,8 +912,25 @@ app.controller("MemberController", function ($scope, memberService) {
             }
         }
     }
-
+    $scope.Resetpassword = function () {
+        $scope.errormessage = "";
+        if (confirm('Please confirm to reset password.')) {
+            var getMSG = memberService.ResetPassword($scope.MemberID);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    $scope.divModification = false;
+                    $scope.AddNew = true;
+                    alert("Reset password complete.");
+                } else {
+                    $scope.errormessage = messagefromController.data;
+                }
+            }, function () {
+                $scope.errormessage = "Reset password failed.";
+            });
+        }
+    }
     $scope.delete = function (member) {
+        $scope.errormessage = "";
         $scope.AddNew = true;
         $scope.divModification = false;
         if (confirm('Please confirm to delete.')) {
@@ -909,6 +998,7 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
     }
 
     $scope.Save = function () {
+        $scope.errormessage = "";
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var payment = {
@@ -935,6 +1025,7 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
     }
 
     $scope.delete = function (payment) {
+        $scope.errormessage = "";
         $scope.AddNew = true;
         $scope.divModification = false;
         if (confirm('Please confirm to delete.')) {
@@ -1020,6 +1111,128 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     };
 
 
+
+
+    $scope.SelectNode = function (cate, parent) {
+        $scope.errormessage = "";
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
+        $scope.divModification = true;
+        $scope.currentNode = cate;
+        $scope.currentParentNode = parent;
+        if ($scope.Operation == "Add") {
+            $scope.ParentID = $scope.currentNode.CategoryID;
+            $scope.ParentName = $scope.currentNode.CategoryDesc;
+        } else {
+            $scope.ParentID = $scope.currentNode.CategoryID
+            $scope.ParentName = $scope.currentParentNode.CategoryDesc;
+        }
+    }
+    $scope.add = function () {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.Operation = "Add";
+        $scope.divAdd = true;
+        $scope.ParentID = $scope.currentNode.CategoryID;
+        $scope.ParentName = $scope.currentNode.CategoryDesc;
+        $scope.CategoryDesc = "";
+        $scope.ImgPath = "";
+    }
+    $scope.edit = function () {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.Operation = "Update";
+        $scope.divAdd = true;
+        $scope.ParentID = $scope.currentNode.CategoryID
+        $scope.CategoryDesc = $scope.currentNode.CategoryDesc;
+        $scope.ParentName = $scope.currentParentNode.CategoryDesc;
+        $scope.ImgPath = $scope.currentNode.ImgPath;
+    }
+    $scope.cancel = function (cate) {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-reset');
+        $scope.divAdd = false;
+    }
+    $scope.Save = function () {
+        $scope.errormessage = "";
+        $scope.$broadcast('show-errors-check-validity');
+        if ($scope.appForm.$valid) {
+            var cate = {
+                CategoryID: "",
+                CategoryDesc: $scope.CategoryDesc,
+                //ImgPath: $scope.ImgPath,
+                ParentID: $scope.ParentID,
+                Attachment: $scope.ImgPath
+            };
+            var Operation = $scope.Operation;
+            if (Operation == "Update") {
+                cate.CategoryID = $scope.CategoryID;
+                var getMSG = categoryService.update(cate);
+                getMSG.then(function (messagefromController) {
+                    if (messagefromController.data == "Success") {
+                        alert(messagefromController.data);
+                        $scope.divAdd = false;
+                        $scope.divModification = false;
+                        parent_node = $scope.currentParentNode;
+                        parent_node = parent_node || $scope.categories;
+                        var index = parent_node.categories.indexOf($scope.currentNode);
+                        if (index != -1) {
+                            update_node = parent_node.categories[index];
+                            update_node.CategoryDesc = $scope.CategoryDesc;
+                        }
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Update category failed.";
+                });
+            }
+            else {
+                var getMSG = categoryService.Add(cate);
+                getMSG.then(function (messagefromController) {
+                    var str = [];
+                    str = messagefromController.data.split('|');
+                    if (str[0] == "Success") {
+                        alert(str[0]);
+                        $scope.divAdd = false;
+                        $scope.divModification = false;
+                        current_node = $scope.currentNode;
+                        cate.CategoryID = str[1];
+                        cate.categories = [];
+                        cate.iscollapsed = false;
+                        if (current_node.categories)
+                        { current_node.categories.push(cate); }
+                        else {
+                            current_node.categories = cate;
+                        }
+                    } else {
+                        $scope.errormessage = str[1];
+                    }
+                }, function () {
+                    $scope.errormessage = "Add category failed.";
+                });
+            }
+        }
+    }
+    $scope.delete = function () {
+        $scope.errormessage = "";
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = categoryService.Delete($scope.currentNode.CategoryID);
+            getMSG.then(function (messagefromController) {
+                alert(messagefromController.data);
+                parent_node = $scope.currentParentNode;
+                parent_node = parent_node || $scope.categories;
+                var index = parent_node.categories.indexOf($scope.currentNode);
+                if (index != -1) {
+                    parent_node.categories.splice(index, 1);
+                }
+            }, function () {
+                $scope.errormessage = "Delete category failed.";
+            });
+        }
+    }
+
+
     //  $scope.categories = [
     //{
     //    title: 'Computers',
@@ -1066,105 +1279,6 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     //    id: '5'
     //}
     //  ];
-
-    $scope.SelectNode = function (cate, parent) {
-        $scope.errormessage = "";
-        $scope.$broadcast('show-errors-reset');
-        $scope.divModification = true;
-        $scope.currentNode = cate;
-        $scope.currentParentNode = parent;
-    }
-    $scope.add = function () {
-        $scope.Operation = "Add";
-        $scope.divAdd = true;
-        $scope.ParentID = $scope.currentNode.CategoryID;
-        $scope.CategoryDesc = "";
-    }
-    $scope.edit = function () {
-        $scope.Operation = "Update";
-        $scope.divAdd = true;
-        $scope.ParentID = $scope.currentNode.CategoryID
-        $scope.CategoryDesc = $scope.currentNode.CategoryDesc;
-        $scope.ImgPath = $scope.currentNode.ImgPath;
-    }
-    $scope.cancel = function (cate) {
-        $scope.errormessage = "";
-        $scope.$broadcast('show-errors-reset');
-        $scope.divAdd = false;
-    }
-    $scope.Save = function () {
-        $scope.$broadcast('show-errors-check-validity');
-        if ($scope.appForm.$valid) {
-            var cate = {
-                CategoryID: "",
-                CategoryDesc: $scope.CategoryDesc,
-                ImgPath: $scope.ImgPath,
-                ParentID: $scope.ParentID,
-            };
-            var Operation = $scope.Operation;
-            if (Operation == "Update") {
-                cate.CategoryID = $scope.CategoryID;
-                var getMSG = categoryService.update(cate);
-                getMSG.then(function (messagefromController) {
-                    if (messagefromController.data == "Success") {
-                        alert(messagefromController.data);
-                        $scope.divAdd = false;
-                        $scope.divModification = false;
-                        parent_node = $scope.currentParentNode;
-                        parent_node = parent_node || $scope.categories;
-                        var index = parent_node.categories.indexOf($scope.currentNode);
-                        if (index != -1) {
-                            update_node = parent_node.categories[index];
-                            update_node.CategoryDesc = $scope.CategoryDesc;
-                        }
-                    } else {
-                        $scope.errormessage = messagefromController.data;
-                    }
-                }, function () {
-                    $scope.errormessage = "Update category failed.";
-                });
-            }
-            else {
-                var getMSG = categoryService.Add(cate);
-                getMSG.then(function (messagefromController) {
-                    var str = [];
-                    str = messagefromController.data.split('|');
-                    if (str[0] == "Success") {
-                        alert(str[0]);
-                        $scope.divAdd = false;
-                        $scope.divModification = false;
-                        current_node = $scope.currentNode;
-                        cate.CategoryID = str[1];
-                        if (current_node.categories)
-                        { current_node.categories.push(cate); }
-                        else {
-                            current_node.categories = cate;
-                        }
-                    } else {
-                        $scope.errormessage = str[1];
-                    }
-                }, function () {
-                    $scope.errormessage = "Add category failed.";
-                });
-            }
-        }
-    }
-    $scope.delete = function () {
-        if (confirm('Please confirm to delete.')) {
-            var getMSG = categoryService.Delete($scope.currentNode.CategoryID);
-            getMSG.then(function (messagefromController) {
-                alert(messagefromController.data);
-                parent_node = $scope.currentParentNode;
-                parent_node = parent_node || $scope.categories;
-                var index = parent_node.categories.indexOf($scope.currentNode);
-                if (index != -1) {
-                    parent_node.categories.splice(index, 1);
-                }
-            }, function () {
-                $scope.errormessage = "Delete category failed.";
-            });
-        }
-    }
 });
 
 //---------------------- ContentManagementController -------------------------------//
@@ -1211,6 +1325,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         category.iscollapsed = !category.iscollapsed;
     }
     $scope.SelectNode = function (cate, parentnode) {
+        $scope.errormessage = "";
         if (!(cate.categories != null && cate.categories.length > 0)) {
             $scope.divActiveChannel = false;
             $scope.SelectItemChans = [];
@@ -1219,6 +1334,13 @@ app.controller("ContentManagementController", function ($scope, contentService, 
             $scope.currentParentNode = parentnode;
             GetMappingChannelsList($scope.currentNode.CategoryID)
             $scope.divMappingChannel = true;
+        } else {
+            $scope.divActiveChannel = false;
+            $scope.SelectItemChans = [];
+            $scope.errormessage = "";
+            $scope.currentNode = cate;
+            $scope.currentParentNode = parentnode;
+            $scope.divMappingChannel = false;
         }
     }
     var _makeTree = function (options) {
@@ -1286,6 +1408,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         }
     }
     $scope.addChannel = function () {
+        $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = true;
         GetActiveChannelsList($scope.currentNode.CategoryID);
@@ -1296,6 +1419,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
     }
 
     $scope.add = function () {
+        $scope.errormessage = "";
         if ($scope.SelectItemChans == null || $scope.SelectItemChans.length <= 0) {
             $scope.errormessage = "Please select channel to map.";
         } else {
@@ -1314,6 +1438,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         }
     }
     $scope.delete = function (cate) {
+        $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
         if (confirm('Please confirm to delete.')) {
@@ -1323,6 +1448,110 @@ app.controller("ContentManagementController", function ($scope, contentService, 
                 alert(messagefromController.data);
             }, function () {
                 $scope.errormessage = "Delete failed.";
+            });
+        }
+    }
+});
+
+//---------------------- PackageMappingController -------------------------------//
+app.controller("MemberTypeMappingController", function ($scope, membertypeMapService, $filter) {
+    $scope.divMappingCategory = false;
+    $scope.divActiveCategory = false;
+    $scope.SelectItemCates = [];
+    GetActiveMembertypeList();
+    function GetActiveMembertypeList() {
+        var Data = membertypeMapService.getActiveMemberTypeList();
+        Data.then(function (mem) {
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = mem.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetMappingCategorysList(MemberTypeID) {
+        var Data = membertypeMapService.getMappingCategoryList(MemberTypeID);
+        Data.then(function (mem) {
+            $scope.itemsmapByPage = 10;
+            $scope.mapCollection = mem.data;
+            $scope.displayedmapCollection = [].concat($scope.mapCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetActiveCategorysList(MemberTypeID) {
+        var Data = membertypeMapService.getActiveCategorysList(MemberTypeID);
+        Data.then(function (pack) {
+            $scope.itemscateByPage = 10;
+            $scope.cateCollection = pack.data;
+            $scope.displayedcateCollection = [].concat($scope.cateCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    $scope.ToJavaScriptDateToString = function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
+    $scope.selectRow = function (mem) {
+        $scope.errormessage = "";
+        $scope.divMappingCategory = true;
+        $scope.SelectItemCates = [];
+        $scope.divActiveCategory = false;
+        $scope.currentMemType = mem;
+        GetMappingCategorysList($scope.currentMemType.MemberTypeID);
+    }
+    $scope.addCategory = function () {
+        $scope.errormessage = "";
+        $scope.SelectItemCates = [];
+        $scope.divActiveCategory = true;
+        GetActiveCategorysList($scope.currentMemType.MemberTypeID);
+    }
+    $scope.cancel = function () {
+        $scope.errormessage = "";
+        $scope.SelectItemCates = [];
+        $scope.divActiveCategory = false;
+    }
+    $scope.addSelect = function (cate) {
+        if ($scope.SelectItemCates.indexOf(cate.CategoryID) != -1) return;
+        $scope.SelectItemCates.push(cate.CategoryID);
+    }
+
+    $scope.add = function () {
+        $scope.errormessage = "";
+        if ($scope.SelectItemCates == null || $scope.SelectItemCates.length <= 0) {
+            $scope.errormessage = "Please select category.";
+        } else {
+            var getMSG = membertypeMapService.Add($scope.currentMemType.MemberTypeID, $scope.SelectItemCates);
+            getMSG.then(function (messagefromController) {
+                if (messagefromController.data == "Success") {
+                    GetMappingCategorysList($scope.currentMemType.MemberTypeID);
+                    $scope.SelectItemCates = [];
+                    $scope.divActiveCategory = false;
+                } else {
+                    alert(messagefromController.data);
+                }
+            }, function () {
+                $scope.errormessage = "Mapping category failed.";
+            });
+        }
+    }
+    $scope.delete = function (mem) {
+        $scope.SelectItemCates = [];
+        $scope.divActiveCategory = false;
+        if (confirm('Please confirm to delete.')) {
+            var getMSG = membertypeMapService.Delete(mem.MemberTypeID, mem.CategoryID);
+            getMSG.then(function (messagefromController) {
+                GetMappingCategorysList(mem.MemberTypeID);
+                alert(messagefromController.data);
+            }, function () {
+                $scope.errormessage = "Delete category mapping failed.";
             });
         }
     }

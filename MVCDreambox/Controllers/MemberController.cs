@@ -31,7 +31,7 @@ namespace MVCDreambox.Controllers
                 var memberlist = (from mem in db.Members.ToList()
                                   join memtype in db.MemberTypes on mem.MemberTypeID equals memtype.MemberTypeID
                                   join tbuser in db.tbUsers on mem.DealerID equals tbuser.DealerID
-                                  where mem.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])
+                                  where mem.DealerID == strUserID
                                   select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeDesc, tbuser.RealName }).ToList();
                 return Json(memberlist, JsonRequestBehavior.AllowGet);
             }
@@ -47,7 +47,8 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var memberTypeList = db.MemberTypes.Where(m => m.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])).ToList();
+                string strUserID = Session[CommonConstant.SessionUserID].ToString();
+                var memberTypeList = db.MemberTypes.Where(m => m.DealerID == strUserID).ToList();
                 return Json(memberTypeList, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -98,7 +99,7 @@ namespace MVCDreambox.Controllers
                 {
                     if (!IsDuplicate(member.MemberID, member.UserName))
                     {
-                        
+
                         Member mem = db.Members.Find(member.MemberID);
                         mem.UserName = member.UserName;
                         mem.MemberName = member.MemberName;
@@ -117,6 +118,29 @@ namespace MVCDreambox.Controllers
                     {
                         return "This username is already in used.";
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "Update failed";
+        }
+
+        public string ResetPassword(string id)
+        {
+            try
+            {
+                if (id != string.Empty)
+                {
+                    RSACrypto crypto = new RSACrypto();
+                    Member mem = db.Members.Find(id);
+                    mem.Password = crypto.Encrypt(CommonConstant.DefaultPassword);
+                    mem.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                    mem.UpdateDate = DateTime.Now;
+                    db.Entry(mem).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return "Success";
                 }
             }
             catch (Exception ex)

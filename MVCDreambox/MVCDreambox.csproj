@@ -190,6 +190,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ContentManagementController.cs" />
+    <Compile Include="Controllers\MemberTypeMappingController.cs" />
     <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\PackageMappingController.cs" />
     <Compile Include="Controllers\PackagePermissionController.cs" />
@@ -1111,6 +1112,8 @@
     <Content Include="Views\PackagePermission\Index.cshtml" />
     <Content Include="Views\tbUser\Login.cshtml" />
     <Content Include="Views\ContentManagement\Index.cshtml" />
+    <Content Include="Views\tbUser\ChangePassword.cshtml" />
+    <Content Include="Views\MemberTypeMapping\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -61,8 +61,10 @@
         </form>
     </div>
     <div class="panel panel-default" style=" width:100%;padding:5px;">
-        @if (Session["Role"].ToString() == "Dealer")
-        { <input ng-show="AddNew" type="button" value="New channel" ng-click="add()" class="btn" />}
+        @*@if (Session["Role"].ToString() == "Dealer")
+            { *@
+        <input ng-show="AddNew" type="button" value="New channel" ng-click="add()" class="btn" />
+        @*}*@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
@@ -70,9 +72,10 @@
                     <th st-sort="ChannelDesc"><b>Channel name</b></th>
                     <th st-sort="ChannelPath"><b>Channel Path</b></th>
                     <th st-sort="ChannelStatus"><b>Channel Status</b></th>
-                    @if (Session["Role"].ToString() == "Dealer")
-                    {
-                        <th><b>Operation</b></th>}
+                    @*@if (Session["Role"].ToString() == "Dealer")
+                        {*@
+                    <th><b>Operation</b></th>
+                    @*}*@
                 </tr>
                 @*<tr>
                         <th>
@@ -95,19 +98,19 @@
                     <td>
                         {{row.ChannelStatus}}
                     </td>
-                    @if (Session["Role"].ToString() == "Dealer")
-                    {
-                        <td>
-                            <button type="button" ng-click="edit(row)" class="btn btn-sm ">
-                                <i class="glyphicon glyphicon-edit">
-                                </i>
-                            </button>
-                            <button type="button" ng-click="delete(row)" class="btn btn-sm ">
-                                <i class="glyphicon glyphicon-trash">
-                                </i>
-                            </button>
-                        </td>
-                    }
+                    @*@if (Session["Role"].ToString() == "Dealer")
+                        {*@
+                    <td>
+                        <button type="button" ng-click="edit(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                        <button type="button" ng-click="delete(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-trash">
+                            </i>
+                        </button>
+                    </td>
+                    @*}*@
                 </tr>
             </tbody>
             <tfoot>

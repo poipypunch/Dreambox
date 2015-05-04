@@ -1,15 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Dreambox Solution";
 }
-<style>
-    .form-group .help-block {
-        display: none;
-    }
-
-    .form-group.has-error .help-block {
-        display: block;
-    }
-</style>
 <h2>Login</h2>
 <div ng-controller="LoginController">
     <form name="appForm" novalidate>
@@ -31,7 +22,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="Login" ng-click="Login()" class="btn" />
+                    <input type="button" value="Login" ng-click="Login()" class="btn btn-default" />
                     <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
                 </div>
             </div>

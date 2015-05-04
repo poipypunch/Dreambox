@@ -38,7 +38,38 @@ namespace MVCDreambox.Controllers
             return Json(results, JsonRequestBehavior.AllowGet);
         }
 
-        public string Add(Category category)
+        //public string Add(CategoryDummay category)
+        //{
+        //    try
+        //    {
+        //        if (category != null)
+        //        {
+        //            if (!IsDuplicate(string.Empty, category.CategoryDesc))
+        //            {
+
+        //                string fname = HttpContext.Server.MapPath("Uploads\\" + category.Attachment.FileName);
+        //                category.Attachment.SaveAs(fname);
+        //                category.CategoryID = Guid.NewGuid().ToString();
+        //                category.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+        //                category.UpdateDate = DateTime.Now;
+        //                category.CreateDate = DateTime.Now;
+        //                //db.Categories.Add(category);
+        //                db.SaveChanges();
+        //                return "Success|" + category.CategoryID.ToString();
+        //            }
+        //            else
+        //            {
+        //                return "Failed|This category name is already in used.";
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //    return "Failed|Add new category failed";
+        //}
+        public string Add(CategoryDummay category)
         {
             try
             {
@@ -46,13 +77,33 @@ namespace MVCDreambox.Controllers
                 {
                     if (!IsDuplicate(string.Empty, category.CategoryDesc))
                     {
-                        category.CategoryID = Guid.NewGuid().ToString();
-                        category.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        category.UpdateDate = DateTime.Now;
-                        category.CreateDate = DateTime.Now;
-                        db.Categories.Add(category);
+                        Category cate = new Category();
+                        if (category.Attachment != null)
+                        {
+                            cate.ImgPath = cate.CategoryID + "\\" + category.Attachment.FileName;
+                            try
+                            {
+                                //string fname = HttpContext.Server.MapPath("Uploads\\" + cate.CategoryID + "\\" + category.Attachment.FileName);
+                                string fname = HttpContext.Server.MapPath("Uploads\\" + category.Attachment.FileName);
+                                //string fname = CommonConstant.GetSiteRoot() + "Uploads\\" + cate.CategoryID + "\\" + category.Attachment.FileName;
+                                category.Attachment.SaveAs(fname);
+                            }
+                            catch (Exception err)
+                            {
+
+                            }
+                        }
+                        
+                        cate.CategoryID = Guid.NewGuid().ToString();
+                        cate.CategoryDesc = category.CategoryDesc;   
+                        cate.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                        cate.UpdateDate = DateTime.Now;
+                        cate.CreateDate = DateTime.Now;
+                        cate.ParentID = category.ParentID;
+
+                        db.Categories.Add(cate);
                         db.SaveChanges();
-                        return "Success|" + category.CategoryID.ToString();
+                        return "Success|" + cate.CategoryID.ToString();
                     }
                     else
                     {
@@ -125,8 +176,9 @@ namespace MVCDreambox.Controllers
         {
             try
             {
+                string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 Category cate;
-                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]) && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID])).First();
+                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID).First();
                 return cate != null ? true : false;
             }
             catch (Exception ex)

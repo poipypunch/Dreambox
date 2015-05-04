@@ -24,6 +24,7 @@ namespace MVCDreambox.Models
 
         public DbSet<PackagePermission> PackagePermissions { get; set; }
         public DbSet<ContentManagement> ContentMangements { get; set; }
+        public DbSet<MemberTypeMapping> MemberTypeMappings { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
