@@ -1,5 +1,5 @@
 ﻿//------------------------------- LoginController ----------------------------------------------------//
-app.controller("LoginController", function ($scope, loginService, $location) {
+app.controller("LoginController", function ($scope, loginService, $location, ShareService) {
     $scope.$broadcast('show-errors-reset');
     $scope.errormessage = "";
     $scope.UserName = "";
@@ -11,12 +11,13 @@ app.controller("LoginController", function ($scope, loginService, $location) {
             var getMSG = loginService.Login($scope.UserName, $scope.Password);
             getMSG.then(function (messagefromController) {
                 if (messagefromController.data == "Success") {
-                    window.location = "/Home/Index";
+                    window.location = ShareService.GetBaseUrl() + "Home/Index";
                 } else {
                     $scope.errormessage = messagefromController.data;
                 }
             }, function () {
-                $scope.errormessage = "Login failed.";
+                $scope.errormessage = "Login error.";
+                console.log($scope.errormessage);
             });
         }
     }
@@ -71,7 +72,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
     $scope.divModification = false;
     $scope.AddNew = true;
     GetUsersList();
-    //To Get All Records
     function GetUsersList() {
         var Data = userService.getUsers();
         Data.then(function (tbuser) {
@@ -86,7 +86,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.errormessage = "";
         $scope.DealerID = tbuser.DealerID;
         $scope.UserName = tbuser.UserName;
-        //$scope.Password = tbuser.Password;
         $scope.RealName = tbuser.RealName;
         $scope.Email = tbuser.Email;
         $scope.Phone = tbuser.Phone;
@@ -95,7 +94,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.Status = tbuser.Status;
         $scope.Operation = "Update";
         $scope.divModification = true;
-        //$scope.showRepassword = false;
         $scope.AddNew = false;
     }
 
@@ -103,7 +101,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        //$scope.showRepassword = false;
         $scope.AddNew = true;
     }
 
@@ -112,7 +109,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.errormessage = "";
         $scope.DealerID = "";
         $scope.UserName = "";
-        //$scope.Password = "";
         $scope.RealName = "";
         $scope.Email = "";
         $scope.Phone = "";
@@ -121,7 +117,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
         $scope.Status = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
-        //$scope.showRepassword = true;
         $scope.AddNew = false;
     }
 
@@ -132,7 +127,6 @@ app.controller("UserController", function ($scope, userService, $filter) {
             var tbuser = {
                 DealerID: $scope.DealerID,
                 UserName: $scope.UserName,
-                //Password: $scope.Password,
                 RealName: $scope.RealName,
                 Email: $scope.Email,
                 Phone: $scope.Phone,
@@ -209,7 +203,7 @@ app.controller("UserController", function ($scope, userService, $filter) {
 
 
 //----------------------- Package ------------------------------------------------//
-app.controller("PackageController", function ($scope, packageService, $filter) {
+app.controller("PackageController", function ($scope, packageService, $filter, ShareService) {
     $scope.divModification = false;
     $scope.AddNew = true;
     GetPackagesList();
@@ -224,20 +218,10 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
             alert('get data error');
         });
     }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
-    }
     $scope.edit = function (Package) {
         $scope.errormessage = "";
         $scope.PackageID = Package.PackageID;
-        $scope.PackageDesc = Package.PackageDesc;
+        $scope.PackageName = Package.PackageName;
         $scope.PackageStatus = Package.PackageStatus;
         $scope.Operation = "Update";
         $scope.divModification = true;
@@ -255,7 +239,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.PackageID = "";
-        $scope.PackageDesc = "";
+        $scope.PackageName = "";
         $scope.PackageStatus = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
@@ -268,7 +252,7 @@ app.controller("PackageController", function ($scope, packageService, $filter) {
         if ($scope.appForm.$valid) {
             var Package = {
                 PackageID: $scope.PackageID,
-                PackageDesc: $scope.PackageDesc,
+                PackageName: $scope.PackageName,
                 PackageStatus: $scope.PackageStatus
             };
             var Operation = $scope.Operation;
@@ -337,21 +321,13 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
             alert('get data error');
         });
     }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
-    }
     $scope.edit = function (channel) {
         $scope.errormessage = "";
         $scope.ChannelID = channel.ChannelID;
-        $scope.ChannelDesc = channel.ChannelDesc;
-        $scope.ChannelPath = channel.ChannelPath;
+        $scope.ChannelName = channel.ChannelName;
+        $scope.BrowserUrl = channel.BrowserUrl;
+        $scope.iOSUrl = channel.iOSUrl;
+        $scope.AndroidUrl = channel.AndroidUrl;
         $scope.ChannelStatus = channel.ChannelStatus;
         $scope.Operation = "Update";
         $scope.divModification = true;
@@ -369,8 +345,10 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.ChannelID = "";
-        $scope.ChannelDesc = "";
-        $scope.ChannelPath = "";
+        $scope.ChannelName = "";
+        $scope.BrowserUrl = "";
+        $scope.iOSUrl = "";
+        $scope.AndroidUrl = "";
         $scope.ChannelStatus = "Active";
         $scope.Operation = "New";
         $scope.divModification = true;
@@ -382,8 +360,10 @@ app.controller("ChannelController", function ($scope, channelService, $filter) {
         $scope.$broadcast('show-errors-check-validity');
         if ($scope.appForm.$valid) {
             var Channel = {
-                ChannelDesc: $scope.ChannelDesc,
-                ChannelPath: $scope.ChannelPath,
+                ChannelName: $scope.ChannelName,
+                BrowserUrl: $scope.BrowserUrl,
+                iOSUrl: $scope.iOSUrl,
+                AndroidUrl: $scope.AndroidUrl,
                 ChannelStatus: $scope.ChannelStatus
             };
             var Operation = $scope.Operation;
@@ -442,13 +422,10 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
     $scope.divActiveChannel = false;
     $scope.SelectItemChans = [];
     GetActivePackageList();
-    //getMappingChannelsList();
-    //getActiveChannelsList();
-    //To Get All Records
     function GetActivePackageList() {
         var Data = packagemapService.getActivePackagesList();
         Data.then(function (pack) {
-            $scope.itemsByPage = 10;
+            $scope.itemsByPage = 5;
             $scope.rowCollection = pack.data;
             $scope.displayedCollection = [].concat($scope.rowCollection);
         }, function () {
@@ -458,7 +435,7 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
     function GetMappingChannelsList(PackageID) {
         var Data = packagemapService.getMappingChannelsList(PackageID);
         Data.then(function (pack) {
-            $scope.itemsmapByPage = 10;
+            $scope.itemsmapByPage = 5;
             $scope.mapCollection = pack.data;
             $scope.displayedmapCollection = [].concat($scope.mapCollection);
         }, function () {
@@ -468,22 +445,12 @@ app.controller("PackageMappingController", function ($scope, packagemapService, 
     function GetActiveChannelsList(PackageID) {
         var Data = packagemapService.getActiveChannelsList(PackageID);
         Data.then(function (pack) {
-            $scope.itemschanByPage = 10;
+            $scope.itemschanByPage = 5;
             $scope.chanCollection = pack.data;
             $scope.displayedchanCollection = [].concat($scope.chanCollection);
         }, function () {
             alert('get data error');
         });
-    }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
     }
     $scope.selectRow = function (pack) {
         $scope.errormessage = "";
@@ -579,16 +546,6 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
             alert('get data error');
         });
     }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
-    }
     $scope.selectRow = function (user) {
         $scope.errormessage = "";
         $scope.divMappingPackage = true;
@@ -648,7 +605,7 @@ app.controller("PackagePermissionController", function ($scope, packagePerServic
     }
 });
 //---------------------- MemberTypeController -----------------------------------//
-app.controller("MemberTypeController", function ($scope, memberTypeService) {
+app.controller("MemberTypeController", function ($scope, memberTypeService, $filter) {
     $scope.divModification = false;
     $scope.AddNew = true;
     GetMemberTypesList();
@@ -663,20 +620,11 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
             alert('Error');
         });
     }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
-    }
+
     $scope.edit = function (memtype) {
         $scope.errormessage = "";
         $scope.MemberTypeID = memtype.MemberTypeID;
-        $scope.MemberTypeDesc = memtype.MemberTypeDesc;
+        $scope.MemberTypeName = memtype.MemberTypeName;
         $scope.Operation = "Update";
         $scope.divModification = true;
         $scope.AddNew = false;
@@ -693,7 +641,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.MemberTypeID = "";
-        $scope.MemberTypeDesc = "";
+        $scope.MemberTypeName = "";
         $scope.Operation = "New";
         $scope.divModification = true;
         $scope.AddNew = false;
@@ -705,7 +653,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
         if ($scope.appForm.$valid) {
             var memtype = {
                 MemberTypeID: $scope.MemberTypeID,
-                MemberTypeDesc: $scope.MemberTypeDesc
+                MemberTypeName: $scope.MemberTypeName
             };
             var Operation = $scope.Operation;
 
@@ -760,7 +708,7 @@ app.controller("MemberTypeController", function ($scope, memberTypeService) {
 });
 
 //-------------------------------- MemberController ---------------------------------------//
-app.controller("MemberController", function ($scope, memberService) {
+app.controller("MemberController", function ($scope, memberService, $filter) {
     $scope.divModification = false;
     $scope.AddNew = true;
     GetMemberTypeList();
@@ -787,16 +735,6 @@ app.controller("MemberController", function ($scope, memberService) {
             alert('Error');
         });
     }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
-    }
     $scope.SavePermission = function () {
         var Permission = {
             ID: $scope.selectedItem.ID,
@@ -818,7 +756,6 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.errormessage = "";
         $scope.MemberID = member.MemberID;
         $scope.UserName = member.UserName;
-        //$scope.Password = member.Password;
         $scope.MemberName = member.MemberName;
         $scope.Address = member.Address;
         $scope.Email = member.Email;
@@ -834,7 +771,6 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = false;
-        //$scope.showRepassword = false;
         $scope.AddNew = true;
     }
 
@@ -843,7 +779,6 @@ app.controller("MemberController", function ($scope, memberService) {
         $scope.$broadcast('show-errors-reset');
         $scope.MemberID = "";
         $scope.UserName = "";
-        //$scope.Password = "";
         $scope.RePassword = "";
         $scope.MemberName = "";
         $scope.Address = "";
@@ -864,7 +799,6 @@ app.controller("MemberController", function ($scope, memberService) {
                 MemberID: $scope.MemberID,
                 UserName: $scope.UserName,
                 MemberName: $scope.MemberName,
-                //Password: $scope.Password,
                 RePassword: $scope.RePassword,
                 Address: $scope.Address,
                 Email: $scope.Email,
@@ -892,7 +826,6 @@ app.controller("MemberController", function ($scope, memberService) {
             }
             else {
                 var getMSG = memberService.Add(Member);
-                //if (Member.Password == Member.RePassword) {
                 getMSG.then(function (messagefromController) {
                     GetMemberTypeList();
                     GetMemberList();
@@ -906,9 +839,6 @@ app.controller("MemberController", function ($scope, memberService) {
                 }, function () {
                     $scope.errormessage = "Add member failed.";
                 });
-                //} else {
-                //    $scope.errormessage = "Confirm password mismatch.";
-                //}
             }
         }
     }
@@ -946,7 +876,7 @@ app.controller("MemberController", function ($scope, memberService) {
     }
 });
 //------------------------------- UserController ----------------------------------------------------//
-app.controller("PaymentController", function ($scope, paymentService, $filter) {
+app.controller("PaymentController", function ($scope, paymentService, ShareService, $filter) {
     $scope.AddNew = true;
     $scope.divModification = false;
     GetPaymentsList();
@@ -960,22 +890,6 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
         }, function () {
             alert('get data error');
         });
-    }
-    //$scope.ToJavaScriptDate = function (value) {
-    //    var pattern = /Date\(([^)]+)\)/;
-    //    var results = pattern.exec(value);
-    //    var dt = new Date(parseFloat(results[1]));
-    //    return dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate();
-    //}
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
     }
     $scope.Cancel = function () {
         $scope.errormessage = "";
@@ -1039,15 +953,15 @@ app.controller("PaymentController", function ($scope, paymentService, $filter) {
         }
     }
 });
-app.controller("CategoryController", function ($scope, categoryService, $filter) {
+app.controller("CategoryController", function ($scope, categoryService, ShareService, $filter) {
     $scope.iscollapsed = true;
     $scope.divAdd = false;
     GetCategoryTreeList();
     function GetCategoryTreeList() {
         var Data = categoryService.GetCategorys();
         Data.then(function (pack) {
-            $scope.data = _queryTreeSort(pack);
-            $scope.categories = _makeTree($scope.data);
+            $scope.data = ShareService._queryTreeSort(pack);
+            $scope.categories = ShareService._makeTree($scope.data);
         }, function () {
             alert('get data error');
         });
@@ -1055,64 +969,6 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
     $scope.selectNodeHead = function (category) {
         category.iscollapsed = !category.iscollapsed;
     }
-    var _makeTree = function (options) {
-        var children, e, id, o, pid, temp, _i, _len, _ref;
-        id = options.id || "CategoryID";
-        pid = options.parentid || "ParentID";
-        children = options.categories || "categories";
-        temp = {};
-        o = [];
-        _ref = options;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            e = _ref[_i];
-            e[children] = [];
-            temp[e[id]] = e;
-            if (temp[e[pid]] != null) {
-                temp[e[pid]][children].push(e);
-            } else {
-                o.push(e);
-            }
-        }
-        return o;
-    };
-
-    var _queryTreeSort = function (options) {
-        var cfi, e, i, id, o, pid, rfi, ri, thisid, _i, _j, _len, _len1, _ref, _ref1;
-        id = options.id || "CategoryID";
-        pid = options.parentid || "ParentID";
-        ri = [];
-        rfi = {};
-        cfi = {};
-        o = [];
-        _ref = options.data;
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-            e = _ref[i];
-            rfi[e[id]] = i;
-            if (cfi[e[pid]] == null) {
-                cfi[e[pid]] = [];
-            }
-            cfi[e[pid]].push(options.data[i][id]);
-        }
-        _ref1 = options.data;
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            e = _ref1[_j];
-            if (rfi[e[pid]] == null) {
-                ri.push(e[id]);
-            }
-        }
-        while (ri.length) {
-            thisid = ri.splice(0, 1);
-            o.push(options.data[rfi[thisid]]);
-            if (cfi[thisid] != null) {
-                ri = cfi[thisid].concat(ri);
-            }
-        }
-        return o;
-    };
-
-
-
-
     $scope.SelectNode = function (cate, parent) {
         $scope.errormessage = "";
         $scope.errormessage = "";
@@ -1122,10 +978,10 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         $scope.currentParentNode = parent;
         if ($scope.Operation == "Add") {
             $scope.ParentID = $scope.currentNode.CategoryID;
-            $scope.ParentName = $scope.currentNode.CategoryDesc;
+            $scope.ParentName = $scope.currentNode.CategoryName;
         } else {
             $scope.ParentID = $scope.currentNode.CategoryID
-            $scope.ParentName = $scope.currentParentNode.CategoryDesc;
+            $scope.ParentName = $scope.currentParentNode.CategoryName;
         }
     }
     $scope.add = function () {
@@ -1134,8 +990,8 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         $scope.Operation = "Add";
         $scope.divAdd = true;
         $scope.ParentID = $scope.currentNode.CategoryID;
-        $scope.ParentName = $scope.currentNode.CategoryDesc;
-        $scope.CategoryDesc = "";
+        $scope.ParentName = $scope.currentNode.CategoryName;
+        $scope.CategoryName = "";
         $scope.ImgPath = "";
     }
     $scope.edit = function () {
@@ -1144,8 +1000,8 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         $scope.Operation = "Update";
         $scope.divAdd = true;
         $scope.ParentID = $scope.currentNode.CategoryID
-        $scope.CategoryDesc = $scope.currentNode.CategoryDesc;
-        $scope.ParentName = $scope.currentParentNode.CategoryDesc;
+        $scope.CategoryName = $scope.currentNode.CategoryName;
+        $scope.ParentName = $scope.currentParentNode.CategoryName;
         $scope.ImgPath = $scope.currentNode.ImgPath;
     }
     $scope.cancel = function (cate) {
@@ -1159,7 +1015,7 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
         if ($scope.appForm.$valid) {
             var cate = {
                 CategoryID: "",
-                CategoryDesc: $scope.CategoryDesc,
+                CategoryName: $scope.CategoryName,
                 //ImgPath: $scope.ImgPath,
                 ParentID: $scope.ParentID,
                 Attachment: $scope.ImgPath
@@ -1178,7 +1034,7 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
                         var index = parent_node.categories.indexOf($scope.currentNode);
                         if (index != -1) {
                             update_node = parent_node.categories[index];
-                            update_node.CategoryDesc = $scope.CategoryDesc;
+                            update_node.CategoryName = $scope.CategoryName;
                         }
                     } else {
                         $scope.errormessage = messagefromController.data;
@@ -1282,7 +1138,7 @@ app.controller("CategoryController", function ($scope, categoryService, $filter)
 });
 
 //---------------------- ContentManagementController -------------------------------//
-app.controller("ContentManagementController", function ($scope, contentService, $filter) {
+app.controller("ContentManagementController", function ($scope, contentService, ShareService, $filter) {
     $scope.iscollapsed = true;
     $scope.divMappingChannel = false;
     $scope.divActiveChannel = false;
@@ -1292,8 +1148,8 @@ app.controller("ContentManagementController", function ($scope, contentService, 
     function GetCategoryTreeList() {
         var Data = contentService.GetCategorys();
         Data.then(function (cates) {
-            $scope.data = _queryTreeSort(cates);
-            $scope.categories = _makeTree($scope.data);
+            $scope.data = ShareService._queryTreeSort(cates);
+            $scope.categories = ShareService._makeTree($scope.data);
         }, function () {
             alert('get data error');
         });
@@ -1341,70 +1197,6 @@ app.controller("ContentManagementController", function ($scope, contentService, 
             $scope.currentNode = cate;
             $scope.currentParentNode = parentnode;
             $scope.divMappingChannel = false;
-        }
-    }
-    var _makeTree = function (options) {
-        var children, e, id, o, pid, temp, _i, _len, _ref;
-        id = options.id || "CategoryID";
-        pid = options.parentid || "ParentID";
-        children = options.categories || "categories";
-        temp = {};
-        o = [];
-        _ref = options;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            e = _ref[_i];
-            e[children] = [];
-            temp[e[id]] = e;
-            if (temp[e[pid]] != null) {
-                temp[e[pid]][children].push(e);
-            } else {
-                o.push(e);
-            }
-        }
-        return o;
-    };
-
-    var _queryTreeSort = function (options) {
-        var cfi, e, i, id, o, pid, rfi, ri, thisid, _i, _j, _len, _len1, _ref, _ref1;
-        id = options.id || "CategoryID";
-        pid = options.parentid || "ParentID";
-        ri = [];
-        rfi = {};
-        cfi = {};
-        o = [];
-        _ref = options.data;
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-            e = _ref[i];
-            rfi[e[id]] = i;
-            if (cfi[e[pid]] == null) {
-                cfi[e[pid]] = [];
-            }
-            cfi[e[pid]].push(options.data[i][id]);
-        }
-        _ref1 = options.data;
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            e = _ref1[_j];
-            if (rfi[e[pid]] == null) {
-                ri.push(e[id]);
-            }
-        }
-        while (ri.length) {
-            thisid = ri.splice(0, 1);
-            o.push(options.data[rfi[thisid]]);
-            if (cfi[thisid] != null) {
-                ri = cfi[thisid].concat(ri);
-            }
-        }
-        return o;
-    };
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
         }
     }
     $scope.addChannel = function () {
@@ -1462,7 +1254,7 @@ app.controller("MemberTypeMappingController", function ($scope, membertypeMapSer
     function GetActiveMembertypeList() {
         var Data = membertypeMapService.getActiveMemberTypeList();
         Data.then(function (mem) {
-            $scope.itemsByPage = 10;
+            $scope.itemsByPage = 5;
             $scope.rowCollection = mem.data;
             $scope.displayedCollection = [].concat($scope.rowCollection);
         }, function () {
@@ -1472,7 +1264,7 @@ app.controller("MemberTypeMappingController", function ($scope, membertypeMapSer
     function GetMappingCategorysList(MemberTypeID) {
         var Data = membertypeMapService.getMappingCategoryList(MemberTypeID);
         Data.then(function (mem) {
-            $scope.itemsmapByPage = 10;
+            $scope.itemsmapByPage = 5;
             $scope.mapCollection = mem.data;
             $scope.displayedmapCollection = [].concat($scope.mapCollection);
         }, function () {
@@ -1482,22 +1274,12 @@ app.controller("MemberTypeMappingController", function ($scope, membertypeMapSer
     function GetActiveCategorysList(MemberTypeID) {
         var Data = membertypeMapService.getActiveCategorysList(MemberTypeID);
         Data.then(function (pack) {
-            $scope.itemscateByPage = 10;
+            $scope.itemscateByPage = 5;
             $scope.cateCollection = pack.data;
             $scope.displayedcateCollection = [].concat($scope.cateCollection);
         }, function () {
             alert('get data error');
         });
-    }
-    $scope.ToJavaScriptDateToString = function (value) {
-        if (value != null) {
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return results[1].toString();
-        } else {
-            return "";
-        }
     }
     $scope.selectRow = function (mem) {
         $scope.errormessage = "";
@@ -1556,9 +1338,69 @@ app.controller("MemberTypeMappingController", function ($scope, membertypeMapSer
         }
     }
 });
+//---------------------- PackagePermissionController -------------------------------//
+app.controller("MemberSubScribeController", function ($scope, memberSubService, $filter) {
+    $scope.divNewSubScribe = false;
+    $scope.divMember = false;
+    GetSubScribeList();
+    function GetSubScribeList() {
+        var Data = memberSubService.getSubScribeList();
+        Data.then(function (sub) {
+            $scope.itemsByPage = 10;
+            $scope.rowCollection = sub.data;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    function GetActiveMemberList() {
+        var Data = memberSubService.getActiveMemberList();
+        Data.then(function (mem) {
+            $scope.itemsmemByPage = 10;
+            $scope.memCollection = mem.data;
+            $scope.displayedmemCollection = [].concat($scope.memCollection);
+        }, function () {
+            alert('get data error');
+        });
+    }
+    $scope.NewSubScribe = function () {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.divMember = true;
+        GetActiveMemberList();
+    }
+    $scope.MemberSubScribe = function (member) {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.MemberID = member.MemberID;
+        $scope.UserName = member.UserName;
+        $scope.MemberName = member.MemberName;
+        $scope.Address = member.Address;
+        $scope.Email = member.Email;
+        $scope.Phone = member.Phone;
+        $scope.MemberTypeName = member.MemberTypeName;
+        $scope.ExpiryDate = member.ExpiryDate;
+        $scope.divNewSubScribe = true;
+    }
+    $scope.cancel = function (cate) {
+        $scope.$broadcast('show-errors-reset');
+        $scope.errormessage = "";
+        $scope.divNewSubScribe = false;
+        $scope.divMember = false;
+    }
 
-
-
-
-
-
+    $scope.save = function () {
+        $scope.errormessage = "";
+        var getMSG = memberSubService.Add($scope.MemberID, $scope.PaymentID);
+        getMSG.then(function (messagefromController) {
+            if (messagefromController.data == "Success") {
+                $scope.divNewSubScribe = false;
+                $scope.divMember = false;
+            } else {
+                alert(messagefromController.data);
+            }
+        }, function () {
+            $scope.errormessage = "Member subscribe failed.";
+        });
+    }
+});

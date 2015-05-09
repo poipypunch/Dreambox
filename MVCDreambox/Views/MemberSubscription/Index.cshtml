@@ -1,57 +1,133 @@
-﻿@model IEnumerable<MVCDreambox.Models.MemberSubscription>
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Dreambox solution";
 }
+<h2>Member Subscribe</h2>
+<br />
+<div ng-controller="MemberSubScribeController">
+    <div ng-show="divNewSubScribe" class="panel panel-default" style=" width:100%;padding:5px;">
+        <form name="appForm" novalidate>
+            <div class="form-horizontal">
+                <h3>New subscribe</h3>
+                <span class="alert-danger">{{errormessage}}</span>
+                <br />
+                <div class="form-group">
+                    @Html.Label("Member name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <p class="form-control-static">{{MemberName}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Expiry date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <p class="form-control-static">{{ExpiryDate | ToJavaScriptDate | date:'yyyy-MM-dd' }}</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("PaymentID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="PaymentID" ng-model="PaymentID" class="form-control" required placeholder="Payment ID" />
+                        <p class="help-block" ng-if="appForm.PaymentID.$error.required">Payment ID Url is requied</p>
+                    </div>
+                </div>
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SubScribeDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubScribeDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
+                <input type="text" style="width:20px;" ng-model="MemberID" class="hidden" />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" ng-click="save()" class="btn" />
+                        <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div ng-show="divMember" class="panel panel-default" style=" width:100%;padding:5px;">
+        <table st-table="displayedmemCollection" st-safe-src="memCollection" class="table">
+            <thead>
+                <tr>
+                    <th st-sort="UserName"><b>Channel name</b></th>
+                    <th st-sort="MemberName"><b>Browser url</b></th>
+                    <th st-sort="ExpireDate"><b>iOS Url</b></th>
+                    <th><b>Operation</b></th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="UserName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="MemberName" type="text" />
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedmemCollection">
+                    <td>
+                        {{row.UserName}}
+                    </td>
+                    <td>
+                        {{row.MemberName}}
+                    </td>
+                    <td>
+                        {{row.ExpireDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td>
+                        <button type="button" ng-click="MemberSubScribe(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsmemByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="panel panel-default" style=" width:100%;padding:5px;">
+        <input type="button" value="New subscribe" ng-click="NewSubScribe()" class="btn" />
+        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
+            <thead>
+                <tr>
+                    <th st-sort="PaymentID"><b>PaymentID</b></th>
+                    <th st-sort="MemberName"><b>MemberName</b></th>
+                    <th st-sort="MemberTypeName"><b>MemberTypeName</b></th>
+                    <th st-sort="PaymentName"><b>PaymentName</b></th>
+                    <th st-sort="SubScribeDate"><b>SubScribeDate</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td>
+                        {{row.PaymentID}}
+                    </td>
+                    <td>
+                        {{row.MemberName}}
+                    </td>
+                    <td>
+                        {{row.MemberTypeName}}
+                    </td>
+                    <td>
+                        {{row.PaymentName}}
+                    </td>
+                    <td>
+                        {{row.SubScribeDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

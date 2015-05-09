@@ -29,12 +29,8 @@ namespace MVCDreambox.Models
         [DisplayName("Status")]
         public string PaymentStatus { get; set; }
         public string CreateBy { get; set; }
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ? CreateDate { get; set; }
         public string UpdateBy { get; set; }
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ? UpdateDate { get; set; }
     }
 

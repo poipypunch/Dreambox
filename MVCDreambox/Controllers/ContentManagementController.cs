@@ -28,7 +28,7 @@ namespace MVCDreambox.Controllers
                 var CategoryList = db.Categories.Where(m => m.DealerID == strUserID).ToList();
                 Category cate = new Category();
                 cate.CategoryID = "0";
-                cate.CategoryDesc = "Root";
+                cate.CategoryName = "Root";
                 cate.DealerID = strUserID;
                 cate.ParentID = null;
                 CategoryList.Add(cate);
@@ -50,7 +50,7 @@ namespace MVCDreambox.Controllers
                                    join cate in db.Categories on content.CategoryID equals cate.CategoryID
                                    join chan in db.Channels on content.ChannelID equals chan.ChannelID
                                    where content.CategoryID == CategoryID
-                                   select new { content.CategoryID, content.ChannelID, cate.CategoryDesc, chan.ChannelDesc, content.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
+                                   select new { content.CategoryID, content.ChannelID, cate.CategoryName, chan.ChannelName, content.CreateDate, content.ChannelOrder }).OrderBy(m => m.ChannelOrder).ToList();
                 return Json(Channellist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace MVCDreambox.Controllers
                                    join packmap in db.PackageMappings on chan.ChannelID equals packmap.ChannelID
                                    join packper in db.PackagePermissions on packmap.PackageID equals packper.PackageID
                                    where packper.DealerID == strUserID && chan.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == chan.ChannelID) && (p.CategoryID == CategoryID))
-                                   select new { chan.ChannelID,chan.ChannelDesc,chan.ChannelPath,chan.CreateDate }).OrderByDescending(m => m.ChannelDesc).ToList();
+                                   select new { chan.ChannelID,chan.ChannelName,chan.iOSUrl,chan.BrowserUrl,chan.AndroidUrl,chan.CreateDate }).OrderByDescending(m => m.ChannelName).ToList();
                 //var channels = (from s in db.Channels
                 //                where s.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == s.ChannelID) && (p.CategoryID == CategoryID))
                 //                select s).ToList();

@@ -36,7 +36,7 @@
             <i ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
             <i ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
             <span ng-click="SelectNode(category,parent)" ng-class="{CurrentNode:category===currentNode}" class="clickable">
-                {{ category.CategoryDesc }}
+                {{ category.CategoryName }}
             </span>
         </span>
         <ul ng-if="(category.categories && category.iscollapsed)||category.CategoryID=='0'">
@@ -70,8 +70,8 @@
                     <div class="form-group" show-errors='{showSuccess: true}'>
                         @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-4" })
                         <div class="col-md-6">
-                            <input type="text" name="CategoryDesc" ng-model="CategoryDesc" class="form-control" required placeholder="Category name" />
-                            <p class="help-block" ng-if="appForm.CategoryDesc.$error.required">Category name is requied</p>
+                            <input type="text" name="CategoryName" ng-model="CategoryName" class="form-control" required placeholder="Category name" />
+                            <p class="help-block" ng-if="appForm.CategoryName.$error.required">Category name is requied</p>
                         </div>
                     </div>
                     <div class="form-group">

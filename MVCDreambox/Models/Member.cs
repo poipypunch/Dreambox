@@ -24,7 +24,6 @@ namespace MVCDreambox.Models
         public string Email { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ExpiryDate { get; set; }
 
         [DisplayName("Member type")]

@@ -14,16 +14,17 @@ namespace MVCDreambox.Models
         public string ChannelID { get; set; }
         [Required]
         [StringLength(250)]
-        public string ChannelDesc { get; set; }
+        public string ChannelName { get; set; }
         [StringLength(250)]
-        public string ChannelPath { get; set; }
+        public string iOSUrl { get; set; }
         public string ChannelStatus { get; set; }
         public string CreateBy { get; set; }
         public DateTime ? CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime ? UpdateDate { get; set; }
-
-        //public virtual ICollection<Package> packages { get; set; }
-        //public virtual ICollection<PackageMapping> PackageMappings { get; set; }
+        [StringLength(250)]
+        public string BrowserUrl { get; set; }
+        [StringLength(250)]
+        public string AndroidUrl { get; set; }
     }
 }

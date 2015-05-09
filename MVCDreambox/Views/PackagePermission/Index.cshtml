@@ -1,11 +1,7 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-<style>
-    .clickable {
-        cursor: pointer;
-    }
-</style>
+
 <h2>Mapping package to dealer</h2>
 <br />
 <div ng-controller="PackagePermissionController" class="row panel panel-default" style=" width:100%;padding:5px;">
@@ -47,13 +43,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="pack in packCollection">
+                    <tr ng-repeat="pack in displayedpackCollection">
                         <td><input type='checkbox' value="{{pack.PackageID}}" check-list='SelectItemPacks' class="clickable"> </td>
                         <td>
-                            {{pack.PackageDesc}}
+                            {{pack.PackageName}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(pack.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{pack.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                     </tr>
                 </tbody>
@@ -78,12 +74,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="packm in mapCollection">
+                    <tr ng-repeat="packm in displayedmapCollection">
                         <td>
-                            {{packm.PackageDesc}}
+                            {{packm.PackageName}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(packm.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{packm.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td>
                             <button type="button" ng-click="delete(packm)" class="btn btn-sm ">

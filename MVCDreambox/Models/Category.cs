@@ -13,7 +13,7 @@ namespace MVCDreambox.Models
         public string CategoryID { get; set; }
         [Required]
         [StringLength(100)]
-        public string CategoryDesc { get; set; }
+        public string CategoryName { get; set; }
         [StringLength(250)]
         public string ImgPath { get; set; }
         [Required]
@@ -29,7 +29,7 @@ namespace MVCDreambox.Models
         public string CategoryID { get; set; }
         [Required]
         [StringLength(100)]
-        public string CategoryDesc { get; set; }
+        public string CategoryName { get; set; }
         [StringLength(250)]
         public string ImgPath { get; set; }
         [Required]

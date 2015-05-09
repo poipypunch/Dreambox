@@ -1,15 +1,6 @@
 ﻿@{
     ViewBag.Title = "Dreambox solution";
 }
-<style>
-    .form-group .help-block {
-        display: none;
-    }
-
-    .form-group.has-error .help-block {
-        display: block;
-    }
-</style>
 <h2>Channel Management</h2>
 <br />
 <div ng-controller="ChannelController">
@@ -26,15 +17,29 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Channel name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="ChannelDesc" ng-model="ChannelDesc" class="form-control" required placeholder="Channel name" />
-                        <p class="help-block" ng-if="appForm.ChannelDesc.$error.required">Channel name is requied</p>
+                        <input type="text" name="ChannelName" ng-model="ChannelName" class="form-control" required placeholder="Channel name" />
+                        <p class="help-block" ng-if="appForm.ChannelName.$error.required">Channel name is requied</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
-                    @Html.Label("Channel path", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.Label("Browser url", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="ChannelPath" ng-model="ChannelPath" class="form-control" required placeholder="Channel path" />
-                        <p class="help-block" ng-if="appForm.ChannelPath.$error.required">Channel path is requied</p>
+                        <input type="text" name="BrowserUrl" ng-model="BrowserUrl" class="form-control" required placeholder="Browser url" />
+                        <p class="help-block" ng-if="appForm.BrowserUrl.$error.required">Browser url is requied</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("iOS Url", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="iOSUrl" ng-model="iOSUrl" class="form-control" required placeholder="iOS Url" />
+                        <p class="help-block" ng-if="appForm.iOSUrl.$error.required">iOS Url is requied</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors='{showSuccess: true}'>
+                    @Html.Label("Android url", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="text" name="AndroidUrl" ng-model="AndroidUrl" class="form-control" required placeholder="Android url" />
+                        <p class="help-block" ng-if="appForm.AndroidUrl.$error.required">Android url is requied</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -61,21 +66,37 @@
         </form>
     </div>
     <div class="panel panel-default" style=" width:100%;padding:5px;">
-        @*@if (Session["Role"].ToString() == "Dealer")
-            { *@
         <input ng-show="AddNew" type="button" value="New channel" ng-click="add()" class="btn" />
-        @*}*@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
                     @*<th></th>*@
-                    <th st-sort="ChannelDesc"><b>Channel name</b></th>
-                    <th st-sort="ChannelPath"><b>Channel Path</b></th>
+                    <th st-sort="ChannelName"><b>Channel name</b></th>
+                    <th st-sort="BrowserUrl"><b>Browser url</b></th>
+                    <th st-sort="iOSUrl"><b>iOS Url</b></th>
+                    <th st-sort="AndroidUrl"><b>Android url</b></th>                    
                     <th st-sort="ChannelStatus"><b>Channel Status</b></th>
-                    @*@if (Session["Role"].ToString() == "Dealer")
-                        {*@
                     <th><b>Operation</b></th>
-                    @*}*@
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="ChannelName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="BrowserUrl" type="text" />
+                    </th>
+                    <th >
+                        <input st-search="iOSUrl" type="text" />
+                    </th>
+                    <th >
+                        <input st-search="AndroidUrl" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="ChannelStatus" type="text" />
+                    </th>
+                    @*<th colspan="2">
+                        <custom-search></custom-search>
+                    </th>*@
                 </tr>
                 @*<tr>
                         <th>
@@ -88,18 +109,21 @@
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
-                    @*<td cs-select="row"></td>*@
                     <td>
-                        {{row.ChannelDesc}}
+                        {{row.ChannelName}}
                     </td>
                     <td>
-                        {{row.ChannelPath}}
+                        {{row.BrowserUrl}}
+                    </td>
+                    <td>
+                        {{row.iOSUrl}}
+                    </td>
+                    <td>
+                        {{row.AndroidUrl}}
                     </td>
                     <td>
                         {{row.ChannelStatus}}
                     </td>
-                    @*@if (Session["Role"].ToString() == "Dealer")
-                        {*@
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">
@@ -110,12 +134,11 @@
                             </i>
                         </button>
                     </td>
-                    @*}*@
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-center">
+                    <td colspan="6" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage"></div>
                     </td>
                 </tr>

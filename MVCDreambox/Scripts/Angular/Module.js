@@ -1,57 +1,61 @@
 ﻿var app = angular.module('MyApp', ['ngRoute', 'smart-table']);
-
 app.config(['$routeProvider', function ($routeprovider) {
+    var baseUrl = $("base").first().attr("href");
     $routeprovider.
         when('/Home', {
-            templateurl: '/Views/Home/index.cshtml',
+            templateurl: baseUrl+'Views/Home/index.cshtml',
             controller: 'HomeController'
         }).
       when('/Channel', {
-          templateurl: '/Views/Channel/index.cshtml',
+          templateurl: baseUrl + 'Views/Channel/index.cshtml',
           controller: 'ChannelController'
       }).
       when('/Member', {
-          templateurl: '/Views/Member/index.cshtml',
+          templateurl: baseUrl + 'Views/Member/index.cshtml',
           controller: 'MemberController'
       }).
         when('/MemberType', {
-            templateurl: '/Views/MemberType/index.cshtml',
+            templateurl: baseUrl + 'Views/MemberType/index.cshtml',
             controller: 'MemberTypeController'
         }).
         when('/Package', {
-            templateurl: '/Views/Package/index.cshtml',
+            templateurl: baseUrl + 'Views/Package/index.cshtml',
             controller: 'PackgeController'
         }).
         when('/tbUser', {
-            templateurl: '/Views/tbUser/index.cshtml',
+            templateurl: baseUrl + 'Views/tbUser/index.cshtml',
             controller: 'UserController'
         }).
         when('/Category', {
-            templateurl: '/Views/Category/index.cshtml',
+            templateurl: baseUrl + 'Views/Category/index.cshtml',
             controller: 'CategoryController'
         }).
         when('/Payment', {
-            templateurl: '/Views/Payment/index.cshtml',
+            templateurl: baseUrl + 'Views/Payment/index.cshtml',
             controller: 'PaymentController'
         }).
         when('/PackageMapping', {
-            templateurl: '/Views/PackageMapping/index.cshtml',
+            templateurl: baseUrl + 'Views/PackageMapping/index.cshtml',
             controller: 'PackageMappingController'
         }).
          when('/ContentManagement', {
-             templateurl: '/Views/ContentManagement/index.cshtml',
+             templateurl: baseUrl + 'Views/ContentManagement/index.cshtml',
              controller: 'ContentManagementController'
          }).
          when('/ChangePassword', {
-             templateurl: '/Views/tbUser/ChangePassword.cshtml',
+             templateurl: baseUrl + 'Views/tbUser/ChangePassword.cshtml',
              controller: 'ChangePassowrdController'
          }).
          when('/MemberTypeMapping', {
-             templateurl: '/Views/MemberTypeMapping/index.cshtml',
+             templateurl: baseUrl + 'Views/MemberTypeMapping/index.cshtml',
              controller: 'MemberTypeMappingController'
          }).
+        when('/MemberSubscription', {
+            templateurl: baseUrl + 'Views/MemberSubscription/index.cshtml',
+            controller: 'MemberSubScribeController'
+        }).
       otherwise({
-          redirectto: '/Home'
+          redirectto: baseUrl + 'Home'
       });
 }]);
 //app.config(['$httpProvider', function ($httpProvider) {

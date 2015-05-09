@@ -203,7 +203,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-                return "Login failed.";
+                return ex.Message.ToString();
             }
             return "Login failed.";
         }

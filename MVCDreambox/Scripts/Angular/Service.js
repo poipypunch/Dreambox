@@ -1,26 +1,54 @@
-﻿app.service("loginService", function ($http) {
+﻿app.filter("ToJavaScriptDateToString", function () {
+    return function (value) {
+        // Your logic
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return results[1].toString();
+        } else {
+            return "";
+        }
+    }
+});
+app.filter("ToJavaScriptDate", function () {
+    return function (value) {
+        if (value != null) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getFullYear() + "-" + ('0' + (dt.getMonth() + 1)).slice(-2) + "-" + ('0' + (dt.getDate())).slice(-2)).toString();
+        } else {
+            return "";
+        }
+    }
+});
+
+app.service("loginService", function ($http, ShareService) {
     //Login 
-    this.Login = function (UserName,Password) {
+    var baseUrl = ShareService.GetBaseUrl();
+    this.Login = function (UserName, Password) {
         var response = $http({
             method: "post",
-            url: "/tbUser/CheckUser",
+            url: baseUrl + "tbUser/CheckUser",
             params: {
                 UserID: UserName,
-                Password:Password
+                Password: Password
             }
         });
         return response;
     }
 });
-app.service("changePassService", function ($http) {
+app.service("changePassService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getUsers = function () {
-        return $http.get("/tbUser/ChangePassword");
+        return $http.get(baseUrl + "tbUser/ChangePassword");
     };
     //Login 
     this.UpdatePassword = function (NewPassword) {
         var response = $http({
             method: "post",
-            url: "/tbUser/UpdatePassword",
+            url: baseUrl + "tbUser/UpdatePassword",
             params: {
                 Password: NewPassword
             }
@@ -28,16 +56,17 @@ app.service("changePassService", function ($http) {
         return response;
     }
 });
-app.service("userService", function ($http) {
+app.service("userService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getUsers = function () {
-        return $http.get("/tbUser/GetUsersList");
-    };   
+        return $http.get(baseUrl + "tbUser/GetUsersList");
+    };
 
     //Save (Update)  
     this.update = function (tbuser) {
         var response = $http({
             method: "post",
-            url: "/tbUser/Update",
+            url: baseUrl + "tbUser/Update",
             data: JSON.stringify(tbuser),
             dataType: "json"
         });
@@ -48,7 +77,7 @@ app.service("userService", function ($http) {
     this.Delete = function (DealerID) {
         var response = $http({
             method: "post",
-            url: "/tbUser/Delete",
+            url: baseUrl + "tbUser/Delete",
             params: {
                 id: DealerID
             }
@@ -60,7 +89,7 @@ app.service("userService", function ($http) {
     this.ResetPassword = function (DealerID) {
         var response = $http({
             method: "post",
-            url: "/tbUser/ResetPassword",
+            url: baseUrl + "tbUser/ResetPassword",
             params: {
                 id: DealerID
             }
@@ -71,7 +100,7 @@ app.service("userService", function ($http) {
     this.Add = function (tbuser) {
         var response = $http({
             method: "post",
-            url: "/tbUser/Add",
+            url: baseUrl + "tbUser/Add",
             data: JSON.stringify(tbuser),
             dataType: "json"
 
@@ -81,16 +110,17 @@ app.service("userService", function ($http) {
 
 });
 
-app.service("packageService", function ($http) {
+app.service("packageService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getPackages = function () {
-        return $http.get("/Package/GetPackagesList");
+        return $http.get(baseUrl + "Package/GetPackagesList");
     };
 
     //Save (Update)  
     this.update = function (Package) {
         var response = $http({
             method: "post",
-            url: "/Package/Update",
+            url: baseUrl + "Package/Update",
             data: JSON.stringify(Package),
             dataType: "json"
         });
@@ -101,7 +131,7 @@ app.service("packageService", function ($http) {
     this.Delete = function (PackageID) {
         var response = $http({
             method: "post",
-            url: "/Package/Delete",
+            url: baseUrl + "Package/Delete",
             params: {
                 id: PackageID
             }
@@ -113,7 +143,7 @@ app.service("packageService", function ($http) {
     this.Add = function (Package) {
         var response = $http({
             method: "post",
-            url: "/Package/Add",
+            url: baseUrl + "Package/Add",
             data: JSON.stringify(Package),
             dataType: "json"
 
@@ -123,16 +153,17 @@ app.service("packageService", function ($http) {
 
 });
 
-app.service("channelService", function ($http) {
+app.service("channelService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getChannels = function () {
-        return $http.get("/Channel/GetChannelsList");
+        return $http.get(baseUrl + "Channel/GetChannelsList");
     };
 
     //Save (Update)  
     this.update = function (channel) {
         var response = $http({
             method: "post",
-            url: "/Channel/Update",
+            url: baseUrl + "Channel/Update",
             data: JSON.stringify(channel),
             dataType: "json"
         });
@@ -143,7 +174,7 @@ app.service("channelService", function ($http) {
     this.Delete = function (channelID) {
         var response = $http({
             method: "post",
-            url: "/Channel/Delete",
+            url: baseUrl + "Channel/Delete",
             params: {
                 id: channelID
             }
@@ -155,7 +186,7 @@ app.service("channelService", function ($http) {
     this.Add = function (channel) {
         var response = $http({
             method: "post",
-            url: "/Channel/Add",
+            url: baseUrl + "Channel/Add",
             data: JSON.stringify(channel),
             dataType: "json"
 
@@ -165,13 +196,14 @@ app.service("channelService", function ($http) {
 
 });
 
-app.service("packagemapService", function ($http) {
+app.service("packagemapService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getActivePackagesList = function () {
-        return $http.get("/PackageMapping/GetActivePackageList");
+        return $http.get(baseUrl + "PackageMapping/GetActivePackageList");
     };
     this.getMappingChannelsList = function (PackageID) {
         return $http({
-            url: "/PackageMapping/GetMappingChannelList",
+            url: baseUrl + "PackageMapping/GetMappingChannelList",
             method: "GET",
             params: { PackageID: PackageID }
         });
@@ -179,7 +211,7 @@ app.service("packagemapService", function ($http) {
     };
     this.getActiveChannelsList = function (PackageID) {
         return $http({
-            url: "/PackageMapping/GetActiveChannelList",
+            url: baseUrl + "PackageMapping/GetActiveChannelList",
             method: "GET",
             params: { PackageID: PackageID }
         });
@@ -188,7 +220,7 @@ app.service("packagemapService", function ($http) {
     this.Delete = function (PackageID, ChannelID) {
         var response = $http({
             method: "post",
-            url: "/PackageMapping/Delete",
+            url: baseUrl + "PackageMapping/Delete",
             params: {
                 pid: PackageID,
                 cid: ChannelID
@@ -209,7 +241,7 @@ app.service("packagemapService", function ($http) {
         //});
         var response = $http({
             method: "post",
-            url: "/PackageMapping/Add",
+            url: baseUrl + "PackageMapping/Add",
             data: { pid: PackageID, channelids: Channels },
             dataType: "json"
         });
@@ -218,13 +250,14 @@ app.service("packagemapService", function ($http) {
 
 });
 
-app.service("packagePerService", function ($http) {
+app.service("packagePerService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getActiveUserList = function () {
-        return $http.get("/PackagePermission/GetActiveUserList");
+        return $http.get(baseUrl + "PackagePermission/GetActiveUserList");
     };
     this.getMappingPackageList = function (DealerID) {
         return $http({
-            url: "/PackagePermission/GetMappingPackageList",
+            url: baseUrl + "PackagePermission/GetMappingPackageList",
             method: "GET",
             params: { DealerID: DealerID }
         });
@@ -232,7 +265,7 @@ app.service("packagePerService", function ($http) {
     };
     this.getActivePackagesList = function (DealerID) {
         return $http({
-            url: "/PackagePermission/GetActivePackageList",
+            url: baseUrl + "PackagePermission/GetActivePackageList",
             method: "GET",
             params: { DealerID: DealerID }
         });
@@ -241,7 +274,7 @@ app.service("packagePerService", function ($http) {
     this.Delete = function (DealerID, PackageID) {
         var response = $http({
             method: "post",
-            url: "/PackagePermission/Delete",
+            url: baseUrl + "PackagePermission/Delete",
             params: {
                 uid: DealerID,
                 pid: PackageID
@@ -254,7 +287,7 @@ app.service("packagePerService", function ($http) {
     this.Add = function (DealerID, packs) {
         var response = $http({
             method: "post",
-            url: "/PackagePermission/Add",
+            url: baseUrl + "PackagePermission/Add",
             data: { uid: DealerID, packids: packs },
             dataType: "json"
         });
@@ -263,19 +296,20 @@ app.service("packagePerService", function ($http) {
 
 });
 
-app.service("memberService", function ($http) {
+app.service("memberService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getMembers = function () {
-        return $http.get("/Member/GetAllMember");
+        return $http.get(baseUrl + "Member/GetAllMember");
     };
 
     this.getMemberTypes = function () {
-        return $http.get("/Member/GetAllMemberTypes");
+        return $http.get(baseUrl + "Member/GetAllMemberTypes");
     };
 
     this.update = function (member) {
         var response = $http({
             method: "post",
-            url: "/Member/Update",
+            url: baseUrl + "Member/Update",
             data: JSON.stringify(member),
             dataType: "json"
         });
@@ -286,7 +320,7 @@ app.service("memberService", function ($http) {
     this.Delete = function (memberID) {
         var response = $http({
             method: "post",
-            url: "/Member/Delete",
+            url: baseUrl + "Member/Delete",
             params: {
                 id: memberID
             }
@@ -298,7 +332,7 @@ app.service("memberService", function ($http) {
     this.ResetPassword = function (memberID) {
         var response = $http({
             method: "post",
-            url: "/Member/ResetPassword",
+            url: baseUrl + "Member/ResetPassword",
             params: {
                 id: memberID
             }
@@ -310,7 +344,7 @@ app.service("memberService", function ($http) {
     this.Add = function (member) {
         var response = $http({
             method: "post",
-            url: "/Member/Add",
+            url: baseUrl + "Member/Add",
             data: JSON.stringify(member),
             dataType: "json"
 
@@ -318,14 +352,15 @@ app.service("memberService", function ($http) {
         return response;
     }
 });
-app.service("memberTypeService", function ($http) {
+app.service("memberTypeService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.GetMemberTypes = function () {
-        return $http.get("/MemberType/GetMemberTypesList");
+        return $http.get(baseUrl + "MemberType/GetMemberTypesList");
     };
     this.update = function (memtype) {
         var response = $http({
             method: "post",
-            url: "/MemberType/Update",
+            url: baseUrl + "MemberType/Update",
             data: JSON.stringify(memtype),
             dataType: "json"
         });
@@ -336,7 +371,7 @@ app.service("memberTypeService", function ($http) {
     this.Delete = function (membertypeid) {
         var response = $http({
             method: "post",
-            url: "/MemberType/Delete",
+            url: baseUrl + "MemberType/Delete",
             params: {
                 id: membertypeid
             }
@@ -348,7 +383,7 @@ app.service("memberTypeService", function ($http) {
     this.Add = function (memtype) {
         var response = $http({
             method: "post",
-            url: "/MemberType/Add",
+            url: baseUrl + "MemberType/Add",
             data: JSON.stringify(memtype),
             dataType: "json"
 
@@ -357,15 +392,16 @@ app.service("memberTypeService", function ($http) {
     }
 });
 //---------------- PaymentService --------------------------------//
-app.service("paymentService", function ($http) {
+app.service("paymentService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getPayments = function () {
-        return $http.get("/Payment/GetPaymentsList");
+        return $http.get(baseUrl + "Payment/GetPaymentsList");
     };
     //Delete 
     this.Delete = function (PaymentID) {
         var response = $http({
             method: "post",
-            url: "/Payment/Delete",
+            url: "/MVCDreambox/Payment/Delete",
             params: {
                 id: PaymentID
             }
@@ -377,7 +413,7 @@ app.service("paymentService", function ($http) {
     this.Add = function (payment) {
         var response = $http({
             method: "post",
-            url: "/Payment/Add",
+            url: baseUrl + "Payment/Add",
             data: JSON.stringify(payment),
             dataType: "json"
         });
@@ -386,14 +422,15 @@ app.service("paymentService", function ($http) {
 
 });
 
-app.service("categoryService", function ($http) {
+app.service("categoryService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.GetCategorys = function () {
-        return $http.get("/Category/GetCategoryTrees");
+        return $http.get(baseUrl + "Category/GetCategoryTrees");
     };
     this.update = function (memtype) {
         var response = $http({
             method: "post",
-            url: "/Category/Update",
+            url: baseUrl + "Category/Update",
             data: JSON.stringify(memtype),
             dataType: "json"
         });
@@ -404,7 +441,7 @@ app.service("categoryService", function ($http) {
     this.Delete = function (categoryid) {
         var response = $http({
             method: "post",
-            url: "/Category/Delete",
+            url: baseUrl + "Category/Delete",
             params: {
                 id: categoryid
             }
@@ -425,17 +462,17 @@ app.service("categoryService", function ($http) {
     this.Add = function (cate) {
         var response = $http({
             method: "post",
-            url: "/Category/Add",
+            url: baseUrl + "Category/Add",
             data: getModelAsFormData(cate),
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined },
-           // data: { category: JSON.stringify(cate), Attachment: getModelAsFormData(Attachment) },
+            // data: { category: JSON.stringify(cate), Attachment: getModelAsFormData(Attachment) },
             dataType: "json"
 
         });
         return response;
     }
-    
+
     var getModelAsFormData = function (data) {
         var dataAsFormData = new FormData();
         angular.forEach(data, function (value, key) {
@@ -445,20 +482,21 @@ app.service("categoryService", function ($http) {
     };
 });
 
-app.service("contentService", function ($http) {
+app.service("contentService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.GetCategorys = function () {
-        return $http.get("/ContentManagement/GetCategoryList");
+        return $http.get(baseUrl + "ContentManagement/GetCategoryList");
     };
     this.getMappingChannelsList = function (CategoryID) {
         return $http({
-            url: "/ContentManagement/GetMappingChannelList",
+            url: baseUrl + "ContentManagement/GetMappingChannelList",
             method: "GET",
             params: { CategoryID: CategoryID }
         });
     };
     this.getActiveChannelsList = function (CategoryID) {
         return $http({
-            url: "/ContentManagement/GetActiveChannelList",
+            url: baseUrl + "ContentManagement/GetActiveChannelList",
             method: "GET",
             params: { CategoryID: CategoryID }
         });
@@ -467,7 +505,7 @@ app.service("contentService", function ($http) {
     this.Delete = function (CategoryID, ChannelID) {
         var response = $http({
             method: "post",
-            url: "/ContentManagement/Delete",
+            url: baseUrl + "ContentManagement/Delete",
             params: {
                 cid: CategoryID,
                 chid: ChannelID
@@ -480,7 +518,7 @@ app.service("contentService", function ($http) {
     this.Add = function (CategoryID, Channels) {
         var response = $http({
             method: "post",
-            url: "/ContentManagement/Add",
+            url: baseUrl + "ContentManagement/Add",
             data: { cid: CategoryID, channelids: Channels },
             dataType: "json"
         });
@@ -490,20 +528,21 @@ app.service("contentService", function ($http) {
 });
 
 
-app.service("membertypeMapService", function ($http) {
+app.service("membertypeMapService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
     this.getActiveMemberTypeList = function () {
-        return $http.get("/MemberTypeMapping/GetActiveMemberTypeList");
+        return $http.get(baseUrl + "MemberTypeMapping/GetActiveMemberTypeList");
     };
     this.getMappingCategoryList = function (MemberTypeID) {
         return $http({
-            url: "/MemberTypeMapping/GetMappingCategoryList",
+            url: baseUrl + "MemberTypeMapping/GetMappingCategoryList",
             method: "GET",
             params: { MemberTypeID: MemberTypeID }
         });
     };
     this.getActiveCategorysList = function (MemberTypeID) {
         return $http({
-            url: "/MemberTypeMapping/GetActiveCategorysList",
+            url: baseUrl + "MemberTypeMapping/GetActiveCategorysList",
             method: "GET",
             params: { MemberTypeID: MemberTypeID }
         });
@@ -512,7 +551,7 @@ app.service("membertypeMapService", function ($http) {
     this.Delete = function (MemberTypeID, CategoryID) {
         var response = $http({
             method: "post",
-            url: "/MemberTypeMapping/Delete",
+            url: baseUrl + "MemberTypeMapping/Delete",
             params: {
                 mid: MemberTypeID,
                 cid: CategoryID
@@ -525,10 +564,97 @@ app.service("membertypeMapService", function ($http) {
     this.Add = function (MemberTypeID, Categorys) {
         var response = $http({
             method: "post",
-            url: "/MemberTypeMapping/Add",
+            url: baseUrl + "MemberTypeMapping/Add",
             data: { mid: MemberTypeID, categoryids: Categorys },
             dataType: "json"
         });
         return response;
     }
+});
+
+app.service("memberSubService", function ($http, ShareService) {
+    var baseUrl = ShareService.GetBaseUrl();
+    this.getSubScribeList = function () {
+        return $http.get(baseUrl + "MemberSubscription/GetSubScribeList");
+    };
+    this.getActiveMemberList = function () {
+        return $http.get(baseUrl + "MemberSubscription/GetActiveMemberList");
+    };
+    this.checkPayment = function (PaymentID) {
+        return $http({
+            url: baseUrl + "MemberSubscription/CheckPayment",
+            method: "GET",
+            params: { PaymentID: PaymentID }
+        });
+    };    
+    //Add 
+    this.Add = function (MemberID, PaymentID) {
+        var response = $http({
+            method: "post",
+            url: baseUrl + "MemberSubscription/Add",
+            data: { mid: MemberID, pid: PaymentID },
+            dataType: "json"
+        });
+        return response;
+    }
+});
+
+app.service("ShareService", function ($http) {   
+    this.GetBaseUrl = function () {
+        return $("base").first().attr("href");;
+    };
+    this._makeTree = function (options) {
+        var children, e, id, o, pid, temp, _i, _len, _ref;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        children = options.categories || "categories";
+        temp = {};
+        o = [];
+        _ref = options;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            e = _ref[_i];
+            e[children] = [];
+            temp[e[id]] = e;
+            if (temp[e[pid]] != null) {
+                temp[e[pid]][children].push(e);
+            } else {
+                o.push(e);
+            }
+        }
+        return o;
+    };
+
+    this._queryTreeSort = function (options) {
+        var cfi, e, i, id, o, pid, rfi, ri, thisid, _i, _j, _len, _len1, _ref, _ref1;
+        id = options.id || "CategoryID";
+        pid = options.parentid || "ParentID";
+        ri = [];
+        rfi = {};
+        cfi = {};
+        o = [];
+        _ref = options.data;
+        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            e = _ref[i];
+            rfi[e[id]] = i;
+            if (cfi[e[pid]] == null) {
+                cfi[e[pid]] = [];
+            }
+            cfi[e[pid]].push(options.data[i][id]);
+        }
+        _ref1 = options.data;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            e = _ref1[_j];
+            if (rfi[e[pid]] == null) {
+                ri.push(e[id]);
+            }
+        }
+        while (ri.length) {
+            thisid = ri.splice(0, 1);
+            o.push(options.data[rfi[thisid]]);
+            if (cfi[thisid] != null) {
+                ri = cfi[thisid].concat(ri);
+            }
+        }
+        return o;
+    };
 });

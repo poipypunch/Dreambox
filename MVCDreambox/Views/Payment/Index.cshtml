@@ -79,6 +79,31 @@
                     <th st-sort="CreateDate"><b>Create date</b></th>
                     <th><b>Operation</b></th>
                 </tr>
+                <tr>
+                    <th>
+                        <input st-search="PaymentID" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="PaymentName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="PaymentTotalDay" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="PaymentCost" type="text" />
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                        <input st-search="PaymentStatus" type="text" />
+                    </th>
+                    <th>
+                        
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
@@ -95,13 +120,13 @@
                         {{row.PaymentCost}}
                     </td>
                     <td>
-                        {{ToJavaScriptDateToString(row.PaymentExpiryDate) | date:'yyyy-MM-dd'}}
+                        {{row.PaymentExpiryDate | ToJavaScriptDate}}
                     </td>
                     <td>
                         {{row.PaymentStatus}}
                     </td>
                     <td>
-                        {{ToJavaScriptDateToString(row.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        {{row.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
                         <button type="button" ng-click="delete(row)" class="btn btn-sm ">
@@ -132,78 +157,3 @@
     </script>
 }
 
-
-@*@model IEnumerable<MVCDreambox.Models.Payment>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentTotalDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentExpiryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateDate)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentTotalDay)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentCost)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentExpiryDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.PaymentID })
-                </td>
-            </tr>
-        }
-
-    </table>*@

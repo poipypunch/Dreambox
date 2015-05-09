@@ -13,8 +13,8 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Package name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="PackageDesc" ng-model="PackageDesc" class="form-control" required placeholder="Package name" />
-                        <p class="help-block" ng-if="appForm.PackageDesc.$error.required">Package name is requied</p>
+                        <input type="text" name="PackageName" ng-model="PackageName" class="form-control" required placeholder="Package name" />
+                        <p class="help-block" ng-if="appForm.PackageName.$error.required">Package name is requied</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,26 +49,40 @@
             <thead>
                 <tr>
 
-                    <th st-sort="PackageDesc"><b>Package name</b></th>
+                    <th st-sort="PackageName"><b>Package name</b></th>
                     <th st-sort="PackageStatus"><b>Status</b></th>
                     <th st-sort="CreateDate"><b>Create date</b></th>
                     <th st-sort="UpdateDate"><b>Update date</b></th>
                     <th><b>Operation</b></th>
                 </tr>
+                <tr>
+                    <th>
+                        <input st-search="PackageName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="PackageStatus" type="text" />
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
                     <td>
-                        {{row.PackageDesc}}
+                        {{row.PackageName}}
                     </td>
                     <td>
                         {{row.PackageStatus}}
                     </td>
                     <td>
-                        {{ToJavaScriptDateToString(row.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        {{row.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
-                        {{ToJavaScriptDateToString(row.UpdateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                        {{row.UpdateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                     </td>
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">

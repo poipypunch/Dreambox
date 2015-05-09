@@ -15,6 +15,7 @@
     <script src="~/Scripts/Angular/Directive.js"></script>
     @*<script src="~/Scripts/ng-table.min.js"></script>*@
     <script src="~/Scripts/smart-table.min.js"></script>
+    <base href="/" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script type="text/javascript">
@@ -27,6 +28,7 @@
         window.appInsights = appInsights;
         appInsights.trackPageView();
     </script>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -59,6 +61,7 @@
                             <li>@Html.ActionLink("Channel", "Index", "Channel")</li>
                             <li>@Html.ActionLink("Category", "Index", "Category")</li>
                             <li>@Html.ActionLink("ContentManagement", "Index", "ContentManagement")</li>
+                            <li>@Html.ActionLink("MemberSubscription", "Index", "MemberSubscription")</li>
                         }
                         <li>@Html.ActionLink("ChangePassword", "ChangePassword", "tbUser")</li>
                         <li>@Html.ActionLink("Logout", "Login", "tbUser")</li>

@@ -40,7 +40,7 @@ namespace MVCDreambox.Controllers
                                     join memtype in db.MemberTypes on p.MemberTypeID equals memtype.MemberTypeID
                                     join cate in db.Categories on p.CategoryID equals cate.CategoryID
                                     where p.MemberTypeID == MemberTypeID 
-                                    select new { p.MemberTypeID, p.CategoryID, memtype.MemberTypeDesc, cate.CategoryDesc, p.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
+                                    select new { p.MemberTypeID, p.CategoryID, memtype.MemberTypeName, cate.CategoryName, p.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
                 return Json(Categorylist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -98,10 +98,7 @@ namespace MVCDreambox.Controllers
                         memtype.MemberTypeID = mid;
                         memtype.CategoryID = categoryids[i];
                         memtype.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        memtype.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        memtype.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         memtype.CreateDate = DateTime.Now;
-                        memtype.UpdateDate = DateTime.Now;
                         db.MemberTypeMappings.Add(memtype);
                     }
                     db.SaveChanges();

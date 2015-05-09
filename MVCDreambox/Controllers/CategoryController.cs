@@ -26,11 +26,11 @@ namespace MVCDreambox.Controllers
         public JsonResult GetCategoryTrees()
         {
             string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-            var results = db.Categories.Where(m => m.DealerID == strUserID).OrderBy(m => m.CategoryDesc).ToList();
+            var results = db.Categories.Where(m => m.DealerID == strUserID).OrderBy(m => m.CategoryName).ToList();
 
             Category cate = new Category();
             cate.CategoryID = "0";
-            cate.CategoryDesc = "Root";
+            cate.CategoryName = "Root";
             cate.DealerID = strUserID;
             cate.ParentID = null;
             results.Add(cate);
@@ -75,7 +75,7 @@ namespace MVCDreambox.Controllers
             {
                 if (category != null)
                 {
-                    if (!IsDuplicate(string.Empty, category.CategoryDesc))
+                    if (!IsDuplicate(string.Empty, category.CategoryName))
                     {
                         Category cate = new Category();
                         if (category.Attachment != null)
@@ -95,7 +95,7 @@ namespace MVCDreambox.Controllers
                         }
                         
                         cate.CategoryID = Guid.NewGuid().ToString();
-                        cate.CategoryDesc = category.CategoryDesc;   
+                        cate.CategoryName = category.CategoryName;   
                         cate.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         cate.UpdateDate = DateTime.Now;
                         cate.CreateDate = DateTime.Now;
@@ -124,10 +124,10 @@ namespace MVCDreambox.Controllers
             {
                 if (category != null)
                 {
-                    if (!IsDuplicate(category.CategoryID, category.CategoryDesc))
+                    if (!IsDuplicate(category.CategoryID, category.CategoryName))
                     {
                         Category cate = db.Categories.Find(category.CategoryID);
-                        cate.CategoryDesc = category.CategoryDesc;
+                        cate.CategoryName = category.CategoryName;
                         cate.ImgPath = category.ImgPath;
                         cate.UpdateDate = DateTime.Now;
                         db.Entry(cate).State = EntityState.Modified;
@@ -178,7 +178,7 @@ namespace MVCDreambox.Controllers
             {
                 string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 Category cate;
-                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryDesc == strCategoryDesc && x.DealerID == strUserID).First();
+                cate = id != string.Empty ? db.Categories.Where(x => x.CategoryName == strCategoryDesc && x.DealerID == strUserID && x.CategoryID != id).First() : db.Categories.Where(x => x.CategoryName == strCategoryDesc && x.DealerID == strUserID).First();
                 return cate != null ? true : false;
             }
             catch (Exception ex)

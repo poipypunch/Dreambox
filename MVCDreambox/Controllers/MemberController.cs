@@ -28,11 +28,11 @@ namespace MVCDreambox.Controllers
             try
             {
                 string strUserID = Session[CommonConstant.SessionUserID].ToString();
-                var memberlist = (from mem in db.Members.ToList()
+                var memberlist = (from mem in db.Members
                                   join memtype in db.MemberTypes on mem.MemberTypeID equals memtype.MemberTypeID
                                   join tbuser in db.tbUsers on mem.DealerID equals tbuser.DealerID
                                   where mem.DealerID == strUserID
-                                  select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeDesc, tbuser.RealName }).ToList();
+                                  select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, mem.MemberTypeID, mem.DealerID, memtype.MemberTypeName, tbuser.RealName }).ToList();
                 return Json(memberlist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

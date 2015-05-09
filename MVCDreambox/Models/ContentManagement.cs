@@ -19,5 +19,6 @@ namespace MVCDreambox.Models
         public string ChannelID { get; set; }
         public string CreateBy { get; set; }
         public DateTime? CreateDate { get; set; }
+        public int ChannelOrder { get; set; }
     }
 }

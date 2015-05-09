@@ -91,16 +91,28 @@
                 <tr>
                     <th st-sort="UserName"><b>User Name</b></th>
                     <th st-sort="MemberName"><b>Member Name</b></th>
-                    <th st-sort="MemberTypeDesc"><b>Member type</b></th>
+                    <th st-sort="MemberTypeName"><b>Member type</b></th>
                     <th st-sort="RealName"><b>Dealer name</b></th>
-                    @*@if (Session["Role"].ToString() == "Dealer")
-                        {*@
                     <td><b>Operation</b></td>
-                    @*}*@
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="UserName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="MemberName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="MemberTypeName" type="text" />
+                    </th>
+                    <th>
+                        <input st-search="RealName" type="text" />
+                    </th>
+                    <th>                        
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                @*<tr ng-repeat="member in members | filter:FilterByMemberName">*@
                 <tr ng-repeat="row in displayedCollection">
                     <td>
                         {{row.UserName}}
@@ -109,11 +121,9 @@
                         {{row.MemberName}}
                     </td>
                     <td>
-                        {{row.MemberTypeDesc}}
+                        {{row.MemberTypeName}}
                     </td>
                     <td>{{row.RealName}}</td>
-                    @*@if (Session["Role"].ToString() == "Dealer")
-                        {*@
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">
@@ -128,7 +138,6 @@
                             </i>
                         </button>
                     </td>
-                    @*}*@
                 </tr>
             </tbody>
             <tfoot>

@@ -40,7 +40,7 @@ namespace MVCDreambox.Controllers
                                    join user in db.tbUsers on pack.DealerID equals user.DealerID
                                    join p in db.Packages on pack.PackageID equals p.PackageID
                                    where pack.DealerID == DealerID
-                                   select new { pack.DealerID, pack.PackageID, user.RealName, p.PackageDesc, pack.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
+                                   select new { pack.DealerID, pack.PackageID, user.RealName, p.PackageName, pack.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
                 return Json(Packagelist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -97,9 +97,7 @@ namespace MVCDreambox.Controllers
                         pack.DealerID = uid;
                         pack.PackageID = packids[i];
                         pack.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        pack.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         pack.CreateDate = DateTime.Now;
-                        pack.UpdateDate = DateTime.Now;
                         db.PackagePermissions.Add(pack);
                     }
                     db.SaveChanges();

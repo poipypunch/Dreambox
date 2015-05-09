@@ -25,7 +25,7 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var packageList = (List<Package>)db.Packages.OrderBy(a => a.PackageDesc).ToList();
+                var packageList = (List<Package>)db.Packages.OrderBy(a => a.PackageName).ToList();
                 return Json(packageList, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace MVCDreambox.Controllers
             {
                 if (package != null)
                 {
-                    if (!IsDuplicate(string.Empty, package.PackageDesc))
+                    if (!IsDuplicate(string.Empty, package.PackageName))
                     {
                         package.PackageID = Guid.NewGuid().ToString();
                         package.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
@@ -71,10 +71,10 @@ namespace MVCDreambox.Controllers
             {
                 if (package != null)
                 {
-                    if (!IsDuplicate(package.PackageID, package.PackageDesc))
+                    if (!IsDuplicate(package.PackageID, package.PackageName))
                     {
                         var pack = db.Packages.Find(package.PackageID);
-                        pack.PackageDesc = package.PackageDesc;
+                        pack.PackageName = package.PackageName;
                         pack.PackageStatus = package.PackageStatus;                       
                         pack.UpdateDate = DateTime.Now;
                         pack.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
@@ -487,7 +487,7 @@ namespace MVCDreambox.Controllers
             try
             {
                 Package package;
-                package = id != string.Empty ? db.Packages.Where(x => x.PackageDesc == packageDesc && x.PackageID != id).First() : db.Packages.Where(x => x.PackageDesc == packageDesc).First();
+                package = id != string.Empty ? db.Packages.Where(x => x.PackageName == packageDesc && x.PackageID != id).First() : db.Packages.Where(x => x.PackageName == packageDesc).First();
                 return package != null ? true : false;
             }
             catch (Exception ex)

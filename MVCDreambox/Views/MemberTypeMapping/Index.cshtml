@@ -11,11 +11,16 @@
                     <th><h3>Member Type</h3></th>
                     @*<th></th>*@
                 </tr>
+                <tr>
+                    <th>
+                        <input st-search="MemberTypeName" type="text" />
+                    </th>
+                </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentMemType}" class="clickable">
                     <td>
-                        {{row.MemberTypeDesc}}
+                        {{row.MemberTypeName}}
                     </td>
                 </tr>
             </tbody>
@@ -30,39 +35,49 @@
     </div>
     <div class="col-xs-12 col-md-8">
         <div ng-show="divActiveCategory" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
-            <h3>Add Category to {{currentMemType.MemberTypeDesc}}</h3>
+            <h3>Add Category to {{currentMemType.MemberTypeName}}</h3>
             <input type="button" value="Add" ng-click="add()" class="btn" />
             <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
-            <table st-table="displayedchanCollection" st-safe-src="cateCollection" class="table">
+            <table st-table="displayedcateCollection" st-safe-src="cateCollection" class="table">
                 <thead>
                     <tr>
                         <th><p>Select</p></th>
                         <th><p>Category name</p></th>
                         <th><p>Create date</p></th>
                     </tr>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>
+                            <input st-search="CategoryName" type="text" />
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="cateA in cateCollection">
+                    <tr ng-repeat="cateA in displayedcateCollection">
                         <td><input type='checkbox' value="{{cateA.CategoryID}}" check-list='SelectItemCates' class="clickable"> </td>
                         <td>
-                            {{cateA.CategoryDesc}}
+                            {{cateA.CategoryName}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(cateA.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{cateA.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <div st-pagination="" st-items-by-page="itemschanByPage"></div>
+                            <div st-pagination="" st-items-by-page="itemscateByPage"></div>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
         <div ng-show="divMappingCategory" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
-            <h3>Mapped Category in {{currentMemType.MemberTypeDesc}}</h3>
+            <h3>Mapped Category in {{currentMemType.MemberTypeName}}</h3>
             <input type="button" value="New category" ng-click="addCategory()" class="btn" />
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
@@ -71,14 +86,23 @@
                         <th><p>Create date</p></th>
                         <th><p>Operation</p></th>
                     </tr>
+                    <tr>
+                        <th>
+                            <input st-search="CategoryName" type="text" />
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="cate in mapCollection">
+                    <tr ng-repeat="cate in displayedmapCollection">
                         <td>
-                            {{cate.CategoryDesc}}
+                            {{cate.CategoryName}}
                         </td>
                         <td>
-                            {{ToJavaScriptDateToString(cate.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}
+                            {{cate.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td>
                             <button type="button" ng-click="delete(cate)" class="btn btn-sm ">

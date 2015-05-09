@@ -25,7 +25,8 @@ namespace MVCDreambox.Controllers
         {
             try
             {
-                var channelList = (List<Channel>)db.Channels.Where(m => m.ChannelStatus == CommonConstant.Status.Active).OrderBy(a => a.ChannelDesc).ToList();
+                string strUserID=CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                var channelList = (List<Channel>)db.Channels.Where(m => m.ChannelStatus == CommonConstant.Status.Active || m.CreateBy == strUserID).OrderBy(a => a.ChannelName).ToList();
                 return Json(channelList, JsonRequestBehavior.AllowGet);
 
             }
@@ -43,7 +44,7 @@ namespace MVCDreambox.Controllers
             {
                 if (channel != null)
                 {
-                    if (!IsDuplicate(string.Empty, channel.ChannelDesc))
+                    if (!IsDuplicate(string.Empty, channel.ChannelName))
                     {
                         channel.ChannelID = Guid.NewGuid().ToString();
                         channel.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
@@ -72,11 +73,13 @@ namespace MVCDreambox.Controllers
             {
                 if (channel != null)
                 {
-                    if (!IsDuplicate(channel.ChannelID, channel.ChannelDesc))
+                    if (!IsDuplicate(channel.ChannelID, channel.ChannelName))
                     {
                         var chan = db.Channels.Find(channel.ChannelID);
-                        chan.ChannelDesc = channel.ChannelDesc;
-                        chan.ChannelPath = channel.ChannelPath;
+                        chan.ChannelName = channel.ChannelName;
+                        chan.iOSUrl = channel.iOSUrl;
+                        chan.BrowserUrl = channel.BrowserUrl;
+                        chan.AndroidUrl = channel.AndroidUrl;
                         chan.ChannelStatus = channel.ChannelStatus;
                         chan.UpdateDate = DateTime.Now;
                         chan.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
@@ -119,7 +122,7 @@ namespace MVCDreambox.Controllers
             try
             {
                 Channel channel;
-                channel = id != string.Empty ? db.Channels.Where(x => x.ChannelDesc == strChannel && x.ChannelID != id).First() : db.Channels.Where(x => x.ChannelDesc == strChannel).First();
+                channel = id != string.Empty ? db.Channels.Where(x => x.ChannelName == strChannel && x.ChannelID != id).First() : db.Channels.Where(x => x.ChannelName == strChannel).First();
                 return channel != null ? true : false;
             }
             catch (Exception ex)

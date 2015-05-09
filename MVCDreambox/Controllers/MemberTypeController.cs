@@ -29,7 +29,7 @@ namespace MVCDreambox.Controllers
                 var memberTypelist = (from memtype in db.MemberTypes.ToList()
                                       join tbuser in db.tbUsers on memtype.DealerID equals tbuser.DealerID
                                       where memtype.DealerID == strUserID
-                                      select new { memtype.MemberTypeID, memtype.MemberTypeDesc, memtype.DealerID, memtype.CreateDate, memtype.CreateBy, memtype.UpdateDate, memtype.UpdateBy, tbuser.RealName }).OrderBy(m => m.MemberTypeDesc).ToList();
+                                      select new { memtype.MemberTypeID, memtype.MemberTypeName, memtype.DealerID, memtype.CreateDate, memtype.UpdateDate, tbuser.RealName }).OrderBy(m => m.MemberTypeName).ToList();
 
                 //var memberTypeList = (List<MemberType>)db.MemberTypes.OrderBy(a => a.MemberTypeDesc).ToList();
                 return Json(memberTypelist, JsonRequestBehavior.AllowGet);
@@ -49,13 +49,11 @@ namespace MVCDreambox.Controllers
             {
                 if (memtype != null)
                 {
-                    if (!IsDuplicate(string.Empty, memtype.MemberTypeDesc))
+                    if (!IsDuplicate(string.Empty, memtype.MemberTypeName))
                     {
                         memtype.MemberTypeID = Guid.NewGuid().ToString();
                         memtype.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        memtype.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         memtype.UpdateDate = DateTime.Now;
-                        memtype.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         memtype.CreateDate = DateTime.Now;
                         db.MemberTypes.Add(memtype);
                         db.SaveChanges();
@@ -79,12 +77,11 @@ namespace MVCDreambox.Controllers
             {
                 if (memtype != null)
                 {
-                    if (!IsDuplicate(memtype.MemberTypeID, memtype.MemberTypeDesc))
+                    if (!IsDuplicate(memtype.MemberTypeID, memtype.MemberTypeName))
                     {
                         var mem = db.MemberTypes.Find(memtype.MemberTypeID);
-                        mem.MemberTypeDesc = memtype.MemberTypeDesc;
+                        mem.MemberTypeName = memtype.MemberTypeName;
                         mem.UpdateDate = DateTime.Now;
-                        mem.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         db.Entry(mem).State = EntityState.Modified;
                         db.SaveChanges();
                         return "Success";
@@ -230,7 +227,7 @@ namespace MVCDreambox.Controllers
             {
                 string UserID =CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                 MemberType objMemberType;
-                objMemberType = id != string.Empty ? db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID && x.MemberTypeID != id).First() : db.MemberTypes.Where(x => x.MemberTypeDesc == TypeDesc && x.DealerID == UserID).First();
+                objMemberType = id != string.Empty ? db.MemberTypes.Where(x => x.MemberTypeName == TypeDesc && x.DealerID == UserID && x.MemberTypeID != id).First() : db.MemberTypes.Where(x => x.MemberTypeName == TypeDesc && x.DealerID == UserID).First();
                 return objMemberType != null ? true : false;
             }
             catch (Exception ex)

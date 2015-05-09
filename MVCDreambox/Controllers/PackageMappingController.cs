@@ -40,7 +40,7 @@ namespace MVCDreambox.Controllers
                                    join pack in db.Packages on p.PackageID equals pack.PackageID
                                    join chan in db.Channels on p.ChannelID equals chan.ChannelID
                                    where p.PackageID == PackageID
-                                   select new { p.PackageID, p.ChannelID, pack.PackageDesc, chan.ChannelDesc, p.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
+                                   select new { p.PackageID, p.ChannelID, pack.PackageName, chan.ChannelName, p.CreateDate }).OrderByDescending(m => m.CreateDate).ToList();
                 return Json(Channellist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -101,9 +101,7 @@ namespace MVCDreambox.Controllers
                         pack.PackageID = pid;
                         pack.ChannelID = channelids[i];
                         pack.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                        pack.UpdateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         pack.CreateDate = DateTime.Now;
-                        pack.UpdateDate = DateTime.Now;
                         db.PackageMappings.Add(pack);
                     }
                     db.SaveChanges();
