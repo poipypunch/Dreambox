@@ -9,7 +9,7 @@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th><p>User</p></th>
+                    <th st-sort="RealName" class="clickable"><b>User</b></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,8 +38,8 @@
                 <thead>
                     <tr>
                         <th><p>Select</p></th>
-                        <th><p>Package name</p></th>
-                        <th><p>Create date</p></th>
+                        <th st-sort="PackageName" class="clickable"><b>Package name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,8 +68,8 @@
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Package name</p></th>
-                        <th><p>Create date</p></th>
+                        <th st-sort="PackageName" class="clickable"><b>Package name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                         <th><p>Operation</p></th>
                     </tr>
                 </thead>

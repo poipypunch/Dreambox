@@ -17,28 +17,28 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Channel name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="ChannelName" ng-model="ChannelName" class="form-control" required placeholder="Channel name" />
+                        <input type="text" name="ChannelName" ng-model="ChannelName" class="form-control" maxlength="250" required placeholder="Channel name" />
                         <p class="help-block" ng-if="appForm.ChannelName.$error.required">Channel name is requied</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Browser url", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="BrowserUrl" ng-model="BrowserUrl" class="form-control" required placeholder="Browser url" />
+                        <input type="text" name="BrowserUrl" ng-model="BrowserUrl" class="form-control" maxlength="250" required placeholder="Browser url" />
                         <p class="help-block" ng-if="appForm.BrowserUrl.$error.required">Browser url is requied</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("iOS Url", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="iOSUrl" ng-model="iOSUrl" class="form-control" required placeholder="iOS Url" />
+                        <input type="text" name="iOSUrl" ng-model="iOSUrl" class="form-control" maxlength="250" required placeholder="iOS Url" />
                         <p class="help-block" ng-if="appForm.iOSUrl.$error.required">iOS Url is requied</p>
                     </div>
                 </div>
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Android url", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="AndroidUrl" ng-model="AndroidUrl" class="form-control" required placeholder="Android url" />
+                        <input type="text" name="AndroidUrl" ng-model="AndroidUrl" class="form-control" maxlength="250" required placeholder="Android url" />
                         <p class="help-block" ng-if="appForm.AndroidUrl.$error.required">Android url is requied</p>
                     </div>
                 </div>
@@ -71,11 +71,11 @@
             <thead>
                 <tr>
                     @*<th></th>*@
-                    <th st-sort="ChannelName"><b>Channel name</b></th>
-                    <th st-sort="BrowserUrl"><b>Browser url</b></th>
-                    <th st-sort="iOSUrl"><b>iOS Url</b></th>
-                    <th st-sort="AndroidUrl"><b>Android url</b></th>                    
-                    <th st-sort="ChannelStatus"><b>Channel Status</b></th>
+                    <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
+                    <th st-sort="BrowserUrl" class="clickable"><b>Browser url</b></th>
+                    <th st-sort="iOSUrl" class="clickable"><b>iOS Url</b></th>
+                    <th st-sort="AndroidUrl" class="clickable"><b>Android url</b></th>                    
+                    <th st-sort="ChannelStatus" class="clickable"><b>Channel Status</b></th>
                     <th><b>Operation</b></th>
                 </tr>
                 <tr>
@@ -94,18 +94,7 @@
                     <th>
                         <input st-search="ChannelStatus" type="text" />
                     </th>
-                    @*<th colspan="2">
-                        <custom-search></custom-search>
-                    </th>*@
-                </tr>
-                @*<tr>
-                        <th>
-                            <input st-search="'ChannelDesc'" placeholder="search for Channel name" class="input-sm form-control" type="search" />
-                        </th>
-                        <th colspan="4">
-                            <input st-search placeholder="global search" class="input-sm form-control" type="search" />
-                        </th>
-                    </tr>*@
+                </tr>               
             </thead>
             <tbody>
                 <tr ng-repeat="row in displayedCollection">

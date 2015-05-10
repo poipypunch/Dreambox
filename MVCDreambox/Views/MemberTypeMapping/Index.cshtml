@@ -8,7 +8,7 @@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th><h3>Member Type</h3></th>
+                    <th st-sort="MemberTypeName" class="clickable"><b>Member Type</b></th>
                     @*<th></th>*@
                 </tr>
                 <tr>
@@ -42,8 +42,8 @@
                 <thead>
                     <tr>
                         <th><p>Select</p></th>
-                        <th><p>Category name</p></th>
-                        <th><p>Create date</p></th>
+                        <th st-sort="CategoryName" class="clickable"><b>Category name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
                     <tr>
                         <th>
@@ -82,9 +82,9 @@
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Category name</p></th>
-                        <th><p>Create date</p></th>
-                        <th><p>Operation</p></th>
+                        <th st-sort="CategoryName" class="clickable"><b>Category name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
+                        <th><b>Operation</b></th>
                     </tr>
                     <tr>
                         <th>

@@ -14,7 +14,7 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("UserName", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="UserName" ng-model="UserName" class="form-control" required placeholder="UserName" />
+                        <input type="text" name="UserName" ng-model="UserName" class="form-control" maxlength="100" required placeholder="UserName" />
                         <p class="help-block" ng-if="appForm.UserName.$error.required">UserName is requied</p>
                     </div>
                 </div>
@@ -40,26 +40,26 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Real name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="RealName" ng-model="RealName" class="form-control" required placeholder="Real name" />
+                        <input type="text" name="RealName" ng-model="RealName" class="form-control" maxlength="200" required placeholder="Real name" />
                         <p class="help-block" ng-if="appForm.RealName.$error.required">Real name is requied</p>
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("Phone", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="Phone" ng-model="Phone" class="form-control" placeholder="Phone" />
+                        <input type="tel" name="Phone" ng-model="Phone" class="form-control" maxlength="20" placeholder="Phone" numbers-only />
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("E-mail", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="Email" ng-model="Email" class="form-control" placeholder="E-mail" />
+                        <input type="text" name="Email" ng-model="Email" class="form-control" maxlength="100" placeholder="E-mail" />
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("Address", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="Address" ng-model="Address" class="form-control" placeholder="Address" />
+                        <textarea ng-model="Address" maxlength="250" class="form-control" placeholder="Address"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -92,7 +92,7 @@
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="button" value="Save" ng-click="Save()" class="btn" />
-                        <input type="button" value="Reset Password" ng-click="Resetpassword()" class="btn" />
+                        @*<input type="button" value="Reset Password" ng-click="Resetpassword()" class="btn" />*@
                         <input type="button" value="Cancel" ng-click="Cancel()" class="btn" />
                     </div>
                 </div>
@@ -105,13 +105,12 @@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-
-                    <th st-sort="UserName"><b>Username</b></th>
-                    <th st-sort="RealName"><b>Real name</b></th>
-                    <th st-sort="Phone"><b>Phone</b></th>
-                    <th st-sort="Email"><b>E-mail</b></th>
-                    <th st-sort="Role"><b>Role</b></th>
-                    <th st-sort="Status"><b>Status</b></th>
+                    <th st-sort="UserName" class="clickable"><b>Username</b></th>
+                    <th st-sort="RealName" class="clickable"><b>Real name</b></th>
+                    <th st-sort="Phone" class="clickable"><b>Phone</b></th>
+                    <th st-sort="Email" class="clickable"><b>E-mail</b></th>
+                    <th st-sort="Role" class="clickable"><b>Role</b></th>
+                    <th st-sort="Status" class="clickable"><b>Status</b></th>
                     <th><b>Operation</b></th>
                 </tr>
             </thead>
@@ -140,6 +139,10 @@
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
+                        <button type="button" ng-click="Resetpassword(row)" class="btn btn-sm ">
+                            <i class="glyphicon glyphicon-refresh">
                             </i>
                         </button>
                         <button type="button" ng-click="delete(row)" class="btn btn-sm ">

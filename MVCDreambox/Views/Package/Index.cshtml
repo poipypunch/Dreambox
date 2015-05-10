@@ -13,7 +13,7 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Package name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="PackageName" ng-model="PackageName" class="form-control" required placeholder="Package name" />
+                        <input type="text" name="PackageName" ng-model="PackageName" class="form-control" maxlength="100" required placeholder="Package name" />
                         <p class="help-block" ng-if="appForm.PackageName.$error.required">Package name is requied</p>
                     </div>
                 </div>
@@ -49,10 +49,10 @@
             <thead>
                 <tr>
 
-                    <th st-sort="PackageName"><b>Package name</b></th>
-                    <th st-sort="PackageStatus"><b>Status</b></th>
-                    <th st-sort="CreateDate"><b>Create date</b></th>
-                    <th st-sort="UpdateDate"><b>Update date</b></th>
+                    <th st-sort="PackageName" class="clickable"><b>Package name</b></th>
+                    <th st-sort="PackageStatus" class="clickable"><b>Status</b></th>
+                    <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
+                    <th st-sort="UpdateDate" class="clickable"><b>Update date</b></th>
                     <th><b>Operation</b></th>
                 </tr>
                 <tr>

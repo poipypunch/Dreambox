@@ -35,8 +35,8 @@
                 <thead>
                     <tr>
                         <th><p>Select</p></th>
-                        <th><p>Channel name</p></th>
-                        <th><p>Create date</p></th>
+                        <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
                     <tr>
                         <th>
@@ -74,9 +74,9 @@
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Channel name</p></th>
-                        <th><p>Create date</p></th>
-                        <th>Operation</th>
+                        <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
+                        <th><b>Operation</b></th>
                     </tr>
                     <tr>
                         <th><input st-search="ChannelName" type="text" />
@@ -112,45 +112,5 @@
                 </tfoot>
             </table>
         </div>
-    </div>
-    @*<div ng-show="divModification" class="col-xs-12 col-md-8 panel panel-default">
-            <input type="button" value="New" ng-click="add()" class="btn" />
-            <input type="button" value="Edit" ng-click="edit()" class="btn" />
-            <input type="button" value="Delete" ng-click="delete()" class="btn" />
-            <div ng-show="divAdd">
-                <form name="appForm" novalidate>
-                    <div class="form-horizontal">
-                        <h3>{{Operation}} Category</h3>
-                        <span class="alert-danger">{{errormessage}}</span>
-                        <div class="form-group">
-                            @Html.Label("Parent", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                {{selected.CategoryDesc}}
-                            </div>
-                        </div>
-                        <div class="form-group" show-errors='{showSuccess: true}'>
-                            @Html.Label("Category name", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" name="CategoryDesc" ng-model="CategoryDesc" class="form-control" required placeholder="Category name" />
-                                <p class="help-block" ng-if="appForm.CategoryDesc.$error.required">Category name is requied</p>
-                            </div>
-                        </div>
-                        <div class="form-group" show-errors='{showSuccess: true}'>
-                            @Html.Label("Image path", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                <input type="text" name="ImgPath" ng-model="ImgPath" class="form-control" required placeholder="Image path" />
-                                <p class="help-block" ng-if="appForm.ImgPath.$error.required">Image path is requied</p>
-                            </div>
-                        </div>
-                        <input type="text" style="width:20px;" ng-model="ParentID" class="form-control" />
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="button" value="Save" ng-click="Save()" class="btn" />
-                                <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>*@
+    </div>    
 </div>

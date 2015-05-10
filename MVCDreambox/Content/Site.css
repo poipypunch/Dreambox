@@ -35,14 +35,23 @@ textarea {
 ul {
     list-style-type: none;
 }
-.iwt{
- white-space:nowrap;
 
+.iwt {
+    white-space: nowrap;
 }
-    .form-group .help-block {
-        display: none;
-    }
 
-    .form-group.has-error .help-block {
-        display: block;
-    }
+.form-group .help-block {
+    display: none;
+}
+
+.form-group.has-error .help-block {
+    display: block;
+}
+
+.st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}

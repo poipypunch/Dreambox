@@ -167,10 +167,10 @@ app.controller("UserController", function ($scope, userService, $filter) {
             }
         }
     }
-    $scope.Resetpassword = function () {
+    $scope.Resetpassword = function (tbuser) {
         $scope.errormessage = "";
         if (confirm('Please confirm to reset password.')) {
-            var getMSG = userService.ResetPassword($scope.DealerID);
+            var getMSG = userService.ResetPassword(tbuser.DealerID);
             getMSG.then(function (messagefromController) {
                 if (messagefromController.data == "Success") {
                     $scope.divModification = false;
@@ -735,23 +735,6 @@ app.controller("MemberController", function ($scope, memberService, $filter) {
             alert('Error');
         });
     }
-    $scope.SavePermission = function () {
-        var Permission = {
-            ID: $scope.selectedItem.ID,
-            RoleID: $scope.selectedItemRole.ID
-        };
-
-        var getMSG = memberService.update(Permission);
-        getMSG.then(function (messagefromController) {
-            GetMemberTypes();
-            GetAllRoles();
-            GetAllMember();
-            alert(messagefromController.data);
-        }, function () {
-            alert('Save Permission Error');
-        });
-    }
-
     $scope.edit = function (member) {
         $scope.errormessage = "";
         $scope.MemberID = member.MemberID;
@@ -842,10 +825,10 @@ app.controller("MemberController", function ($scope, memberService, $filter) {
             }
         }
     }
-    $scope.Resetpassword = function () {
+    $scope.Resetpassword = function (member) {
         $scope.errormessage = "";
         if (confirm('Please confirm to reset password.')) {
-            var getMSG = memberService.ResetPassword($scope.MemberID);
+            var getMSG = memberService.ResetPassword(member.MemberID);
             getMSG.then(function (messagefromController) {
                 if (messagefromController.data == "Success") {
                     $scope.divModification = false;
@@ -909,6 +892,8 @@ app.controller("PaymentController", function ($scope, paymentService, ShareServi
         $scope.Operation = "New";
         $scope.divModification = true;
         $scope.AddNew = false;
+
+        $scope.date = '19/03/2013';
     }
 
     $scope.Save = function () {
@@ -1391,13 +1376,25 @@ app.controller("MemberSubScribeController", function ($scope, memberSubService, 
 
     $scope.save = function () {
         $scope.errormessage = "";
-        var getMSG = memberSubService.Add($scope.MemberID, $scope.PaymentID);
-        getMSG.then(function (messagefromController) {
+        var checkPayment = memberSubService.checkPayment($scope.PaymentID);
+        checkPayment.then(function (messagefromController) {
             if (messagefromController.data == "Success") {
-                $scope.divNewSubScribe = false;
-                $scope.divMember = false;
+                var getMSG = memberSubService.Add($scope.MemberID, $scope.PaymentID);
+                getMSG.then(function (messagefromController) {
+                    if (messagefromController.data == "Success") {
+                        $scope.divNewSubScribe = false;
+                        $scope.divMember = false;
+                        $scope.$broadcast('show-errors-reset');
+                        $scope.errormessage = "";
+                        GetSubScribeList();
+                    } else {
+                        $scope.errormessage = messagefromController.data;
+                    }
+                }, function () {
+                    $scope.errormessage = "Member subscribe failed.";
+                });
             } else {
-                alert(messagefromController.data);
+                $scope.errormessage = messagefromController.data;
             }
         }, function () {
             $scope.errormessage = "Member subscribe failed.";

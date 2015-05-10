@@ -19,7 +19,7 @@ namespace MVCDreambox.Controllers
         {
             if (Session[CommonConstant.SessionUserID] == null) { return RedirectToAction("Login", "tbUser"); } else { return View(); }
         }
-       
+
         public JsonResult GetSubScribeList()
         {
             try
@@ -46,8 +46,11 @@ namespace MVCDreambox.Controllers
             try
             {
                 string strUserID = Session[CommonConstant.SessionUserID].ToString();
-                var memberList = db.Members.Where(m => m.DealerID == strUserID).ToList();
-                return Json(memberList, JsonRequestBehavior.AllowGet);
+                var memberlist = (from mem in db.Members
+                                  join memtype in db.MemberTypes on mem.MemberTypeID equals memtype.MemberTypeID
+                                  where mem.DealerID == strUserID
+                                  select new { mem.MemberID, mem.UserName, mem.Password, mem.MemberName, mem.Email, mem.Address, mem.Phone, memtype.MemberTypeName }).OrderBy(m => m.MemberName).ToList();
+                return Json(memberlist, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -91,45 +94,36 @@ namespace MVCDreambox.Controllers
 
         public string Add(string mid, string pid)
         {
-            try
+            if (mid != string.Empty && pid != string.Empty)
             {
-                if (mid != string.Empty && pid != string.Empty)
+                using (var context = new DreamboxContext())
                 {
-                    string UserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-                    MemberSubscription mems = new MemberSubscription();
-                    mems.MemberID = mid;
-                    mems.PaymentID = pid;
-                    mems.SubScribeDate = DateTime.Now;
-                    mems.DealerID = UserID;
-                    mems.UpdateBy = UserID;
-                    mems.UpdateDate = DateTime.Now;
-                    mems.CreateBy = UserID;
-                    mems.CreateDate = DateTime.Now;
-                    db.MemberSubscriptions.Add(mems);
-
-                    Payment pay = db.Payments.Find(pid);
-                    Payment paysave = pay;
-                    paysave.PaymentStatus = CommonConstant.CardStatus.InUsed;
-                    paysave.UpdateBy = UserID;
-                    paysave.UpdateDate = DateTime.Now;
-                    db.Entry(paysave).State = EntityState.Modified;
-                    db.Payments.Add(paysave);
-
-                    Member mem = db.Members.Find(mid);
-                    Member memsave = mem;
-                    memsave.ExpiryDate = mem.ExpiryDate.Value.AddDays(pay.PaymentTotalDay);
-                    memsave.UpdateBy = UserID;
-                    memsave.UpdateDate = DateTime.Now;
-                    db.Entry(memsave).State = EntityState.Modified;
-                    db.Members.Add(memsave);
-                    
-                    db.SaveChanges();
-                    return "Success";
+                    using (var dbContextTransaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            string UserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                            Payment pay = db.Payments.Find(pid);
+                            context.Database.ExecuteSqlCommand(
+                                @"INSERT INTO  MemberSubscription (PaymentID,MemberID,DealerID,SubScribeDate,CreateBy,CreateDate,UpdateBy,UpdateDate) VALUES ('" + pid + "','" + mid + "','" + UserID + "',GETDATE(),'" + UserID + "',GETDATE(),'" + UserID + "',GETDATE())");
+                            context.Database.ExecuteSqlCommand(
+                              @"UPDATE Payment SET PaymentStatus = '" + CommonConstant.CardStatus.InUsed + "',UpdateBy='" + UserID + "',UpdateDate=GETDATE()" +
+                                  " WHERE PaymentID = '" + pid + "'"
+                              );
+                            context.Database.ExecuteSqlCommand(
+                              @"UPDATE Member SET ExpiryDate = DATEADD(day," + pay.PaymentTotalDay + ",ExpiryDate),UpdateBy='"+UserID+"',UpdateDate=GETDATE() " +
+                                  " WHERE MemberID ='" + mid + "'"
+                              );                    
+                            context.SaveChanges();
+                            dbContextTransaction.Commit();
+                            return "Success";
+                        }
+                        catch (Exception)
+                        {
+                            dbContextTransaction.Rollback();
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-
             }
             return "Subscribe failed";
         }

@@ -13,7 +13,7 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member type name", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="text" name="MemberTypeName" ng-model="MemberTypeName" class="form-control" required />
+                        <input type="text" name="MemberTypeName" ng-model="MemberTypeName"  maxlength="100" class="form-control" required />
                         <p class="help-block" ng-if="appForm.MemberTypeName.$error.required">Member type name is requied</p>
                     </div>
                 </div>
@@ -34,10 +34,10 @@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th st-sort="MemberTypeName"><b>Member type name</b></th>
-                    <th st-sort="RealName"><b>Dealer name</b></th>
-                    <th st-sort="CreateDate"><b>Create date</b></th>
-                    <th st-sort="UpdateDate"><b>Update date</b></th>
+                    <th st-sort="MemberTypeName" class="clickable"><b>Member type name</b></th>
+                    <th st-sort="RealName" class="clickable"><b>Dealer name</b></th>
+                    <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
+                    <th st-sort="UpdateDate" class="clickable"><b>Update date</b></th>
                     <td><b>Operation</b></td>
                 </tr>
                 <tr>

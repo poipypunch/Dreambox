@@ -8,7 +8,7 @@
         <table st-table="displayedCollection" st-safe-src="rowCollection" class="table">
             <thead>
                 <tr>
-                    <th><h3>Package</h3></th>
+                    <th st-sort="PackageName" class="clickable"><b>Package</b></th>
                     @*<th></th>*@
                 </tr>
             </thead>
@@ -36,9 +36,9 @@
             <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Select</p></th>
-                        <th><p>Channel name</p></th>
-                        <th><p>Create date</p></th>
+                        <th><b>Select</b></th>
+                        <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,8 +67,8 @@
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Channel name</p></th>
-                        <th><p>Create date</p></th>
+                        <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
+                        <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                         <th>Operation</th>
                     </tr>
                 </thead>
