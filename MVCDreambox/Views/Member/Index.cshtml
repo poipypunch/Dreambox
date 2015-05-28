@@ -13,7 +13,7 @@
                 <div class="form-group" show-errors='{showSuccess: true}'>
                     @Html.Label("Member type", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <select data-ng-model="MemberTypeID" name="MemberTypeID" ng-options="memtype.MemberTypeID as memtype.MemberTypeDesc for memtype in membertypes" class="form-control" required></select>
+                        <select data-ng-model="MemberTypeID" name="MemberTypeID" ng-options="memtype.MemberTypeID as memtype.MemberTypeName for memtype in membertypes" class="form-control" required></select>
                         <p class="help-block" ng-if="appForm.MemberTypeID.$error.required">Member type is requied</p>
                     </div>
                 </div>
