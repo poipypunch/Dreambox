@@ -26,7 +26,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackagePermissionController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -45,7 +45,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackagePermissionController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -61,7 +61,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackagePermissionController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -80,7 +80,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackagePermissionController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -107,7 +107,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackagePermissionController", ex.ToString());
             }
             return "Add failed.";
         }

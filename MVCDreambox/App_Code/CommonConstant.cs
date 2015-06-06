@@ -11,6 +11,15 @@ namespace MVCDreambox.App_Code
         public const string DefaultPassword = "password";
         public const string SessionUserID = "UserID";
         public const string SessionRole = "Role";
+
+        #region"LogFile"
+        public const string PathLogFile = "c:\\logFile";
+        public const string timeformat = "HH:mm:ss";
+        public const string fileformat = "yyyyMMdd";
+        public const string spit = "-----";
+        public const string fileType = ".txt";
+        #endregion
+
         public class Role
         {
             public const string Admin = "Admin";
@@ -27,6 +36,8 @@ namespace MVCDreambox.App_Code
             public const string InUsed = "InUsed";
             public const string New = "New";
         }
+
+      
 
         public static string GetFieldValueString(object Value)
         {

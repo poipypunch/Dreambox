@@ -179,6 +179,6 @@ E:\Dreambox\git\MVCDreambox\MVCDreambox\bin\zh-Hans\System.Spatial.resources.dll
 E:\Dreambox\git\MVCDreambox\MVCDreambox\bin\zh-Hant\System.Spatial.resources.dll
 E:\Dreambox\git\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.dll
 E:\Dreambox\git\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.pdb
-E:\Dreambox\git\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.csprojResolveAssemblyReference.cache
 E:\Dreambox\git\MVCDreambox\MVCDreambox\bin\EntityFramework.SqlServer.dll
 E:\Dreambox\git\MVCDreambox\MVCDreambox\bin\EntityFramework.SqlServer.xml
+E:\Dreambox\git\MVCDreambox\MVCDreambox\obj\Debug\MVCDreambox.csprojResolveAssemblyReference.cache

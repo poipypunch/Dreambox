@@ -15,7 +15,7 @@
             <tbody>
                 <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentDealer}" class="clickable">
                     <td>
-                        {{row.RealName}}
+                        {{row.RealName | strLimit: 50}}
                     </td>
                 </tr>
             </tbody>
@@ -46,7 +46,7 @@
                     <tr ng-repeat="pack in displayedpackCollection">
                         <td><input type='checkbox' value="{{pack.PackageID}}" check-list='SelectItemPacks' class="clickable"> </td>
                         <td>
-                            {{pack.PackageName}}
+                            {{pack.PackageName | strLimit: 30}}
                         </td>
                         <td>
                             {{pack.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
@@ -76,7 +76,7 @@
                 <tbody>
                     <tr ng-repeat="packm in displayedmapCollection">
                         <td>
-                            {{packm.PackageName}}
+                            {{packm.PackageName | strLimit: 30}}
                         </td>
                         <td>
                             {{packm.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}

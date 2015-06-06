@@ -37,7 +37,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -53,7 +53,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -87,7 +87,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
             }
             return "Add new member failed";
         }
@@ -122,6 +122,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
 
             }
             return "Update failed";
@@ -145,7 +146,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
             }
             return "Update failed";
         }
@@ -164,7 +165,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
             }
             return "Delete failed";
         }
@@ -179,6 +180,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "MemberController", ex.ToString());
                 return false;
             }
         }

@@ -955,10 +955,12 @@ app.controller("CategoryController", function ($scope, categoryService, ShareSer
         category.iscollapsed = !category.iscollapsed;
     }
     $scope.SelectNode = function (cate, parent) {
+        cate.iscollapsed = true;
         $scope.errormessage = "";
         $scope.errormessage = "";
         $scope.$broadcast('show-errors-reset');
         $scope.divModification = true;
+        $scope.divAdd = false;
         $scope.currentNode = cate;
         $scope.currentParentNode = parent;
         if ($scope.Operation == "Add") {
@@ -984,7 +986,8 @@ app.controller("CategoryController", function ($scope, categoryService, ShareSer
         $scope.errormessage = "";
         $scope.Operation = "Update";
         $scope.divAdd = true;
-        $scope.ParentID = $scope.currentNode.CategoryID
+        $scope.ParentID = $scope.currentParentNode.CategoryID;
+        $scope.CategoryID = $scope.currentNode.CategoryID;
         $scope.CategoryName = $scope.currentNode.CategoryName;
         $scope.ParentName = $scope.currentParentNode.CategoryName;
         $scope.ImgPath = $scope.currentNode.ImgPath;
@@ -1013,7 +1016,7 @@ app.controller("CategoryController", function ($scope, categoryService, ShareSer
                     if (messagefromController.data == "Success") {
                         alert(messagefromController.data);
                         $scope.divAdd = false;
-                        $scope.divModification = false;
+                        $scope.divModification = true;
                         parent_node = $scope.currentParentNode;
                         parent_node = parent_node || $scope.categories;
                         var index = parent_node.categories.indexOf($scope.currentNode);
@@ -1036,7 +1039,7 @@ app.controller("CategoryController", function ($scope, categoryService, ShareSer
                     if (str[0] == "Success") {
                         alert(str[0]);
                         $scope.divAdd = false;
-                        $scope.divModification = false;
+                        $scope.divModification = true;
                         current_node = $scope.currentNode;
                         cate.CategoryID = str[1];
                         cate.categories = [];
@@ -1127,6 +1130,8 @@ app.controller("ContentManagementController", function ($scope, contentService, 
     $scope.iscollapsed = true;
     $scope.divMappingChannel = false;
     $scope.divActiveChannel = false;
+    $scope.divModification = false;
+    $scope.showAdd = true;
     $scope.SelectItemChans = [];
     GetCategoryTreeList();
 
@@ -1162,11 +1167,12 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         });
     }
 
-    $scope.selectNodeHead = function (category) {
+    $scope.selectNodeHead = function (category) {        
         category.iscollapsed = !category.iscollapsed;
     }
     $scope.SelectNode = function (cate, parentnode) {
         $scope.errormessage = "";
+        cate.iscollapsed = true;
         if (!(cate.categories != null && cate.categories.length > 0)) {
             $scope.divActiveChannel = false;
             $scope.SelectItemChans = [];
@@ -1188,11 +1194,14 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = true;
+        $scope.showAdd = false;
         GetActiveChannelsList($scope.currentNode.CategoryID);
     }
     $scope.cancel = function () {
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
+        $scope.divModification = false;
+        $scope.showAdd = true;
     }
 
     $scope.add = function () {
@@ -1206,6 +1215,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
                     GetMappingChannelsList($scope.currentNode.CategoryID);
                     $scope.SelectItemChans = [];
                     $scope.divActiveChannel = false;
+                    $scope.showAdd = true;
                 } else {
                     alert(messagefromController.data);
                 }
@@ -1218,6 +1228,7 @@ app.controller("ContentManagementController", function ($scope, contentService, 
         $scope.errormessage = "";
         $scope.SelectItemChans = [];
         $scope.divActiveChannel = false;
+        $scope.showAdd = true;
         if (confirm('Please confirm to delete.')) {
             var getMSG = contentService.Delete(cate.CategoryID, cate.ChannelID);
             getMSG.then(function (messagefromController) {
@@ -1227,6 +1238,42 @@ app.controller("ContentManagementController", function ($scope, contentService, 
                 $scope.errormessage = "Delete failed.";
             });
         }
+    }
+    $scope.edit = function (chan) {
+        $scope.divModification = true;
+        $scope.showAdd = false;
+        $scope.ChannelName = chan.ChannelName;
+        $scope.ChannelID = chan.ChannelID;
+        $scope.ChannelOrder = chan.ChannelOrder;
+        $scope.orgOrder = chan.ChannelOrder;
+        $scope.CategoryID = $scope.currentNode.CategoryID;
+    }
+
+    $scope.save = function () {
+        $scope.errormessage = "";
+        if ($scope.ChannelOrder != null) {
+            var Data = contentService.getMaxOrder($scope.CategoryID);
+            Data.then(function (maxorder) {
+                if (maxorder.data >= $scope.ChannelOrder) {
+                    var getMSG = contentService.Save($scope.currentNode.CategoryID, $scope.ChannelID, $scope.ChannelOrder, $scope.orgOrder);
+                    getMSG.then(function (messagefromController) {
+                        if (messagefromController.data == "Success") {
+                            GetMappingChannelsList($scope.currentNode.CategoryID);
+                            $scope.divModification = false;
+                            $scope.showAdd = true;
+                        } else {
+                            alert(messagefromController.data);
+                        }
+                    }, function () {
+                        $scope.errormessage = "Update channel order failed.";
+                    });
+                } else {
+                    $scope.errormessage = "Update failed,max channel order is " + maxorder.data.toString();
+                }
+            }, function () {
+                alert('get data error');
+            });
+        } 
     }
 });
 

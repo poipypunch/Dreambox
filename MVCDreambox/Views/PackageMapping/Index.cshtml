@@ -15,7 +15,7 @@
             <tbody>
                 <tr ng-repeat="row in displayedCollection" ng-click="selectRow(row)" ng-class="{success:row===currentPackage}" class="clickable">
                     <td>
-                        {{row.PackageName}}
+                        {{row.PackageName | strLimit: 50}}
                     </td>
                 </tr>
             </tbody>
@@ -45,7 +45,7 @@
                     <tr ng-repeat="chanA in displayedchanCollection">
                         <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans' class="clickable"> </td>
                         <td>
-                            {{chanA.ChannelName}}
+                            {{chanA.ChannelName | strLimit: 50}}
                         </td>
                         <td>
                             {{chanA.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
@@ -75,7 +75,7 @@
                 <tbody>
                     <tr ng-repeat="chan in displayedmapCollection">
                         <td>
-                            {{chan.ChannelName}}
+                            {{chan.ChannelName | strLimit: 50}}
                         </td>
                         <td>
                             {{chan.CreateDate  | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}

@@ -24,6 +24,15 @@ app.filter("ToJavaScriptDate", function () {
     }
 });
 
+app.filter('strLimit', ['$filter', function ($filter) {
+    return function (input, limit) {
+        if (!input) return;
+        if (input.length <= limit) {
+            return input;
+        }
+        return $filter('limitTo')(input, limit) + '...';
+    };
+}]);
 app.service("loginService", function ($http, ShareService) {
     //Login 
     var baseUrl = ShareService.GetBaseUrl();
@@ -501,6 +510,14 @@ app.service("contentService", function ($http, ShareService) {
             params: { CategoryID: CategoryID }
         });
     };
+
+    this.getMaxOrder = function (CategoryID) {
+        return $http({
+            url: baseUrl + "ContentManagement/MaxOrder",
+            method: "GET",
+            params: { cid: CategoryID }
+        });
+    };
     //Delete 
     this.Delete = function (CategoryID, ChannelID) {
         var response = $http({
@@ -520,6 +537,16 @@ app.service("contentService", function ($http, ShareService) {
             method: "post",
             url: baseUrl + "ContentManagement/Add",
             data: { cid: CategoryID, channelids: Channels },
+            dataType: "json"
+        });
+        return response;
+    }
+
+    this.Save = function (CategoryID, ChannelID,ChannelOrder,orgOrder) {
+        var response = $http({
+            method: "post",
+            url: baseUrl + "ContentManagement/ChangeOrder",
+            data: { cid: CategoryID, channelids: ChannelID, channelorder: ChannelOrder, org: orgOrder },
             dataType: "json"
         });
         return response;
@@ -601,7 +628,7 @@ app.service("memberSubService", function ($http, ShareService) {
 
 app.service("ShareService", function ($http) {   
     this.GetBaseUrl = function () {
-        return $("base").first().attr("href");;
+        return $("base").first().attr("href");
     };
     this._makeTree = function (options) {
         var children, e, id, o, pid, temp, _i, _len, _ref;

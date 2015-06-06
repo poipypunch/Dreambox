@@ -8,10 +8,10 @@
         <span class="iwt">
             @*<label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-open clickable"></i></label>
                 <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-close clickable"></i></label>*@
-            <i ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
-            <i ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
+            <i ng-if="(category.categories && category.iscollapsed)||category.CategoryID=='0' || category.categories.length<=0" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
+            <i ng-if="category.categories.length>0 && !category.iscollapsed &&category.CategoryID!='0'" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
             <span ng-click="SelectNode(category,parent)" ng-class="{CurrentNode:category===currentNode}" class="clickable">
-                {{ category.CategoryName }}
+                {{ category.CategoryName  | strLimit: 35}}
             </span>
         </span>
 
@@ -28,13 +28,13 @@
     </div>
     <div class="col-xs-12 col-md-8">
         <div ng-show="divActiveChannel" class="panel panel-default" style=" width:100%; margin-left:10px; margin-top:20px; padding:5px;">
-            <h3>Add channel to {{currentNode.CategoryName}}</h3>
+            <h3>Add channel to {{currentNode.CategoryName | strLimit: 50}}</h3>
             <input type="button" value="Add" ng-click="add()" class="btn" />
             <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
             <table st-table="displayedchanCollection" st-safe-src="chanCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Select</p></th>
+                        <th><b>Select</b></th>
                         <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
                         <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
@@ -52,7 +52,7 @@
                     <tr ng-repeat="chanA in displayedchanCollection">
                         <td><input type='checkbox' value="{{chanA.ChannelID}}" check-list='SelectItemChans' class="clickable"> </td>
                         <td>
-                            {{chanA.ChannelName}}
+                            {{chanA.ChannelName | strLimit: 40}}
                         </td>
                         <td>
                             {{chanA.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
@@ -69,19 +69,52 @@
             </table>
         </div>
         <div ng-show="divMappingChannel" class="panel panel-default" style=" width: 100%; margin-left: 10px; margin-top: 20px; padding: 5px;">
-            <h3>Mapped channel in {{currentNode.CategoryName}}</h3>
-            <input type="button" value="New channel" ng-click="addChannel()" class="btn" />
+            <h3>Mapped channel in {{currentNode.CategoryName | strLimit: 40}}</h3>
+            <input type="button" value="New channel" ng-click="addChannel()" class="btn" ng-show="showAdd" />
+            <div ng-show="divModification" class="panel panel-default" style=" width:100%;padding:5px;">
+                <form name="appForm">
+                    <div class="form-horizontal">
+                        <h3>Update channel order</h3>
+                        <span class="alert-danger">{{errormessage}}</span>
+                        <br />
+                        <div class="form-group" show-errors='{showSuccess: true}'>
+                            @Html.Label("Channel name", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <label>{{ChannelName}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors='{showSuccess: true}'>
+                            @Html.Label("Channel order", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <input type="text" name="ChannelOrder" ng-model="ChannelOrder" maxlength="100" class="form-control" required numbers-only />
+                                <p class="help-block" ng-if="appForm.ChannelOrder.$error.required">Channel order name is requied</p>
+                            </div>
+                        </div>
+                        <input type="text" style="width:20px;" ng-model="ChannelID" class="hidden" />
+                        <input type="text" style="width:20px;" ng-model="orgOrder" class="hidden" />
+                        <input type="text" style="width:20px;" ng-model="CategoryID" class="hidden" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="button" value="Save" ng-click="save()" class="btn" />
+                                <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <table st-table="displayedmapCollection" st-safe-src="mapCollection" class="table">
                 <thead>
                     <tr>
                         <th st-sort="ChannelName" class="clickable"><b>Channel name</b></th>
                         <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
+                        <th st-sort="ChannelOrder" class="clickable"><b>Channel order</b></th>
                         <th><b>Operation</b></th>
                     </tr>
                     <tr>
-                        <th><input st-search="ChannelName" type="text" />
+                        <th>
+                            <input st-search="ChannelName" type="text" />
                         </th>
-                        <th>                            
+                        <th>
                         </th>
                         <th>
                         </th>
@@ -90,12 +123,19 @@
                 <tbody>
                     <tr ng-repeat="chan in displayedmapCollection">
                         <td>
-                            {{chan.ChannelName}}
+                            {{chan.ChannelName | strLimit: 40}}
                         </td>
                         <td>
                             {{chan.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
                         </td>
                         <td>
+                            {{chan.ChannelOrder}}
+                        </td>
+                        <td>
+                            <button type="button" ng-click="edit(chan)" class="btn btn-sm ">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
                             <button type="button" ng-click="delete(chan)" class="btn btn-sm ">
                                 <i class="glyphicon glyphicon-trash">
                                 </i>
@@ -112,5 +152,5 @@
                 </tfoot>
             </table>
         </div>
-    </div>    
+    </div>
 </div>

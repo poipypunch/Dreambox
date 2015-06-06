@@ -25,17 +25,24 @@ namespace MVCDreambox.Controllers
 
         public JsonResult GetCategoryTrees()
         {
-            string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
-            var results = db.Categories.Where(m => m.DealerID == strUserID).OrderBy(m => m.CategoryName).ToList();
+            try
+            {
+                string strUserID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
+                var results = db.Categories.Where(m => m.DealerID == strUserID).OrderBy(m => m.CategoryName).ToList();
 
-            Category cate = new Category();
-            cate.CategoryID = "0";
-            cate.CategoryName = "Root";
-            cate.DealerID = strUserID;
-            cate.ParentID = null;
-            results.Add(cate);
-
-            return Json(results, JsonRequestBehavior.AllowGet);
+                Category cate = new Category();
+                cate.CategoryID = "0";
+                cate.CategoryName = "Root";
+                cate.DealerID = strUserID;
+                cate.ParentID = null;
+                results.Add(cate);
+                return Json(results, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                LogFile.writeLogFile(DateTime.Now, "CategoryController", ex.ToString());
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         //public string Add(CategoryDummay category)
@@ -93,9 +100,9 @@ namespace MVCDreambox.Controllers
 
                             }
                         }
-                        
+
                         cate.CategoryID = Guid.NewGuid().ToString();
-                        cate.CategoryName = category.CategoryName;   
+                        cate.CategoryName = category.CategoryName;
                         cate.DealerID = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         cate.UpdateDate = DateTime.Now;
                         cate.CreateDate = DateTime.Now;
@@ -113,7 +120,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "CategoryController", ex.ToString());
             }
             return "Failed|Add new category failed";
         }
@@ -142,7 +149,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "CategoryController", ex.ToString());
             }
             return "Update failed";
         }
@@ -167,6 +174,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "CategoryController", ex.ToString());
 
             }
             return "Delete failed";
@@ -183,132 +191,10 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "CategoryController", ex.ToString());
                 return false;
             }
-        }
-        //public ActionResult PatialCreate(string ParentID, string viewName)
-        //{
-        //    Category model = new Category();
-        //    Category cate = new Category();
-        //    viewName = "Create";
-        //    cate = db.Categories.Find(ParentID);
-        //    model.ParentID = ParentID;
-        //    ViewBag.ParentName = "Parent : " + cate.CategoryDesc;
-        //    return PartialView(viewName, model);
-        //}
-        //[HttpPost]
-        //public ActionResult Create(Category cate)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            cate.CategoryID = Guid.NewGuid().ToString();
-        //            cate.CreateDate = DateTime.Now;
-        //            cate.UpdateDate = DateTime.Now;
-        //            cate.DealerID = Session["UserID"].ToString();
-        //            db.Categories.Add(cate);
-        //            db.SaveChanges();
-        //            return RedirectToAction("Index", "Category");
-        //        }
-        //    }
-        //    catch (Exception ex) { }
-        //    return PartialView("Create", cate);
-        //}
-
-        ////
-        //// GET: /Category/Details/5
-
-        //public ActionResult Details(string id = null)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    if (category == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(category);
-        //}
-
-        ////
-        //// GET: /Category/Create
-
-        ////public ActionResult Create()
-        ////{
-        ////    return View();
-        ////}
-
-        ////
-        //// POST: /Category/Create
-
-        ////[HttpPost]
-        ////[ValidateAntiForgeryToken]
-        ////public ActionResult Create(Category category)
-        ////{
-        ////    if (ModelState.IsValid)
-        ////    {
-        ////        db.Categories.Add(category);
-        ////        db.SaveChanges();
-        ////        return RedirectToAction("Index");
-        ////    }
-
-        ////    return View(category);
-        ////}
-
-        ////
-        //// GET: /Category/Edit/5
-
-        //public ActionResult Edit(string id = null)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    if (category == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(category);
-        //}
-
-        ////
-        //// POST: /Category/Edit/5
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(Category category)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(category).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(category);
-        //}
-
-        ////
-        //// GET: /Category/Delete/5
-
-        //public ActionResult Delete(string id = null)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    if (category == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(category);
-        //}
-
-        ////
-        //// POST: /Category/Delete/5
-
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    db.Categories.Remove(category);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
-
+        }       
         protected override void Dispose(bool disposing)
         {
             db.Dispose();

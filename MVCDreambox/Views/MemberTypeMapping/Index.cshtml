@@ -41,7 +41,7 @@
             <table st-table="displayedcateCollection" st-safe-src="cateCollection" class="table">
                 <thead>
                     <tr>
-                        <th><p>Select</p></th>
+                        <th><b>Select</b></th>
                         <th st-sort="CategoryName" class="clickable"><b>Category name</b></th>
                         <th st-sort="CreateDate" class="clickable"><b>Create date</b></th>
                     </tr>
@@ -60,7 +60,7 @@
                     <tr ng-repeat="cateA in displayedcateCollection">
                         <td><input type='checkbox' value="{{cateA.CategoryID}}" check-list='SelectItemCates' class="clickable"> </td>
                         <td>
-                            {{cateA.CategoryName}}
+                            {{cateA.CategoryName | strLimit: 30}}
                         </td>
                         <td>
                             {{cateA.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
@@ -99,7 +99,7 @@
                 <tbody>
                     <tr ng-repeat="cate in displayedmapCollection">
                         <td>
-                            {{cate.CategoryName}}
+                            {{cate.CategoryName | strLimit: 30}}
                         </td>
                         <td>
                             {{cate.CreateDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}

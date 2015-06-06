@@ -26,7 +26,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeMappingController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -45,7 +45,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeMappingController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -62,7 +62,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeMappingController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -81,7 +81,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeMappingController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -108,7 +108,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeMappingController", ex.ToString());
             }
             return "Add failed.";
         }

@@ -75,21 +75,19 @@
                     <th st-sort="BrowserUrl" class="clickable"><b>Browser url</b></th>
                     <th st-sort="iOSUrl" class="clickable"><b>iOS Url</b></th>
                     <th st-sort="AndroidUrl" class="clickable"><b>Android url</b></th>                    
-                    <th st-sort="ChannelStatus" class="clickable"><b>Channel Status</b></th>
+                    <th st-sort="ChannelStatus" class="clickable"><b>Status</b></th>
                     <th><b>Operation</b></th>
                 </tr>
                 <tr>
                     <th>
                         <input st-search="ChannelName" type="text" />
                     </th>
-                    <th>
-                        <input st-search="BrowserUrl" type="text" />
+                    <th>                        
+                    </th>
+                    <th >                       
                     </th>
                     <th >
-                        <input st-search="iOSUrl" type="text" />
-                    </th>
-                    <th >
-                        <input st-search="AndroidUrl" type="text" />
+                        
                     </th>
                     <th>
                         <input st-search="ChannelStatus" type="text" />
@@ -99,16 +97,16 @@
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
                     <td>
-                        {{row.ChannelName}}
+                        {{row.ChannelName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.BrowserUrl}}
+                        {{row.BrowserUrl | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.iOSUrl}}
+                        {{row.iOSUrl | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.AndroidUrl}}
+                        {{row.AndroidUrl | strLimit: 20}}
                     </td>
                     <td>
                         {{row.ChannelStatus}}

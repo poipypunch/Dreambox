@@ -83,7 +83,7 @@
                     <th st-sort="UserName" class="clickable"><b>User Name</b></th>
                     <th st-sort="MemberName" class="clickable"><b>Member Name</b></th>
                     <th st-sort="MemberTypeName" class="clickable"><b>Member type</b></th>
-                    <th st-sort="RealName" class="clickable"><b>Dealer name</b></th>
+                    @*<th st-sort="RealName" class="clickable"><b>Dealer name</b></th>*@
                     <td><b>Operation</b></td>
                 </tr>
                 <tr>
@@ -96,9 +96,9 @@
                     <th>
                         <input st-search="MemberTypeName" type="text" />
                     </th>
-                    <th>
+                    @*<th>
                         <input st-search="RealName" type="text" />
-                    </th>
+                    </th>*@
                     <th>
                     </th>
                 </tr>
@@ -106,15 +106,15 @@
             <tbody>
                 <tr ng-repeat="row in displayedCollection">
                     <td>
-                        {{row.UserName}}
+                        {{row.UserName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.MemberName}}
+                        {{row.MemberName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.MemberTypeName}}
+                        {{row.MemberTypeName | strLimit: 20}}
                     </td>
-                    <td>{{row.RealName}}</td>
+                    @*<td>{{row.RealName | strLimit: 50}}</td>*@
                     <td>
                         <button type="button" ng-click="edit(row)" class="btn btn-sm ">
                             <i class="glyphicon glyphicon-edit">
@@ -133,7 +133,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" class="text-center">
+                    <td colspan="4" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage"></div>
                     </td>
                 </tr>

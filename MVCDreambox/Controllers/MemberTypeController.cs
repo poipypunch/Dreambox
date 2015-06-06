@@ -37,7 +37,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -65,9 +65,9 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeController", ex.ToString());
             }
             return "Add member type failed.";
         }
@@ -92,7 +92,7 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { LogFile.writeLogFile(DateTime.Now, "MemberTypeController", ex.ToString()); }
             return "Update failed";
         }
 
@@ -111,115 +111,10 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeController", ex.ToString());
             }
             return "Delete failed.";
-        }
-        //
-        // GET: /MemberType/Details/5
-
-        //public ActionResult Details(string id = null)
-        //{
-        //    MemberType membertype = db.MemberTypes.Find(id);
-        //    if (membertype == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(membertype);
-        //}
-
-        ////
-        //// GET: /MemberType/Create
-
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-        //
-        // POST: /MemberType/Create
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(MemberType membertype)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (!CheckDuplicate(string.Empty, membertype.MemberTypeDesc))
-        //        {
-        //            membertype.MemberTypeID = Guid.NewGuid().ToString();
-        //            membertype.CreateBy = Session["UserID"].ToString();
-        //            membertype.UpdateBy = Session["UserID"].ToString();
-        //            membertype.CreateDate = DateTime.Now;
-        //            membertype.UpdateDate = DateTime.Now;
-        //            membertype.DealerID = Session["UserID"].ToString();
-        //            db.MemberTypes.Add(membertype);
-        //            db.SaveChanges();
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-
-        //    return View(membertype);
-        //}
-
-        ////
-        //// GET: /MemberType/Edit/5
-
-        //public ActionResult Edit(string id = null)
-        //{
-        //    MemberType membertype = db.MemberTypes.Find(id);
-        //    if (membertype == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(membertype);
-        //}
-
-        ////
-        //// POST: /MemberType/Edit/5
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(MemberType membertype)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (CheckDuplicate(membertype.MemberTypeID, membertype.MemberTypeDesc))
-        //        {
-        //            membertype.UpdateBy = Session["UserID"].ToString();
-        //            membertype.UpdateDate = DateTime.Now;
-        //            db.Entry(membertype).State = EntityState.Modified;
-        //            db.SaveChanges();
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-        //    return View(membertype);
-        //}
-
-        ////
-        //// GET: /MemberType/Delete/5
-
-        //public ActionResult Delete(string id = null)
-        //{
-        //    MemberType membertype = db.MemberTypes.Find(id);
-        //    if (membertype == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(membertype);
-        //}
-
-        ////
-        //// POST: /MemberType/Delete/5
-
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    MemberType membertype = db.MemberTypes.Find(id);
-        //    db.MemberTypes.Remove(membertype);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        }        
 
         private bool IsDuplicate(string id, string TypeDesc)
         {
@@ -232,6 +127,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "MemberTypeController", ex.ToString());
                 return false;
             }
         }

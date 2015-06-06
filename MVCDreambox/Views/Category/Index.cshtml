@@ -33,10 +33,10 @@
         <span class="iwt">
             @*<label ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-open clickable"></i></label>
                 <label ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)"><i class="glyphicon glyphicon-folder-close clickable"></i></label>*@
-            <i ng-if="category.categories && category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
-            <i ng-if="category.categories && !category.iscollapsed" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
+            <i ng-if="(category.categories && category.iscollapsed)||category.CategoryID=='0' || category.categories.length<=0" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-open clickable"></i>
+            <i ng-if="category.categories.length>0 && !category.iscollapsed &&category.CategoryID!='0'" ng-click="selectNodeHead(category)" class="glyphicon glyphicon-folder-close clickable"></i>
             <span ng-click="SelectNode(category,parent)" ng-class="{CurrentNode:category===currentNode}" class="clickable">
-                {{ category.CategoryName }}
+                {{ category.CategoryName}}
             </span>
         </span>
         <ul ng-if="(category.categories && category.iscollapsed)||category.CategoryID=='0'">
@@ -44,7 +44,7 @@
             </li>
         </ul>
     </script>
-    <div class="col-xs-6 col-md-4 panel panel-default">
+    <div class="col-xs-6 col-md-4 panel panel-default" style=" overflow:scroll">
         <ul>
             <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
         </ul>
@@ -82,6 +82,7 @@
                     </div>
                     <input type="text" style="width:20px;" ng-model="ParentID" class="hidden" />
                     <input type="text" style="width:20px;" ng-model="ImageUrl" class="hidden" />
+                    <input type="text" style="width:20px;" ng-model="CategoryID" class="hidden" />
                     <div class="form-group">
                         <div class="col-md-offset-4 col-md-8">
                             <input type="button" value="Save" ng-click="Save()" class="btn" />

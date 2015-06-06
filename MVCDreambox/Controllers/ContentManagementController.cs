@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCDreambox.Models;
 using MVCDreambox.App_Code;
+using System.Data.Entity;
 namespace MVCDreambox.Controllers
 {
     public class ContentManagementController : Controller
@@ -36,7 +37,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -55,7 +56,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -68,8 +69,9 @@ namespace MVCDreambox.Controllers
                 var Channellist = (from chan in db.Channels
                                    join packmap in db.PackageMappings on chan.ChannelID equals packmap.ChannelID
                                    join packper in db.PackagePermissions on packmap.PackageID equals packper.PackageID
-                                   where packper.DealerID == strUserID && chan.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == chan.ChannelID) && (p.CategoryID == CategoryID))
-                                   select new { chan.ChannelID,chan.ChannelName,chan.iOSUrl,chan.BrowserUrl,chan.AndroidUrl,chan.CreateDate }).OrderByDescending(m => m.ChannelName).ToList();
+                                   //where packper.DealerID == strUserID && chan.ChannelStatus == CommonConstant.Status.Active
+                                   where packper.DealerID == strUserID && chan.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == chan.ChannelID && p.CategoryID == CategoryID))
+                                   select new { chan.ChannelID, chan.ChannelName, chan.iOSUrl, chan.BrowserUrl, chan.AndroidUrl, chan.CreateDate }).OrderByDescending(m => m.ChannelName).ToList().Distinct();
                 //var channels = (from s in db.Channels
                 //                where s.ChannelStatus == CommonConstant.Status.Active && !db.ContentMangements.Any(p => (p.ChannelID == s.ChannelID) && (p.CategoryID == CategoryID))
                 //                select s).ToList();
@@ -77,7 +79,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -96,7 +98,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -106,6 +108,7 @@ namespace MVCDreambox.Controllers
             {
                 if (cid != string.Empty && channelids != null && channelids.Length > 0)
                 {
+                    int maxorder = MaxOrder(cid);
                     ContentManagement content;
                     for (int i = 0; i < channelids.Length; i++)
                     {
@@ -114,7 +117,9 @@ namespace MVCDreambox.Controllers
                         content.ChannelID = channelids[i];
                         content.CreateBy = CommonConstant.GetFieldValueString(Session[CommonConstant.SessionUserID]);
                         content.CreateDate = DateTime.Now;
+                        content.ChannelOrder = maxorder + 1;
                         db.ContentMangements.Add(content);
+                        maxorder = maxorder + 1;
                     }
                     db.SaveChanges();
 
@@ -123,10 +128,66 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
             }
             return "Add failed.";
         }
 
+        public string ChangeOrder(string cid, string channelids, int channelorder, int org)
+        {
+            try
+            {
+                if (cid != string.Empty && channelids != string.Empty && channelorder != null && org != null)
+                {
+                    if (channelorder < org)
+                    {
+                        ContentManagement content = db.ContentMangements.Where(c => c.ChannelID == channelids && c.CategoryID == cid).FirstOrDefault();
+                        content.ChannelOrder = channelorder;
+                        db.Entry(content).State = EntityState.Modified;
+
+                        var contentlist = db.ContentMangements.Where(f => f.CategoryID == cid && f.ChannelOrder >= channelorder && f.ChannelOrder <= org && f.ChannelID != channelids).ToList();
+                        contentlist.ForEach(a => a.ChannelOrder = a.ChannelOrder + 1);
+                        db.SaveChanges();
+                    }
+                    else if (channelorder > org)
+                    {
+                        ContentManagement content = db.ContentMangements.Where(c => c.ChannelID == channelids && c.CategoryID == cid).FirstOrDefault();
+                        content.ChannelOrder = channelorder;
+                        db.Entry(content).State = EntityState.Modified;
+
+                        var contentlist = db.ContentMangements.Where(f => f.CategoryID == cid && f.ChannelOrder > org && f.ChannelOrder <= channelorder && f.ChannelID != channelids).ToList();
+                        contentlist.ForEach(a => a.ChannelOrder = a.ChannelOrder - 1);
+                        db.SaveChanges();
+                    }
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
+            }
+            return "Add failed.";
+        }
+
+        public int MaxOrder(string cid)
+        {
+            int Maxorder = 0;
+            try
+            {
+                var maxTopID = (from max in db.ContentMangements
+                                where max.CategoryID == cid
+                                select max.ChannelOrder).Max();
+                Maxorder = Convert.ToInt32(maxTopID);
+            }
+            catch (Exception ex)
+            {
+                LogFile.writeLogFile(DateTime.Now, "ContentManagementController", ex.ToString());
+                Maxorder = 0;
+            }
+            return Maxorder;
+        }
     }
+
 }
+
+

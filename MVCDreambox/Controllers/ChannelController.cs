@@ -32,7 +32,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ChannelController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -61,9 +61,9 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ChannelController", ex.ToString());
             }
             return "Add channel failed.";
         }
@@ -93,7 +93,7 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { LogFile.writeLogFile(DateTime.Now, "ChannelController", ex.ToString()); }
             return "Update failed";
         }
 
@@ -112,7 +112,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "ChannelController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -127,6 +127,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "ChannelController", ex.ToString());
                 return false;
             }
         }

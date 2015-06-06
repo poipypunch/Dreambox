@@ -46,8 +46,9 @@
             </div>
         </form>
     </div>
-    <h3>Member list</h3>
+    <h3 ng-show="divMember">Member list</h3>
     <div ng-show="divMember" class="panel panel-default" style=" width:100%;padding:5px;">
+        <input type="button" value="Cancel" ng-click="cancel()" class="btn" />
         <table st-table="displayedmemCollection" st-safe-src="memCollection" class="table">
             <thead>
                 <tr>
@@ -73,13 +74,13 @@
             <tbody>
                 <tr ng-repeat="row in displayedmemCollection">
                     <td>
-                        {{row.UserName}}
+                        {{row.UserName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.MemberName}}
+                        {{row.MemberName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.MemberTypeName}}
+                        {{row.MemberTypeName | strLimit: 20}}
                     </td>
                     <td>
                         {{row.ExpireDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}
@@ -120,13 +121,13 @@
                         {{row.PaymentID}}
                     </td>
                     <td>
-                        {{row.MemberName}}
+                        {{row.MemberName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.MemberTypeName}}
+                        {{row.MemberTypeName | strLimit: 20}}
                     </td>
                     <td>
-                        {{row.PaymentName}}
+                        {{row.PaymentName | strLimit: 20}}
                     </td>
                     <td>
                         {{row.SubScribeDate | ToJavaScriptDateToString | date:'yyyy-MM-dd HH:mm:ss'}}

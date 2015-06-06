@@ -43,6 +43,7 @@ namespace MVCDreambox.Controllers
             {
 
                 string str = ex.Message.ToString();
+                LogFile.writeLogFile(DateTime.Now,"tbUserController", ex.ToString());
             }
             return null;
         }
@@ -72,9 +73,9 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString());
             }
             return "Add user failed.";
         }
@@ -106,7 +107,7 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString()); }
             return "Update failed";
         }
 
@@ -127,7 +128,7 @@ namespace MVCDreambox.Controllers
                     return "Success";
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString()); }
             return "Change password failed";
         }
 
@@ -149,7 +150,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString());
             }
             return "Update failed";
         }
@@ -167,7 +168,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -197,129 +198,19 @@ namespace MVCDreambox.Controllers
                     }
                     else
                     {
+                        LogFile.writeLogFile(DateTime.Now, "tbUserController", "This username is not exist.");
                         return "This username is not exist.";
                     }
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message.ToString();
+                LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString());
+                //return ex.Message.ToString();
             }
             return "Login failed.";
         }
-        //
-        // GET: /SysUser/
-
-        //public ActionResult Index()
-        //{
-        //    return View(db.tbUsers.ToList());
-        //}
-
-        ////
-        //// GET: /SysUser/Details/5
-
-        //public ActionResult Details(string id = null)
-        //{
-        //    tbUser tbuser = db.tbUsers.Find(id);
-        //    if (tbuser == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(tbuser);
-        //}
-
-        ////
-        //// GET: /SysUser/Create
-
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        ////
-        //// POST: /SysUser/Create
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(tbUser tbuser)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (!CheckDuplicate(string.Empty, tbuser.UserName))
-        //        {
-        //            tbuser.DealerID = Guid.NewGuid().ToString();
-        //            tbuser.CreateBy = Session["UserID"].ToString();
-        //            tbuser.CreateDate = DateTime.Now;
-        //            tbuser.UpdateBy = Session["UserID"].ToString();
-        //            db.tbUsers.Add(tbuser);
-        //            db.SaveChanges();
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-
-        //    return View(tbuser);
-        //}
-
-        ////
-        //// GET: /SysUser/Edit/5
-
-        //public ActionResult Edit(string id = null)
-        //{
-        //    tbUser tbuser = db.tbUsers.Find(id);
-        //    if (tbuser == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(tbuser);
-        //}
-
-        ////
-        //// POST: /SysUser/Edit/5
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(tbUser tbuser)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (!CheckDuplicate(tbuser.DealerID, tbuser.UserName))
-        //        {
-        //            tbuser.UpdateBy = Session["UserID"].ToString();
-        //            tbuser.UpdateDate = DateTime.Now;
-        //            db.Entry(tbuser).State = EntityState.Modified;
-        //            db.SaveChanges();
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-        //    return View(tbuser);
-        //}
-
-        ////
-        //// GET: /SysUser/Delete/5
-
-        //public ActionResult Delete(string id = null)
-        //{
-        //    tbUser tbuser = db.tbUsers.Find(id);
-        //    if (tbuser == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(tbuser);
-        //}
-
-        ////
-        //// POST: /SysUser/Delete/5
-
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    tbUser tbuser = db.tbUsers.Find(id);
-        //    db.tbUsers.Remove(tbuser);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
-
+        
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
@@ -336,6 +227,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "tbUserController", ex.ToString());
                 return false;
             }
         }

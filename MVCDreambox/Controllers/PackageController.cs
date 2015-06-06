@@ -30,7 +30,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackageController", ex.ToString());
                 string str = ex.Message.ToString();
             }
             return null;
@@ -59,9 +59,9 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackageController", ex.ToString());
             }
             return "Add user failed.";
         }
@@ -88,7 +88,7 @@ namespace MVCDreambox.Controllers
                     }
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { LogFile.writeLogFile(DateTime.Now, "PackageController", ex.ToString()); }
             return "Update failed";
         }
 
@@ -107,7 +107,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
-
+                LogFile.writeLogFile(DateTime.Now, "PackageController", ex.ToString());
             }
             return "Delete failed.";
         }
@@ -492,6 +492,7 @@ namespace MVCDreambox.Controllers
             }
             catch (Exception ex)
             {
+                LogFile.writeLogFile(DateTime.Now, "PackageController", ex.ToString());
                 return false;
             }
         }

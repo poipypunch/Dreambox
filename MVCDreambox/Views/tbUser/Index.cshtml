@@ -118,17 +118,17 @@
                 <tr ng-repeat="row in displayedCollection">
 
                     <td>
-                        {{row.UserName}}
+                        {{row.UserName | strLimit: 30}}
                     </td>
 
                     <td>
-                        {{row.RealName}}
+                        {{row.RealName | strLimit: 30}}
                     </td>
                     <td>
                         {{row.Phone}}
                     </td>
                     <td>
-                        {{row.Email}}
+                        {{row.Email | strLimit: 20}}
                     </td>
                     <td>
                         {{row.Role}}
